@@ -1,8 +1,8 @@
 namespace FE_ToDoApp
 {
-    public partial class Form1 : Form
+    public partial class Trangchu : Form
     {
-        public Form1()
+        public Trangchu()
         {
             InitializeComponent();
         }
