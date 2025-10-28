@@ -1,3 +1,5 @@
+using FE_ToDoApp.NewFolder;
+
 namespace FE_ToDoApp
 {
     public partial class Trangchu : Form
@@ -10,6 +12,12 @@ namespace FE_ToDoApp
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnTrash_Click(object sender, EventArgs e)
+        {
+            ThungRac thungRac = new ThungRac();
+            thungRac.ShowDialog();
         }
     }
 }
