@@ -1,3 +1,4 @@
+using FE_ToDoApp.Lich_Trinh;
 using FE_ToDoApp.NewFolder;
 
 namespace FE_ToDoApp
@@ -18,6 +19,12 @@ namespace FE_ToDoApp
         {
             ThungRac thungRac = new ThungRac();
             thungRac.ShowDialog();
+        }
+
+        private void btn_CaiDat(object sender, EventArgs e)
+        {
+            ToDoList todolist = new ToDoList();
+            todolist.ShowDialog();
         }
     }
 }

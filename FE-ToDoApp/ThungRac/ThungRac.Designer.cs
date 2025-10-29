@@ -61,17 +61,19 @@
             panel1.Controls.Add(panel8);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
+            panel1.Margin = new Padding(3, 4, 3, 4);
             panel1.Name = "panel1";
-            panel1.Size = new Size(444, 45);
+            panel1.Size = new Size(729, 60);
             panel1.TabIndex = 0;
             // 
             // panel9
             // 
             panel9.Controls.Add(textBox1);
             panel9.Dock = DockStyle.Fill;
-            panel9.Location = new Point(50, 0);
+            panel9.Location = new Point(57, 0);
+            panel9.Margin = new Padding(3, 4, 3, 4);
             panel9.Name = "panel9";
-            panel9.Size = new Size(394, 45);
+            panel9.Size = new Size(672, 60);
             panel9.TabIndex = 1;
             // 
             // textBox1
@@ -80,12 +82,12 @@
             textBox1.BackColor = Color.FromArgb(247, 247, 247);
             textBox1.BorderStyle = BorderStyle.None;
             textBox1.Font = new Font("Segoe UI", 13F);
-            textBox1.Location = new Point(0, 9);
-            textBox1.Margin = new Padding(10);
+            textBox1.Location = new Point(0, 12);
+            textBox1.Margin = new Padding(11, 13, 11, 13);
             textBox1.Multiline = true;
             textBox1.Name = "textBox1";
             textBox1.PlaceholderText = "    Tìm kiếm trang trong Thùng rác";
-            textBox1.Size = new Size(375, 28);
+            textBox1.Size = new Size(651, 37);
             textBox1.TabIndex = 3;
             // 
             // panel8
@@ -93,18 +95,19 @@
             panel8.Controls.Add(pictureBox1);
             panel8.Dock = DockStyle.Left;
             panel8.Location = new Point(0, 0);
+            panel8.Margin = new Padding(3, 4, 3, 4);
             panel8.Name = "panel8";
-            panel8.Size = new Size(50, 45);
+            panel8.Size = new Size(57, 60);
             panel8.TabIndex = 0;
             // 
             // pictureBox1
             // 
             pictureBox1.Anchor = AnchorStyles.Right;
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(9, 9);
+            pictureBox1.Location = new Point(10, 12);
             pictureBox1.Margin = new Padding(0);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(41, 28);
+            pictureBox1.Size = new Size(47, 37);
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox1.TabIndex = 6;
             pictureBox1.TabStop = false;
@@ -114,18 +117,20 @@
             panel2.Controls.Add(panel5);
             panel2.Controls.Add(panel4);
             panel2.Dock = DockStyle.Top;
-            panel2.Location = new Point(0, 45);
+            panel2.Location = new Point(0, 60);
+            panel2.Margin = new Padding(3, 4, 3, 4);
             panel2.Name = "panel2";
-            panel2.Size = new Size(444, 339);
+            panel2.Size = new Size(729, 452);
             panel2.TabIndex = 1;
             // 
             // panel5
             // 
             panel5.Controls.Add(panel7);
             panel5.Dock = DockStyle.Fill;
-            panel5.Location = new Point(0, 47);
+            panel5.Location = new Point(0, 63);
+            panel5.Margin = new Padding(3, 4, 3, 4);
             panel5.Name = "panel5";
-            panel5.Size = new Size(444, 292);
+            panel5.Size = new Size(729, 389);
             panel5.TabIndex = 1;
             // 
             // panel7
@@ -133,20 +138,21 @@
             panel7.Controls.Add(label1);
             panel7.Dock = DockStyle.Fill;
             panel7.Location = new Point(0, 0);
+            panel7.Margin = new Padding(3, 4, 3, 4);
             panel7.Name = "panel7";
-            panel7.Size = new Size(444, 292);
+            panel7.Size = new Size(729, 389);
             panel7.TabIndex = 1;
             // 
             // label1
             // 
-            label1.Dock = DockStyle.Fill;
+            label1.Anchor = AnchorStyles.None;
             label1.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
-            label1.Location = new Point(0, 0);
+            label1.Location = new Point(243, 143);
             label1.Name = "label1";
-            label1.Size = new Size(444, 292);
+            label1.Size = new Size(249, 70);
             label1.TabIndex = 1;
             label1.Text = "   🗑️\r\nKhông có kết quả\r\n\r\n\r\n\r\n\r\n.\r\n";
-            label1.TextAlign = ContentAlignment.BottomCenter;
+            label1.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // panel4
             // 
@@ -155,17 +161,19 @@
             panel4.Controls.Add(button1);
             panel4.Dock = DockStyle.Top;
             panel4.Location = new Point(0, 0);
+            panel4.Margin = new Padding(3, 4, 3, 4);
             panel4.Name = "panel4";
-            panel4.Size = new Size(444, 47);
+            panel4.Size = new Size(729, 63);
             panel4.TabIndex = 0;
             // 
             // button3
             // 
             button3.AutoSize = true;
             button3.BackColor = Color.FromArgb(247, 247, 247);
-            button3.Location = new Point(288, 6);
+            button3.Location = new Point(329, 8);
+            button3.Margin = new Padding(3, 4, 3, 4);
             button3.Name = "button3";
-            button3.Size = new Size(143, 30);
+            button3.Size = new Size(214, 40);
             button3.TabIndex = 2;
             button3.Text = "🏢 Không gian nhóm 🔽";
             button3.UseVisualStyleBackColor = false;
@@ -174,9 +182,10 @@
             // 
             button2.AutoSize = true;
             button2.BackColor = Color.FromArgb(247, 247, 247);
-            button2.Location = new Point(196, 6);
+            button2.Location = new Point(224, 8);
+            button2.Margin = new Padding(3, 4, 3, 4);
             button2.Name = "button2";
-            button2.Size = new Size(78, 30);
+            button2.Size = new Size(122, 40);
             button2.TabIndex = 1;
             button2.Text = "📁 Trong 🔽";
             button2.UseVisualStyleBackColor = false;
@@ -186,9 +195,10 @@
             // 
             button1.AutoSize = true;
             button1.BackColor = Color.FromArgb(247, 247, 247);
-            button1.Location = new Point(12, 6);
+            button1.Location = new Point(14, 8);
+            button1.Margin = new Padding(3, 4, 3, 4);
             button1.Name = "button1";
-            button1.Size = new Size(170, 30);
+            button1.Size = new Size(253, 40);
             button1.TabIndex = 0;
             button1.Text = "👤 Chỉnh sửa gần nhất bởi 🔽";
             button1.UseVisualStyleBackColor = false;
@@ -197,9 +207,10 @@
             // 
             panel3.Controls.Add(label3);
             panel3.Dock = DockStyle.Fill;
-            panel3.Location = new Point(0, 384);
+            panel3.Location = new Point(0, 512);
+            panel3.Margin = new Padding(3, 4, 3, 4);
             panel3.Name = "panel3";
-            panel3.Size = new Size(444, 35);
+            panel3.Size = new Size(729, 95);
             panel3.TabIndex = 2;
             // 
             // label3
@@ -207,22 +218,23 @@
             label3.BackColor = Color.FromArgb(247, 247, 247);
             label3.Dock = DockStyle.Bottom;
             label3.Font = new Font("Segoe UI", 10F);
-            label3.Location = new Point(0, 0);
+            label3.Location = new Point(0, 48);
             label3.Name = "label3";
-            label3.Size = new Size(444, 35);
+            label3.Size = new Size(729, 47);
             label3.TabIndex = 0;
             label3.Text = "Các trang trong Thùng rác quá 30 ngày sẽ tự động bị xóa";
             label3.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // ThungRac
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(444, 419);
+            ClientSize = new Size(729, 607);
             Controls.Add(panel3);
             Controls.Add(panel2);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            Margin = new Padding(3, 4, 3, 4);
             Name = "ThungRac";
             Text = "ThungRac";
             panel1.ResumeLayout(false);
