@@ -30,7 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Trangchu));
             sidebarPanel = new Panel();
-            panel2 = new Panel();
+            panel = new Panel();
+            private_item_panel = new Panel();
             privateHeaderPanel = new Panel();
             lblPrivate = new Label();
             btnAddPrivatePage = new Button();
@@ -53,7 +54,7 @@
             headerPanel = new Panel();
             lblHeaderTitle = new Label();
             sidebarPanel.SuspendLayout();
-            panel2.SuspendLayout();
+            panel.SuspendLayout();
             privateHeaderPanel.SuspendLayout();
             panel1.SuspendLayout();
             userPanel.SuspendLayout();
@@ -67,7 +68,7 @@
             // sidebarPanel
             // 
             sidebarPanel.BackColor = Color.FromArgb(247, 247, 247);
-            sidebarPanel.Controls.Add(panel2);
+            sidebarPanel.Controls.Add(panel);
             sidebarPanel.Controls.Add(panel1);
             sidebarPanel.Controls.Add(userPanel);
             sidebarPanel.Controls.Add(footerPanel);
@@ -79,14 +80,23 @@
             sidebarPanel.Size = new Size(320, 908);
             sidebarPanel.TabIndex = 0;
             // 
-            // panel2
+            // panel
             // 
-            panel2.Controls.Add(privateHeaderPanel);
-            panel2.Dock = DockStyle.Fill;
-            panel2.Location = new Point(9, 274);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(302, 538);
-            panel2.TabIndex = 9;
+            panel.Controls.Add(private_item_panel);
+            panel.Controls.Add(privateHeaderPanel);
+            panel.Dock = DockStyle.Fill;
+            panel.Location = new Point(9, 274);
+            panel.Name = "panel";
+            panel.Size = new Size(302, 538);
+            panel.TabIndex = 9;
+            // 
+            // private_item_panel
+            // 
+            private_item_panel.Dock = DockStyle.Fill;
+            private_item_panel.Location = new Point(0, 42);
+            private_item_panel.Name = "private_item_panel";
+            private_item_panel.Size = new Size(302, 496);
+            private_item_panel.TabIndex = 9;
             // 
             // privateHeaderPanel
             // 
@@ -97,7 +107,8 @@
             privateHeaderPanel.Location = new Point(0, 0);
             privateHeaderPanel.Margin = new Padding(3, 4, 3, 4);
             privateHeaderPanel.Name = "privateHeaderPanel";
-            privateHeaderPanel.Size = new Size(302, 33);
+            privateHeaderPanel.Padding = new Padding(0, 0, 0, 10);
+            privateHeaderPanel.Size = new Size(302, 42);
             privateHeaderPanel.TabIndex = 8;
             // 
             // lblPrivate
@@ -124,10 +135,11 @@
             btnAddPrivatePage.Location = new Point(267, 0);
             btnAddPrivatePage.Margin = new Padding(3, 4, 3, 4);
             btnAddPrivatePage.Name = "btnAddPrivatePage";
-            btnAddPrivatePage.Size = new Size(35, 33);
+            btnAddPrivatePage.Size = new Size(35, 32);
             btnAddPrivatePage.TabIndex = 6;
             btnAddPrivatePage.Text = "+";
             btnAddPrivatePage.UseVisualStyleBackColor = true;
+            btnAddPrivatePage.Click += add_private_item_click;
             // 
             // panel1
             // 
@@ -386,7 +398,7 @@
             Text = "Trangchu";
             sidebarPanel.ResumeLayout(false);
             sidebarPanel.PerformLayout();
-            panel2.ResumeLayout(false);
+            panel.ResumeLayout(false);
             privateHeaderPanel.ResumeLayout(false);
             privateHeaderPanel.PerformLayout();
             panel1.ResumeLayout(false);
@@ -425,9 +437,10 @@
         private System.Windows.Forms.Button btnAddPrivatePage;
         private TextBox textBox1;
         private Panel panel1;
-        private Panel panel2;
+        private Panel panel;
         private Panel panel3;
         private PictureBox pictureBox1;
+        private Panel private_item_panel;
     }
 
 }
