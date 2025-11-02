@@ -1,3 +1,5 @@
+using FE_ToDoApp.login;
+
 namespace FE_ToDoApp
 {
     internal static class Program
@@ -11,7 +13,7 @@ namespace FE_ToDoApp
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new Trangchu());
+            Application.Run(new Login1());
         }
     }
 }
