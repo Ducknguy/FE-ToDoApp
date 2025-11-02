@@ -30,7 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Trangchu));
             sidebarPanel = new Panel();
-            panel2 = new Panel();
+            private_item_panel1 = new Panel();
+            private_item_panel = new Panel();
             privateHeaderPanel = new Panel();
             lblPrivate = new Label();
             btnAddPrivatePage = new Button();
@@ -53,7 +54,7 @@
             headerPanel = new Panel();
             lblHeaderTitle = new Label();
             sidebarPanel.SuspendLayout();
-            panel2.SuspendLayout();
+            private_item_panel1.SuspendLayout();
             privateHeaderPanel.SuspendLayout();
             panel1.SuspendLayout();
             userPanel.SuspendLayout();
@@ -67,7 +68,7 @@
             // sidebarPanel
             // 
             sidebarPanel.BackColor = Color.FromArgb(247, 247, 247);
-            sidebarPanel.Controls.Add(panel2);
+            sidebarPanel.Controls.Add(private_item_panel1);
             sidebarPanel.Controls.Add(panel1);
             sidebarPanel.Controls.Add(userPanel);
             sidebarPanel.Controls.Add(footerPanel);
@@ -79,14 +80,23 @@
             sidebarPanel.Size = new Size(320, 908);
             sidebarPanel.TabIndex = 0;
             // 
-            // panel2
+            // private_item_panel1
             // 
-            panel2.Controls.Add(privateHeaderPanel);
-            panel2.Dock = DockStyle.Fill;
-            panel2.Location = new Point(9, 274);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(302, 538);
-            panel2.TabIndex = 9;
+            private_item_panel1.Controls.Add(private_item_panel);
+            private_item_panel1.Controls.Add(privateHeaderPanel);
+            private_item_panel1.Dock = DockStyle.Fill;
+            private_item_panel1.Location = new Point(9, 274);
+            private_item_panel1.Name = "private_item_panel1";
+            private_item_panel1.Size = new Size(302, 538);
+            private_item_panel1.TabIndex = 9;
+            // 
+            // private_item_panel
+            // 
+            private_item_panel.Dock = DockStyle.Top;
+            private_item_panel.Location = new Point(0, 33);
+            private_item_panel.Name = "private_item_panel";
+            private_item_panel.Size = new Size(302, 125);
+            private_item_panel.TabIndex = 9;
             // 
             // privateHeaderPanel
             // 
@@ -386,7 +396,7 @@
             Text = "Trangchu";
             sidebarPanel.ResumeLayout(false);
             sidebarPanel.PerformLayout();
-            panel2.ResumeLayout(false);
+            private_item_panel1.ResumeLayout(false);
             privateHeaderPanel.ResumeLayout(false);
             privateHeaderPanel.PerformLayout();
             panel1.ResumeLayout(false);
@@ -425,9 +435,10 @@
         private System.Windows.Forms.Button btnAddPrivatePage;
         private TextBox textBox1;
         private Panel panel1;
-        private Panel panel2;
+        private Panel private_item_panel1;
         private Panel panel3;
         private PictureBox pictureBox1;
+        private Panel private_item_panel;
     }
 
 }
