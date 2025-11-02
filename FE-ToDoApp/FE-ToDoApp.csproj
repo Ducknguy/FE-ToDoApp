@@ -11,6 +11,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="img\R %281%29.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="img\R (1).jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Image\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
