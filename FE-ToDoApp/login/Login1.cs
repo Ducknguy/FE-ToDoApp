@@ -1,0 +1,71 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Data.SqlClient;
+using System.Configuration;
+
+
+namespace FE_ToDoApp.login
+{
+    public partial class Login1 : Form
+    {
+        public Login1()
+        {
+            InitializeComponent();
+        }
+
+        private void btnLogin_Click(object sender, EventArgs e)
+        {
+            string username = txtUsername.Text.Trim();
+            string password = txtPassword.Text;
+            string query = "SELECT COUNT(1) FROM [User] WHERE username = @User AND password = @Pass";
+            using (SqlConnection connection = DatabaseHelper.GetConnection())
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    try
+                    {
+                        connection.Open();
+                        command.Parameters.AddWithValue("@User", username);
+                        command.Parameters.AddWithValue("@Pass", password); // So sánh mật khẩu (Chưa Hash)
+                        int count = (int)command.ExecuteScalar();
+                        if (count == 1)
+                        {
+                            Trangchu mainForm = new Trangchu();
+                            mainForm.Show();
+
+                            // 2. Ẩn Form Login hiện tại
+                            this.Hide();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Tên đăng nhập hoặc mật khẩu không đúng.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Lỗi kết nối cơ sở dữ liệu: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void linkRegister_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Register registerForm = new Register();
+            registerForm.ShowDialog();
+        }
+
+        private void linkForgotPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ForgotPasswrod forgotForm = new ForgotPasswrod();
+            forgotForm.ShowDialog();
+        }
+    }
+}
