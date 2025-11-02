@@ -14,7 +14,7 @@
     <None Remove="img\R %281%29.jpg" />
   </ItemGroup>
 
-  <ItemGroup>SSS
+  <ItemGroup>
     <Content Include="img\R (1).jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
