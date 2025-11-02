@@ -30,7 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Trangchu));
             sidebarPanel = new Panel();
-            panel2 = new Panel();
+            panel = new Panel();
+            private_item_panel = new Panel();
             privateHeaderPanel = new Panel();
             lblPrivate = new Label();
             btnAddPrivatePage = new Button();
@@ -50,11 +51,10 @@
             lblBody = new Label();
             lblWelcome = new Label();
             lblTitle = new Label();
-            lblRocket = new Label();
             headerPanel = new Panel();
             lblHeaderTitle = new Label();
             sidebarPanel.SuspendLayout();
-            panel2.SuspendLayout();
+            panel.SuspendLayout();
             privateHeaderPanel.SuspendLayout();
             panel1.SuspendLayout();
             userPanel.SuspendLayout();
@@ -68,7 +68,7 @@
             // sidebarPanel
             // 
             sidebarPanel.BackColor = Color.FromArgb(247, 247, 247);
-            sidebarPanel.Controls.Add(panel2);
+            sidebarPanel.Controls.Add(panel);
             sidebarPanel.Controls.Add(panel1);
             sidebarPanel.Controls.Add(userPanel);
             sidebarPanel.Controls.Add(footerPanel);
@@ -80,14 +80,23 @@
             sidebarPanel.Size = new Size(320, 908);
             sidebarPanel.TabIndex = 0;
             // 
-            // panel2
+            // panel
             // 
-            panel2.Controls.Add(privateHeaderPanel);
-            panel2.Dock = DockStyle.Fill;
-            panel2.Location = new Point(9, 274);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(302, 538);
-            panel2.TabIndex = 9;
+            panel.Controls.Add(private_item_panel);
+            panel.Controls.Add(privateHeaderPanel);
+            panel.Dock = DockStyle.Fill;
+            panel.Location = new Point(9, 274);
+            panel.Name = "panel";
+            panel.Size = new Size(302, 538);
+            panel.TabIndex = 9;
+            // 
+            // private_item_panel
+            // 
+            private_item_panel.Dock = DockStyle.Fill;
+            private_item_panel.Location = new Point(0, 42);
+            private_item_panel.Name = "private_item_panel";
+            private_item_panel.Size = new Size(302, 496);
+            private_item_panel.TabIndex = 9;
             // 
             // privateHeaderPanel
             // 
@@ -98,7 +107,8 @@
             privateHeaderPanel.Location = new Point(0, 0);
             privateHeaderPanel.Margin = new Padding(3, 4, 3, 4);
             privateHeaderPanel.Name = "privateHeaderPanel";
-            privateHeaderPanel.Size = new Size(302, 33);
+            privateHeaderPanel.Padding = new Padding(0, 0, 0, 10);
+            privateHeaderPanel.Size = new Size(302, 42);
             privateHeaderPanel.TabIndex = 8;
             // 
             // lblPrivate
@@ -125,10 +135,11 @@
             btnAddPrivatePage.Location = new Point(267, 0);
             btnAddPrivatePage.Margin = new Padding(3, 4, 3, 4);
             btnAddPrivatePage.Name = "btnAddPrivatePage";
-            btnAddPrivatePage.Size = new Size(35, 33);
+            btnAddPrivatePage.Size = new Size(35, 32);
             btnAddPrivatePage.TabIndex = 6;
             btnAddPrivatePage.Text = "+";
             btnAddPrivatePage.UseVisualStyleBackColor = true;
+            btnAddPrivatePage.Click += add_private_item_click;
             // 
             // panel1
             // 
@@ -138,7 +149,7 @@
             panel1.Controls.Add(btnShared);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(9, 106);
-            panel1.Margin = new Padding(10);
+            panel1.Margin = new Padding(10, 11, 10, 11);
             panel1.Name = "panel1";
             panel1.Size = new Size(302, 168);
             panel1.TabIndex = 8;
@@ -202,7 +213,7 @@
             userPanel.Location = new Point(9, 11);
             userPanel.Margin = new Padding(3, 4, 3, 4);
             userPanel.Name = "userPanel";
-            userPanel.Padding = new Padding(6, 7, 6, 10);
+            userPanel.Padding = new Padding(6, 7, 6, 11);
             userPanel.Size = new Size(302, 95);
             userPanel.TabIndex = 0;
             // 
@@ -211,7 +222,7 @@
             panel3.Controls.Add(textBox1);
             panel3.Controls.Add(pictureBox1);
             panel3.Dock = DockStyle.Bottom;
-            panel3.Location = new Point(6, 49);
+            panel3.Location = new Point(6, 48);
             panel3.Name = "panel3";
             panel3.Size = new Size(290, 36);
             panel3.TabIndex = 6;
@@ -278,6 +289,7 @@
             btnSettings.Text = "⚙️ Cài đặt";
             btnSettings.TextAlign = ContentAlignment.MiddleLeft;
             btnSettings.UseVisualStyleBackColor = true;
+            btnSettings.Click += btn_CaiDat;
             // 
             // btnTrash
             // 
@@ -294,6 +306,7 @@
             btnTrash.Text = "🗑️ Thùng rác";
             btnTrash.TextAlign = ContentAlignment.MiddleLeft;
             btnTrash.UseVisualStyleBackColor = true;
+            btnTrash.Click += btnTrash_Click;
             // 
             // mainPanel
             // 
@@ -302,7 +315,6 @@
             mainPanel.Controls.Add(lblBody);
             mainPanel.Controls.Add(lblWelcome);
             mainPanel.Controls.Add(lblTitle);
-            mainPanel.Controls.Add(lblRocket);
             mainPanel.Dock = DockStyle.Fill;
             mainPanel.Location = new Point(320, 60);
             mainPanel.Margin = new Padding(3, 4, 3, 4);
@@ -317,7 +329,7 @@
             lblBody.Dock = DockStyle.Top;
             lblBody.Font = new Font("Segoe UI", 11.25F);
             lblBody.ForeColor = Color.FromArgb(40, 40, 40);
-            lblBody.Location = new Point(171, 401);
+            lblBody.Location = new Point(171, 80);
             lblBody.Margin = new Padding(3, 0, 3, 13);
             lblBody.Name = "lblBody";
             lblBody.Padding = new Padding(0, 0, 0, 13);
@@ -326,40 +338,29 @@
             // 
             // lblWelcome
             // 
+            lblWelcome.Anchor = AnchorStyles.None;
             lblWelcome.AutoSize = true;
-            lblWelcome.Dock = DockStyle.Top;
             lblWelcome.Font = new Font("Segoe UI Semibold", 18F, FontStyle.Bold);
             lblWelcome.ForeColor = Color.FromArgb(20, 20, 20);
-            lblWelcome.Location = new Point(171, 333);
+            lblWelcome.Location = new Point(280, 354);
             lblWelcome.Name = "lblWelcome";
             lblWelcome.Padding = new Padding(0, 27, 0, 0);
             lblWelcome.Size = new Size(450, 68);
             lblWelcome.TabIndex = 3;
             lblWelcome.Text = "Chào mừng đến với Notion! 👋";
+            lblWelcome.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // lblTitle
             // 
+            lblTitle.Anchor = AnchorStyles.None;
             lblTitle.AutoSize = true;
-            lblTitle.Dock = DockStyle.Top;
             lblTitle.Font = new Font("Segoe UI", 36F, FontStyle.Bold);
             lblTitle.ForeColor = Color.Black;
-            lblTitle.Location = new Point(171, 252);
+            lblTitle.Location = new Point(261, 273);
             lblTitle.Name = "lblTitle";
             lblTitle.Size = new Size(469, 81);
             lblTitle.TabIndex = 1;
             lblTitle.Text = "Getting Started";
-            // 
-            // lblRocket
-            // 
-            lblRocket.AutoSize = true;
-            lblRocket.Dock = DockStyle.Top;
-            lblRocket.Font = new Font("Segoe UI", 72F);
-            lblRocket.Location = new Point(171, 80);
-            lblRocket.Name = "lblRocket";
-            lblRocket.Padding = new Padding(0, 0, 0, 13);
-            lblRocket.Size = new Size(232, 172);
-            lblRocket.TabIndex = 0;
-            lblRocket.Text = "🚀";
             // 
             // headerPanel
             // 
@@ -392,12 +393,12 @@
             Controls.Add(headerPanel);
             Controls.Add(sidebarPanel);
             Margin = new Padding(3, 4, 3, 4);
-            MinimumSize = new Size(912, 784);
+            MinimumSize = new Size(912, 782);
             Name = "Trangchu";
             Text = "Trangchu";
             sidebarPanel.ResumeLayout(false);
             sidebarPanel.PerformLayout();
-            panel2.ResumeLayout(false);
+            panel.ResumeLayout(false);
             privateHeaderPanel.ResumeLayout(false);
             privateHeaderPanel.PerformLayout();
             panel1.ResumeLayout(false);
@@ -427,7 +428,6 @@
         private System.Windows.Forms.Button btnSettings;
         private System.Windows.Forms.Button btnTrash;
         private System.Windows.Forms.Panel mainPanel;
-        private System.Windows.Forms.Label lblRocket;
         private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.Label lblWelcome;
         private System.Windows.Forms.Label lblBody;
@@ -437,9 +437,10 @@
         private System.Windows.Forms.Button btnAddPrivatePage;
         private TextBox textBox1;
         private Panel panel1;
-        private Panel panel2;
+        private Panel panel;
         private Panel panel3;
         private PictureBox pictureBox1;
+        private Panel private_item_panel;
     }
 
 }
