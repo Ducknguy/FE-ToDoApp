@@ -1,5 +1,6 @@
 ﻿using FE_ToDoApp.Lich_Trinh;
 using FE_ToDoApp.NewFolder;
+using FE_ToDoApp.Setting;
 
 namespace FE_ToDoApp
 {
@@ -24,8 +25,8 @@ namespace FE_ToDoApp
 
         private void btn_CaiDat(object sender, EventArgs e)
         {
-            ToDoList todolist = new ToDoList();
-            todolist.ShowDialog();
+            setting setting = new setting();
+            setting.ShowDialog();
         }
 
         private void sidebar_item_click(object sender, EventArgs e)
