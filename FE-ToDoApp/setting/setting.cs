@@ -283,6 +283,11 @@ namespace FE_ToDoApp.Setting
                 lblMaKhoa.Text = "Mã khóa";
             }
         }
+
+        private void setting_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
 

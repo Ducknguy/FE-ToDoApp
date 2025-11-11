@@ -240,6 +240,8 @@
             Controls.Add(panel2);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "ThungRac";
             Text = "ThungRac";
             Load += ThungRac_Load;
