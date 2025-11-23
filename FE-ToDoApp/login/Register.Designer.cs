@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Register));
             label2 = new Label();
             label1 = new Label();
             btnRegister = new Button();
@@ -87,8 +86,8 @@
             // 
             // pictureBox1
             // 
-            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(272, 12);
+            pictureBox1.Image = Properties.Resources.search__1_;
+            pictureBox1.Location = new Point(266, 12);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(177, 172);
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;

@@ -62,6 +62,7 @@
             // 
             // btnLogin
             // 
+            btnLogin.Anchor = AnchorStyles.None;
             btnLogin.AutoSize = true;
             btnLogin.Location = new Point(295, 465);
             btnLogin.Name = "btnLogin";
@@ -87,6 +88,7 @@
             // 
             // pictureBox1
             // 
+            pictureBox1.Anchor = AnchorStyles.None;
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
             pictureBox1.Location = new Point(284, 27);
             pictureBox1.Name = "pictureBox1";
