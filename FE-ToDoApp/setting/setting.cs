@@ -393,5 +393,10 @@ namespace FE_ToDoApp.Setting
                 linkTimHieuThongBao.Text = "Tìm hiểu về thông báo";
             }
         }
+
+        private void setting_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

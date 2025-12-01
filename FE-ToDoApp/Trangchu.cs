@@ -1,5 +1,6 @@
 ﻿using FE_ToDoApp.Lich_Trinh;
 using FE_ToDoApp.NewFolder;
+using FE_ToDoApp.Setting;
 
 namespace FE_ToDoApp
 {
@@ -18,14 +19,27 @@ namespace FE_ToDoApp
 
         private void btnTrash_Click(object sender, EventArgs e)
         {
-            ThungRac thungRac = new ThungRac();
-            thungRac.ShowDialog();
+            Button btn = sender as Button;
+
+            // Tạo form ảo để LẤY CHIỀU CAO
+            ThungRac tempForm = new ThungRac(new Point(0, 0));
+            int formHeight = tempForm.Height;
+            tempForm.Close();
+
+            Point screenPoint = btn.PointToScreen(new Point(btn.Width, btn.Height)); // <-- ĐÃ SỬA
+
+            int startX = screenPoint.X;
+            int startY = screenPoint.Y - formHeight;
+
+            // Tạo và hiển thị form thật
+            ThungRac thungRacForm = new ThungRac(new Point(startX, startY));
+            thungRacForm.Show();
         }
 
         private void btn_CaiDat(object sender, EventArgs e)
         {
-            ToDoList todolist = new ToDoList();
-            todolist.ShowDialog();
+            setting setting = new setting();
+            setting.ShowDialog();
         }
 
         private void sidebar_item_click(object sender, EventArgs e)
