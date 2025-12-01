@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+// ĐÃ THAY ĐỔI NAMESPACE ĐỂ TRÙNG VỚI TỆP DESIGNER
 namespace FE_ToDoApp.Setting
 {
     public partial class setting : Form
@@ -26,9 +26,10 @@ namespace FE_ToDoApp.Setting
             cmbNgonNgu.SelectedItem = "Tiếng Việt";
             SetLanguage("Tiếng Việt");
 
-            // 3. Hiển thị panel Cài đặt (Settings) và ẩn panel Tài khoản (Account)
+            // 3. Hiển thị panel Cài đặt (Settings) và ẩn 2 panel còn lại
             panelSettings.Visible = true;
             panelAccount.Visible = false;
+            panelNotifications.Visible = false;
 
             // 4. Đăng ký sự kiện click cho các panel/label ở sidebar
             // Click vào "Quang Hòa Bùi"
@@ -37,26 +38,41 @@ namespace FE_ToDoApp.Setting
 
             // Click vào "Tùy chọn"
             btnTuyChon.Click += new EventHandler(ShowSettingsPanel_Click);
+
+            // Click vào "Thông báo"
+            btnThongBao.Click += new EventHandler(ShowNotificationsPanel_Click);
         }
 
         // --- BỘ XỬ LÝ SỰ KIỆN ---
 
         /// <summary>
-        /// Xử lý sự kiện khi click vào "Quang Hòa Bùi" -> Hiển thị Panel Tài khoản
+        /// Hiển thị Panel Tài khoản
         /// </summary>
         private void ShowAccountPanel_Click(object sender, EventArgs e)
         {
             panelSettings.Visible = false;
             panelAccount.Visible = true;
+            panelNotifications.Visible = false;
         }
 
         /// <summary>
-        /// Xử lý sự kiện khi click vào "Tùy chọn" -> Hiển thị Panel Cài đặt
+        /// Hiển thị Panel Cài đặt
         /// </summary>
         private void ShowSettingsPanel_Click(object sender, EventArgs e)
         {
             panelSettings.Visible = true;
             panelAccount.Visible = false;
+            panelNotifications.Visible = false;
+        }
+
+        /// <summary>
+        /// Hiển thị Panel Thông báo
+        /// </summary>
+        private void ShowNotificationsPanel_Click(object sender, EventArgs e)
+        {
+            panelSettings.Visible = false;
+            panelAccount.Visible = false;
+            panelNotifications.Visible = true;
         }
 
 
@@ -65,8 +81,13 @@ namespace FE_ToDoApp.Setting
         /// </summary>
         private void cmbGiaoDien_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string selectedTheme = cmbGiaoDien.SelectedItem.ToString();
-            SetTheme(selectedTheme);
+            // *** ĐÃ SỬA LỖI CS8600 ***
+            // Lấy giá trị một cách an toàn, kiểm tra null
+            string? selectedTheme = cmbGiaoDien.SelectedItem as string;
+            if (selectedTheme != null)
+            {
+                SetTheme(selectedTheme);
+            }
         }
 
         /// <summary>
@@ -74,8 +95,39 @@ namespace FE_ToDoApp.Setting
         /// </summary>
         private void cmbNgonNgu_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string selectedLang = cmbNgonNgu.SelectedItem.ToString();
-            SetLanguage(selectedLang);
+            // *** ĐÃ SỬA LỖI CS8600 (Dòng 121 của bạn) ***
+            // Lấy giá trị một cách an toàn, kiểm tra null
+            string? selectedLang = cmbNgonNgu.SelectedItem as string;
+            if (selectedLang != null)
+            {
+                SetLanguage(selectedLang);
+            }
+        }
+
+        /// <summary>
+        /// (MỚI) Xử lý sự kiện click "Thêm ảnh"
+        /// </summary>
+        private void linkThemAnh_Click(object sender, EventArgs e)
+        {
+            // Mở hộp thoại chọn tệp
+            if (openFileDialogAvatar.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    // Lấy đường dẫn tệp
+                    string imagePath = openFileDialogAvatar.FileName;
+
+                    // Tải ảnh vào panelAvatar
+                    panelAvatar.BackgroundImage = Image.FromFile(imagePath);
+
+                    // Ẩn chữ "Q" đi
+                    lblAvatarText.Visible = false;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Không thể tải ảnh: " + ex.Message);
+                }
+            }
         }
 
 
@@ -139,7 +191,7 @@ namespace FE_ToDoApp.Setting
                 // Các Nhãn (Label)
                 else if (control is Label lbl)
                 {
-                    lbl.ForeColor = fgColor; // Khoảng quan trọng nên có cp
+                    lbl.ForeColor = fgColor;
 
                     // Các tiêu đề (Ví dụ: "Tài khoản", "Quyền riêng tư")
                     if (lbl.Font.Bold)
@@ -183,6 +235,21 @@ namespace FE_ToDoApp.Setting
                     chk.BackColor = Color.Transparent; // Phải trong suốt
                     chk.ForeColor = fgColor;
                 }
+
+                // LinkLabel
+                else if (control is LinkLabel link)
+                {
+                    link.BackColor = Color.Transparent;
+                    // Màu link giữ nguyên (thường là xanh) hoặc tùy chỉnh
+                    // link.LinkColor = ...
+                }
+
+                // TextBox
+                else if (control is TextBox txt)
+                {
+                    txt.BackColor = (bgColor == Color.White) ? Color.White : Color.DarkGray;
+                    txt.ForeColor = fgColor;
+                }
             }
         }
 
@@ -199,14 +266,17 @@ namespace FE_ToDoApp.Setting
                 btnTuyChon.Text = "     Settings";
                 btnThongBao.Text = "     Notifications";
                 btnKetNoi.Text = "     Connections";
-                btnNgoaiTuyen.Text = "     Offline";
+                // btnNgoaiTuyen.Text = "     Offline"; // ĐÃ XÓA
                 lblKhongGianLamViec.Text = "Workspace";
                 btnChung.Text = "     General";
                 btnThanhVien.Text = "     Members";
                 btnKhongGianNhom.Text = "     Teamspaces";
-                btnNotionAI.Text = "     Notion AI";
+                // btnNotionAI.Text = "     Notion AI"; // ĐÃ XÓA
                 btnTrangCongKhai.Text = "     Public Pages";
                 btnSidebarKetNoi.Text = "     Connections";
+                // btnBieuTuongCamXuc (Mới từ Panel Thông báo)
+                // btnNhap (Mới từ Panel Thông báo)
+                // btnNangCapGoi (Mới từ Panel Thông báo)
 
                 // Panel Cài đặt (Settings)
                 lblTieuDeTuyChon.Text = "Settings";
@@ -225,7 +295,7 @@ namespace FE_ToDoApp.Setting
                 lblTieuDeTaiKhoan.Text = "My Account";
                 lblTenUaDung.Text = "Preferred name";
                 linkThemAnh.Text = "Add photo";
-                linkTaoAnhChanDung.Text = "Create avatar";
+                // linkTaoAnhChanDung.Text = "Create avatar"; // ĐÃ XÓA
                 lblBaoMatTaiKhoan.Text = "Account security";
                 lblEmail.Text = "Email";
                 btnDoiEmail.Text = "Change email";
@@ -236,6 +306,25 @@ namespace FE_ToDoApp.Setting
                 lblMoTaXacMinh2Buoc.Text = "Add an extra layer of security...";
                 btnThemPhuongThucXacMinh.Text = "Add verification method";
                 lblMaKhoa.Text = "Lock code";
+
+                // Panel Thông báo (Notifications)
+                lblTieuDeThongBao.Text = "Notifications";
+                lblThongBaoDiscord.Text = "Discord notifications";
+                lblMoTaThongBaoDiscord.Text = "Receive Discord notifications when someone...";
+                lblThongBaoQuaEmail.Text = "Email notifications";
+                lblHoatDongKhongGianLamViec.Text = "Activity in your workspace";
+                lblMoTaHoatDongKhongGianLamViec.Text = "Receive emails about comments, mentions, page invitations...";
+                lblLuonGuiThongBaoEmail.Text = "Always send email notifications";
+                lblMoTaLuonGuiThongBaoEmail.Text = "Receive email notifications even when you are active...";
+                lblCapNhatTrang.Text = "Page updates";
+                lblMoTaCapNhatTrang.Text = "Receive email summaries of changes to pages...";
+                lblBanTomTatKhongGianLamViec.Text = "Workspace summary";
+                lblMoTaBanTomTatKhongGianLamViec.Text = "Receive email summaries of what's new...";
+                lblEmailThongBaoVaCapNhat.Text = "Email notifications and updates";
+                lblMoTaEmailThongBaoVaCapNhat.Text = "Receive occasional emails about new products...";
+                linkQuanLyCaiDat.Text = "Manage settings";
+                linkTimHieuThongBao.Text = "Learn about notifications";
+
             }
             else // Tiếng Việt
             {
@@ -244,14 +333,17 @@ namespace FE_ToDoApp.Setting
                 btnTuyChon.Text = "     Tùy chọn";
                 btnThongBao.Text = "     Thông báo";
                 btnKetNoi.Text = "     Kết nối";
-                btnNgoaiTuyen.Text = "     Ngoại tuyến";
+                // btnNgoaiTuyen.Text = "     Ngoại tuyến"; // ĐÃ XÓA
                 lblKhongGianLamViec.Text = "Không gian làm việc";
                 btnChung.Text = "     Chung";
-                btnThanhVien.Text = "     Thành viên";
+                btnThanhVien.Text = "     Người dùng"; // Sửa lại từ Thành viên
                 btnKhongGianNhom.Text = "     Không gian nhóm";
-                btnNotionAI.Text = "     Notion AI";
+                // btnNotionAI.Text = "     Notion AI"; // ĐÃ XÓA
                 btnTrangCongKhai.Text = "     Trang công khai";
                 btnSidebarKetNoi.Text = "     Kết nối";
+                // btnBieuTuongCamXuc (Mới từ Panel Thông báo)
+                // btnNhap (Mới từ Panel Thông báo)
+                // btnNangCapGoi (Mới từ Panel Thông báo)
 
                 // Panel Cài đặt (Settings)
                 lblTieuDeTuyChon.Text = "Tùy chọn";
@@ -270,7 +362,7 @@ namespace FE_ToDoApp.Setting
                 lblTieuDeTaiKhoan.Text = "Tài khoản";
                 lblTenUaDung.Text = "Tên ưa dùng";
                 linkThemAnh.Text = "Thêm ảnh";
-                linkTaoAnhChanDung.Text = "Tạo ảnh chân dung";
+                // linkTaoAnhChanDung.Text = "Tạo ảnh chân dung"; // ĐÃ XÓA
                 lblBaoMatTaiKhoan.Text = "Bảo mật tài khoản";
                 lblEmail.Text = "Email";
                 btnDoiEmail.Text = "Đổi email";
@@ -281,8 +373,25 @@ namespace FE_ToDoApp.Setting
                 lblMoTaXacMinh2Buoc.Text = "Thêm một lớp bảo mật bổ sung...";
                 btnThemPhuongThucXacMinh.Text = "Thêm phương thức xác minh";
                 lblMaKhoa.Text = "Mã khóa";
+
+                // Panel Thông báo (Notifications)
+                lblTieuDeThongBao.Text = "Thông báo";
+                lblThongBaoDiscord.Text = "Thông báo trong Discord";
+                lblMoTaThongBaoDiscord.Text = "Nhận thông báo trong Discord khi có người...";
+                lblThongBaoQuaEmail.Text = "Thông báo qua email";
+                lblHoatDongKhongGianLamViec.Text = "Hoạt động trong không gian làm việc của bạn";
+                lblMoTaHoatDongKhongGianLamViec.Text = "Nhận email khi bạn nhận được bình luận, lượt đề cập...";
+                lblLuonGuiThongBaoEmail.Text = "Luôn gửi thông báo qua email";
+                lblMoTaLuonGuiThongBaoEmail.Text = "Nhận email về hoạt động trong không gian làm việc...";
+                lblCapNhatTrang.Text = "Cập nhật trang";
+                lblMoTaCapNhatTrang.Text = "Nhận email tóm tắt về các thay đổi đối với...";
+                lblBanTomTatKhongGianLamViec.Text = "Bản tóm tắt không gian làm việc";
+                lblMoTaBanTomTatKhongGianLamViec.Text = "Nhận email tóm tắt về những gì đang xảy ra...";
+                lblEmailThongBaoVaCapNhat.Text = "Email thông báo và cập nhật";
+                lblMoTaEmailThongBaoVaCapNhat.Text = "Nhận email không thường xuyên khi có đợt ra mắt...";
+                linkQuanLyCaiDat.Text = "Quản lý cài đặt";
+                linkTimHieuThongBao.Text = "Tìm hiểu về thông báo";
             }
         }
     }
 }
-
