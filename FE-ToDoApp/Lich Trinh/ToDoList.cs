@@ -8,10 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
 namespace FE_ToDoApp.Lich_Trinh
 {
+
     public partial class ToDoList : Form
     {
+        private List<Form> privatePages = new List<Form>();
         public ToDoList()
         {
             InitializeComponent();
