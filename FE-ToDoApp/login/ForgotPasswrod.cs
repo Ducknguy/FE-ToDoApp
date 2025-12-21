@@ -67,5 +67,12 @@ namespace FE_ToDoApp.login
         {
             txtNewPassword.PasswordChar = chkShowPassword.Checked ? '\0' : '*';
         }
+
+        private void linkLogin_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Login1 loginForm = new Login1();
+            loginForm.Show();
+            this.Hide();
+        }
     }
 }
