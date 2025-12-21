@@ -22,9 +22,9 @@ namespace FE_ToDoApp.login
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            string username = txtUsername.Text.Trim();
-            string password = txtPassword.Text;
-            string query = "SELECT COUNT(1) FROM [User] WHERE username = @User AND password = @Pass";
+            string Username = txtUsername.Text.Trim();
+            string Password = txtPassword.Text;
+            string query = "SELECT COUNT(1) FROM [User] WHERE Username = @User AND Password = @Pass";
             using (SqlConnection connection = DatabaseHelper.GetConnection())
             {
                 using (SqlCommand command = new SqlCommand(query, connection))
@@ -32,15 +32,14 @@ namespace FE_ToDoApp.login
                     try
                     {
                         connection.Open();
-                        command.Parameters.AddWithValue("@User", username);
-                        command.Parameters.AddWithValue("@Pass", password); // So sánh mật khẩu (Chưa Hash)
+                        command.Parameters.AddWithValue("@User", Username);
+                        command.Parameters.AddWithValue("@Pass", Password);
                         int count = (int)command.ExecuteScalar();
                         if (count == 1)
                         {
                             Trangchu mainForm = new Trangchu();
                             mainForm.Show();
 
-                            // 2. Ẩn Form Login hiện tại
                             this.Hide();
                         }
                         else
@@ -66,6 +65,18 @@ namespace FE_ToDoApp.login
         {
             ForgotPasswrod forgotForm = new ForgotPasswrod();
             forgotForm.ShowDialog();
+        }
+
+        private void chkShowPassword_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkShowPassword.Checked)
+            {
+                txtPassword.PasswordChar = '\0';
+            }
+            else
+            {
+                txtPassword.PasswordChar = '*';
+            }
         }
     }
 }

@@ -128,6 +128,111 @@ namespace FE_ToDoApp.Setting
             lblTaiKhoan.TabIndex = 0;
             lblTaiKhoan.Text = "Quang Hòa Bùi";
             // 
+            // panelNotifications
+            // 
+            panelNotifications.Controls.Add(linkTimHieuThongBao);
+            panelNotifications.Controls.Add(linkQuanLyCaiDat);
+            panelNotifications.Controls.Add(tableLayoutPanel8);
+            panelNotifications.Controls.Add(tableLayoutPanel7);
+            panelNotifications.Controls.Add(tableLayoutPanel6);
+            panelNotifications.Controls.Add(tableLayoutPanel5);
+            panelNotifications.Controls.Add(tableLayoutPanel4);
+            panelNotifications.Controls.Add(lblThongBaoQuaEmail);
+            panelNotifications.Controls.Add(panel1);
+            panelNotifications.Controls.Add(tableLayoutPanelDiscord);
+            panelNotifications.Controls.Add(lblTieuDeThongBao);
+            panelNotifications.Dock = DockStyle.Top;
+            panelNotifications.Location = new Point(40, 1349);
+            panelNotifications.Name = "panelNotifications";
+            panelNotifications.Size = new Size(599, 800);
+            panelNotifications.TabIndex = 2;
+            // 
+            // linkTimHieuThongBao
+            // 
+            linkTimHieuThongBao.AutoSize = true;
+            linkTimHieuThongBao.Location = new Point(9, 692);
+            linkTimHieuThongBao.Name = "linkTimHieuThongBao";
+            linkTimHieuThongBao.Size = new Size(183, 23);
+            linkTimHieuThongBao.TabIndex = 10;
+            linkTimHieuThongBao.TabStop = true;
+            linkTimHieuThongBao.Text = "Tìm hiểu về thông báo";
+            // 
+            // linkQuanLyCaiDat
+            // 
+            linkQuanLyCaiDat.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            linkQuanLyCaiDat.AutoSize = true;
+            linkQuanLyCaiDat.Location = new Point(388, 638);
+            linkQuanLyCaiDat.Name = "linkQuanLyCaiDat";
+            linkQuanLyCaiDat.Size = new Size(125, 23);
+            linkQuanLyCaiDat.TabIndex = 9;
+            linkQuanLyCaiDat.TabStop = true;
+            linkQuanLyCaiDat.Text = "Quản lý cài đặt";
+            // 
+            // tableLayoutPanel8
+            // 
+            tableLayoutPanel8.ColumnCount = 2;
+            tableLayoutPanel8.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 84.13461F));
+            tableLayoutPanel8.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15.86538F));
+            tableLayoutPanel8.Controls.Add(lblMoTaEmailThongBaoVaCapNhat, 0, 1);
+            tableLayoutPanel8.Controls.Add(lblEmailThongBaoVaCapNhat, 0, 0);
+            tableLayoutPanel8.Dock = DockStyle.Top;
+            tableLayoutPanel8.Location = new Point(0, 559);
+            tableLayoutPanel8.Name = "tableLayoutPanel8";
+            tableLayoutPanel8.RowCount = 2;
+            tableLayoutPanel8.RowStyles.Add(new RowStyle(SizeType.Absolute, 35F));
+            tableLayoutPanel8.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+            tableLayoutPanel8.Size = new Size(599, 81);
+            tableLayoutPanel8.TabIndex = 8;
+            // 
+            // lblMoTaEmailThongBaoVaCapNhat
+            // 
+            lblMoTaEmailThongBaoVaCapNhat.AutoSize = true;
+            tableLayoutPanel8.SetColumnSpan(lblMoTaEmailThongBaoVaCapNhat, 2);
+            lblMoTaEmailThongBaoVaCapNhat.ForeColor = Color.Gray;
+            lblMoTaEmailThongBaoVaCapNhat.Location = new Point(3, 35);
+            lblMoTaEmailThongBaoVaCapNhat.Name = "lblMoTaEmailThongBaoVaCapNhat";
+            lblMoTaEmailThongBaoVaCapNhat.Size = new Size(570, 46);
+            lblMoTaEmailThongBaoVaCapNhat.TabIndex = 3;
+            lblMoTaEmailThongBaoVaCapNhat.Text = "Nhận email không thường xuyên khi có đợt ra mắt sản phẩm và các tính năng mới từ Notion";
+            // 
+            // lblEmailThongBaoVaCapNhat
+            // 
+            lblEmailThongBaoVaCapNhat.AutoSize = true;
+            lblEmailThongBaoVaCapNhat.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblEmailThongBaoVaCapNhat.Location = new Point(3, 0);
+            lblEmailThongBaoVaCapNhat.Name = "lblEmailThongBaoVaCapNhat";
+            lblEmailThongBaoVaCapNhat.Size = new Size(230, 23);
+            lblEmailThongBaoVaCapNhat.TabIndex = 2;
+            lblEmailThongBaoVaCapNhat.Text = "Email thông báo và cập nhật";
+            // 
+            // tableLayoutPanel7
+            // 
+            tableLayoutPanel7.ColumnCount = 2;
+            tableLayoutPanel7.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 84.13461F));
+            tableLayoutPanel7.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15.86538F));
+            tableLayoutPanel7.Controls.Add(chkBanTomTatKhongGianLamViec, 1, 0);
+            tableLayoutPanel7.Controls.Add(lblMoTaBanTomTatKhongGianLamViec, 0, 1);
+            tableLayoutPanel7.Controls.Add(lblBanTomTatKhongGianLamViec, 0, 0);
+            tableLayoutPanel7.Dock = DockStyle.Top;
+            tableLayoutPanel7.Location = new Point(0, 478);
+            tableLayoutPanel7.Name = "tableLayoutPanel7";
+            tableLayoutPanel7.RowCount = 2;
+            tableLayoutPanel7.RowStyles.Add(new RowStyle(SizeType.Absolute, 35F));
+            tableLayoutPanel7.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+            tableLayoutPanel7.Size = new Size(599, 81);
+            tableLayoutPanel7.TabIndex = 7;
+            // 
+            // chkBanTomTatKhongGianLamViec
+            // 
+            chkBanTomTatKhongGianLamViec.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            chkBanTomTatKhongGianLamViec.AutoSize = true;
+            chkBanTomTatKhongGianLamViec.Checked = true;
+            chkBanTomTatKhongGianLamViec.CheckState = CheckState.Checked;
+            chkBanTomTatKhongGianLamViec.Location = new Point(578, 3);
+            chkBanTomTatKhongGianLamViec.Name = "chkBanTomTatKhongGianLamViec";
+            chkBanTomTatKhongGianLamViec.Size = new Size(18, 17);
+            chkBanTomTatKhongGianLamViec.TabIndex = 4;
+            chkBanTomTatKhongGianLamViec.UseVisualStyleBackColor = true;
             // panelSettings
             // 
             panelSettings.Controls.Add(tableLayoutPanel1);
@@ -367,6 +472,7 @@ namespace FE_ToDoApp.Setting
             Controls.Add(splitContainer1);
             Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Name = "setting";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Cài đặt";
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel2.ResumeLayout(false);

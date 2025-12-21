@@ -8,7 +8,7 @@ namespace FE_ToDoApp.Calendar
 {
     public static class DatabaseHelper
     {
-        private static string connectionString = "Data Source=Money\\SQLEXPRESS;Initial Catalog=ToDoListDB;Integrated Security=True;";
+        private static string connectionString = "Data Source=duc;Initial Catalog=ToDoListDB;Integrated Security=True;";
 
         public static List<TaskItem> GetTasksByMonth(int month, int year)
         {
