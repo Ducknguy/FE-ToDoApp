@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
-using Google.Apis.Calendar.v3.Data;
 
 namespace FE_ToDoApp.Calendar
 {
@@ -107,6 +106,7 @@ namespace FE_ToDoApp.Calendar
         {
             lblMonthYear.Text = $"THÁNG {month} / {year}";
 
+            // Xóa các ô ngày cũ để vẽ lại
             for (int i = pnlGrid.Controls.Count - 1; i >= 7; i--)
             {
                 pnlGrid.Controls.RemoveAt(i);
@@ -119,6 +119,10 @@ namespace FE_ToDoApp.Calendar
             int row = 1;
             int col = startCol;
 
+            // --- 1. LẤY DỮ LIỆU TỪ SQL ---
+            List<TaskItem> dbTasks = DatabaseHelper.GetTasksByMonth(month, year);
+
+            // --- 2. VẼ Ô NGÀY ---
             for (int day = 1; day <= daysInMonth; day++)
             {
                 DayCell btnDay = new DayCell(day, month, year);
@@ -128,65 +132,26 @@ namespace FE_ToDoApp.Calendar
                     btnDay.SetToday();
                 }
 
+                foreach (var task in dbTasks)
+                {
+                    if (task.StartDate.Date == DateTime.Parse(btnDay.FullDate).Date)
+                    {
+                        btnDay.LocalEvents.Add(task);
+                    }
+                }
+
+                if (btnDay.LocalEvents.Count > 0)
+                {
+                    btnDay.ShowInfo(btnDay.LocalEvents.Count);
+                }
+
                 btnDay.MouseUp += DayCell_MouseUp;
+
                 pnlGrid.Controls.Add(btnDay, col, row);
 
                 col++;
                 if (col > 6) { col = 0; row++; }
             }
-
-            // Gọi hàm lấy dữ liệu
-            SyncGoogleEvents();
-        }
-
-        private async void SyncGoogleEvents()
-        {
-            string oldTitle = this.Text;
-            this.Text = oldTitle + " (Đang tải lịch Google...)";
-
-            var events = await GoogleHelper.LaySuKienTrongThang(_month, _year);
-
-            if (events == null)
-            {
-                this.Text = oldTitle;
-                return;
-            }
-
-            foreach (Control c in pnlGrid.Controls)
-            {
-                if (c is DayCell cell)
-                {
-                    DateTime cellDate = DateTime.Parse(cell.FullDate);
-
-                    // --- ĐOẠN NÀY ĐÃ ĐƯỢC NÂNG CẤP ---
-                    // Thay vì chỉ đếm, ta lọc và thêm hẳn sự kiện vào list của ô ngày
-                    foreach (var evt in events)
-                    {
-                        bool match = false;
-                        if (evt.Start.DateTime.HasValue)
-                        {
-                            if (evt.Start.DateTime.Value.Date == cellDate.Date) match = true;
-                        }
-                        else if (evt.Start.Date != null)
-                        {
-                            if (DateTime.Parse(evt.Start.Date) == cellDate) match = true;
-                        }
-
-                        if (match)
-                        {
-                            cell.GoogleEvents.Add(evt); // Lưu sự kiện vào ô
-                        }
-                    }
-
-                    // Nếu list có dữ liệu thì hiện số lượng
-                    if (cell.GoogleEvents.Count > 0)
-                    {
-                        cell.ShowGoogleInfo(cell.GoogleEvents.Count);
-                    }
-                }
-            }
-
-            this.Text = oldTitle;
         }
 
         private void ChangeMonth(int step)
@@ -197,43 +162,43 @@ namespace FE_ToDoApp.Calendar
             LoadCalendar(_month, _year);
         }
 
-        // --- XỬ LÝ CLICK ---
+        // --- Xử lý click chuột trái-phải ---
         private void DayCell_MouseUp(object sender, MouseEventArgs e)
         {
             DayCell cell = sender as DayCell;
             if (cell == null) return;
 
-            // 1. Chuột Phải -> Hiện Menu Thêm/Sửa/Xóa (Giữ nguyên)
             if (e.Button == MouseButtons.Right)
             {
                 ContextMenuStrip menu = new ContextMenuStrip();
-                menu.Items.Add("➕ Thêm công việc mới", null, (s, ev) => MessageBox.Show($"Thêm: {cell.FullDate}"));
+                menu.Items.Add("➕ Thêm công việc mới", null, (s, ev) =>
+                {
+                    DateTime selectedDate = DateTime.Parse(cell.FullDate);
+                    TaskForm addForm = new TaskForm(selectedDate);
+
+                    if (addForm.ShowDialog() == DialogResult.OK)
+                    {
+                        LoadCalendar(_month, _year);
+                        MessageBox.Show("Đã thêm công việc thành công!");
+                    }
+                });
                 menu.Show(cell, e.Location);
             }
-            // 2. Chuột Trái -> Xem chi tiết (MỚI)
             else if (e.Button == MouseButtons.Left)
             {
-                // Chỉ mở form nếu ngày đó có sự kiện Google
-                if (cell.GoogleEvents.Count > 0)
-                {
-                    EventDetailsForm detailsForm = new EventDetailsForm(cell.FullDate, cell.GoogleEvents);
-                    detailsForm.ShowDialog(); // Hiện form popup
-                }
-                else
-                {
-                    // Nếu không có việc, có thể không làm gì hoặc hiện thông báo
-                    // MessageBox.Show("Ngày này không có sự kiện nào.");
-                }
+                EventDetailsForm detailsForm = new EventDetailsForm(cell.FullDate, cell.LocalEvents);
+
+                detailsForm.ShowDialog();
+
+                LoadCalendar(_month, _year);
             }
         }
     }
 
-    // --- CLASS DAYCELL (ĐÃ NÂNG CẤP) ---
     public class DayCell : Button
     {
         public string FullDate { get; private set; }
-        // Biến này để lưu danh sách sự kiện thật
-        public List<Event> GoogleEvents { get; set; } = new List<Event>();
+        public List<TaskItem> LocalEvents { get; set; } = new List<TaskItem>();
 
         private bool _isToday = false;
         private Color _colorNormal = Color.White;
@@ -266,9 +231,16 @@ namespace FE_ToDoApp.Calendar
             this.Text += " (Hôm nay)";
         }
 
-        public void ShowGoogleInfo(int count)
+        public void ClearInfo()
         {
-            this.Text = this.Text.Split('\n')[0] + $"\n📅 {count} việc";
+            this.Text = this.FullDate.Split('-')[2];
+            this.ForeColor = Color.Black;
+            if (!_isToday) this.BackColor = _colorNormal;
+        }
+
+        public void ShowInfo(int count)
+        {
+            this.Text = this.FullDate.Split('-')[2] + $"\n📅 {count} việc";
             this.ForeColor = Color.DarkBlue;
             if (!_isToday) this.BackColor = Color.AliceBlue;
         }
