@@ -31,9 +31,6 @@
             btnAction2 = new Panel();
             lblText2 = new Label();
             lblIcon2 = new Label();
-            btnAction3 = new Panel();
-            lblText3 = new Label();
-            lblIcon3 = new Label();
             btnAction4 = new Panel();
             lblTagNew = new Label();
             lblText4 = new Label();
@@ -53,7 +50,6 @@
             flowActions.SuspendLayout();
             btnAction1.SuspendLayout();
             btnAction2.SuspendLayout();
-            btnAction3.SuspendLayout();
             btnAction4.SuspendLayout();
             panelFooter.SuspendLayout();
             panelInputContainer.SuspendLayout();
@@ -154,20 +150,23 @@
             // 
             // lblGreeting
             // 
+            lblGreeting.AutoSize = true;
             lblGreeting.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
             lblGreeting.ForeColor = Color.FromArgb(55, 53, 47);
             lblGreeting.Location = new Point(20, 70);
+            lblGreeting.MaximumSize = new Size(500, 0);
             lblGreeting.Name = "lblGreeting";
-            lblGreeting.Size = new Size(500, 40);
+            lblGreeting.Size = new Size(486, 32);
             lblGreeting.TabIndex = 1;
             lblGreeting.Text = "Xin hỏi hoàng thượng muốn thần làm gì?";
             // 
             // lblAvatar
             // 
+            lblAvatar.AutoSize = true;
             lblAvatar.Font = new Font("Segoe UI Emoji", 26F);
-            lblAvatar.Location = new Point(20, 10);
+            lblAvatar.Location = new Point(23, 10);
             lblAvatar.Name = "lblAvatar";
-            lblAvatar.Size = new Size(60, 60);
+            lblAvatar.Size = new Size(68, 47);
             lblAvatar.TabIndex = 0;
             lblAvatar.Text = "🤖";
             // 
@@ -186,7 +185,6 @@
             // 
             flowActions.Controls.Add(btnAction1);
             flowActions.Controls.Add(btnAction2);
-            flowActions.Controls.Add(btnAction3);
             flowActions.Controls.Add(btnAction4);
             flowActions.Dock = DockStyle.Fill;
             flowActions.FlowDirection = FlowDirection.TopDown;
@@ -261,46 +259,13 @@
             lblIcon2.Text = "📝";
             lblIcon2.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // btnAction3
-            // 
-            btnAction3.Controls.Add(lblText3);
-            btnAction3.Controls.Add(lblIcon3);
-            btnAction3.Cursor = Cursors.Hand;
-            btnAction3.Location = new Point(0, 106);
-            btnAction3.Margin = new Padding(0, 0, 0, 8);
-            btnAction3.Name = "btnAction3";
-            btnAction3.Size = new Size(510, 45);
-            btnAction3.TabIndex = 2;
-            // 
-            // lblText3
-            // 
-            lblText3.Dock = DockStyle.Fill;
-            lblText3.Font = new Font("Segoe UI", 11F);
-            lblText3.Location = new Point(45, 0);
-            lblText3.Name = "lblText3";
-            lblText3.Size = new Size(465, 45);
-            lblText3.TabIndex = 1;
-            lblText3.Text = "Phân tích PDF hoặc hình ảnh";
-            lblText3.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // lblIcon3
-            // 
-            lblIcon3.Dock = DockStyle.Left;
-            lblIcon3.Font = new Font("Segoe UI Emoji", 14F);
-            lblIcon3.Location = new Point(0, 0);
-            lblIcon3.Name = "lblIcon3";
-            lblIcon3.Size = new Size(45, 45);
-            lblIcon3.TabIndex = 0;
-            lblIcon3.Text = "📄";
-            lblIcon3.TextAlign = ContentAlignment.MiddleCenter;
-            // 
             // btnAction4
             // 
             btnAction4.Controls.Add(lblTagNew);
             btnAction4.Controls.Add(lblText4);
             btnAction4.Controls.Add(lblIcon4);
             btnAction4.Cursor = Cursors.Hand;
-            btnAction4.Location = new Point(0, 159);
+            btnAction4.Location = new Point(0, 106);
             btnAction4.Margin = new Padding(0, 0, 0, 8);
             btnAction4.Name = "btnAction4";
             btnAction4.Size = new Size(510, 45);
@@ -439,8 +404,8 @@
             // 
             // ChatbotAI
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(550, 600);
             Controls.Add(panelBody);
             Controls.Add(panelFooter);
@@ -453,11 +418,11 @@
             panelTitleBar.ResumeLayout(false);
             panelTitleBar.PerformLayout();
             panelHeader.ResumeLayout(false);
+            panelHeader.PerformLayout();
             panelBody.ResumeLayout(false);
             flowActions.ResumeLayout(false);
             btnAction1.ResumeLayout(false);
             btnAction2.ResumeLayout(false);
-            btnAction3.ResumeLayout(false);
             btnAction4.ResumeLayout(false);
             btnAction4.PerformLayout();
             panelFooter.ResumeLayout(false);
@@ -487,9 +452,7 @@
         private System.Windows.Forms.Panel btnAction2;
         private System.Windows.Forms.Label lblText2;
         private System.Windows.Forms.Label lblIcon2;
-        private System.Windows.Forms.Panel btnAction3;
-        private System.Windows.Forms.Label lblText3;
-        private System.Windows.Forms.Label lblIcon3;
+
         private System.Windows.Forms.Panel btnAction4;
         private System.Windows.Forms.Label lblTagNew;
         private System.Windows.Forms.Label lblText4;
