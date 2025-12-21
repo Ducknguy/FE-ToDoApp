@@ -41,7 +41,7 @@
             label2.Location = new Point(45, 299);
             label2.Name = "label2";
             label2.Size = new Size(86, 23);
-            label2.TabIndex = 27;
+            label2.TabIndex = 7;
             label2.Text = "Password:";
             // 
             // label1
@@ -52,7 +52,7 @@
             label1.Location = new Point(45, 229);
             label1.Name = "label1";
             label1.Size = new Size(91, 23);
-            label1.TabIndex = 26;
+            label1.TabIndex = 6;
             label1.Text = "Username:";
             // 
             // btnLogin
@@ -65,7 +65,7 @@
             btnLogin.Location = new Point(45, 465);
             btnLogin.Name = "btnLogin";
             btnLogin.Size = new Size(360, 45);
-            btnLogin.TabIndex = 25;
+            btnLogin.TabIndex = 4;
             btnLogin.Text = "LOGIN";
             btnLogin.UseVisualStyleBackColor = false;
             btnLogin.Click += btnLogin_Click;
@@ -77,7 +77,7 @@
             txtPassword.Name = "txtPassword";
             txtPassword.PasswordChar = '*';
             txtPassword.Size = new Size(360, 32);
-            txtPassword.TabIndex = 24;
+            txtPassword.TabIndex = 1;
             // 
             // txtUsername
             // 
@@ -85,7 +85,7 @@
             txtUsername.Location = new Point(45, 255);
             txtUsername.Name = "txtUsername";
             txtUsername.Size = new Size(360, 32);
-            txtUsername.TabIndex = 23;
+            txtUsername.TabIndex = 0;
             // 
             // pictureBox1
             // 
@@ -105,7 +105,7 @@
             linkForgotPassword.Location = new Point(45, 415);
             linkForgotPassword.Name = "linkForgotPassword";
             linkForgotPassword.Size = new Size(133, 21);
-            linkForgotPassword.TabIndex = 28;
+            linkForgotPassword.TabIndex = 2;
             linkForgotPassword.TabStop = true;
             linkForgotPassword.Text = "Forgot Password?";
             linkForgotPassword.LinkClicked += linkForgotPassword_LinkClicked;
@@ -118,7 +118,7 @@
             linkRegister.Location = new Point(340, 415);
             linkRegister.Name = "linkRegister";
             linkRegister.Size = new Size(67, 21);
-            linkRegister.TabIndex = 29;
+            linkRegister.TabIndex = 3;
             linkRegister.TabStop = true;
             linkRegister.Text = "Register";
             linkRegister.LinkClicked += linkRegister_LinkClicked_1;
@@ -140,7 +140,7 @@
             panel1.Location = new Point(72, 32);
             panel1.Name = "panel1";
             panel1.Size = new Size(450, 550);
-            panel1.TabIndex = 30;
+            panel1.TabIndex = 0;
             // 
             // label3
             // 
@@ -150,7 +150,7 @@
             label3.Location = new Point(148, 175);
             label3.Name = "label3";
             label3.Size = new Size(157, 41);
-            label3.TabIndex = 36;
+            label3.TabIndex = 5;
             label3.Text = "Welcome!";
             // 
             // chkShowPassword
@@ -161,13 +161,14 @@
             chkShowPassword.Location = new Point(275, 365);
             chkShowPassword.Name = "chkShowPassword";
             chkShowPassword.Size = new Size(132, 24);
-            chkShowPassword.TabIndex = 35;
+            chkShowPassword.TabIndex = 8;
             chkShowPassword.Text = "Show Password";
             chkShowPassword.UseVisualStyleBackColor = true;
             chkShowPassword.CheckedChanged += chkShowPassword_CheckedChanged;
             // 
             // Login1
             // 
+            AcceptButton = btnLogin;
             AutoScaleDimensions = new SizeF(9F, 23F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(240, 245, 255);
@@ -179,6 +180,7 @@
             Name = "Login1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Todo App - Login";
+            WindowState = FormWindowState.Minimized;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();

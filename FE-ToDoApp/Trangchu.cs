@@ -3,6 +3,7 @@ using FE_ToDoApp.Lich_Trinh;
 using FE_ToDoApp.NewFolder;
 using FE_ToDoApp.Setting;
 using ChatbotAI_Form;
+using FE_ToDoApp.login;
 
 
 namespace FE_ToDoApp
@@ -22,7 +23,7 @@ namespace FE_ToDoApp
 
         private void btnTrash_Click(object sender, EventArgs e)
         {
-            
+
             ThungRac thungRacForm = new ThungRac();
             thungRacForm.Show();
         }
@@ -35,7 +36,8 @@ namespace FE_ToDoApp
 
         private void btnChatbotAI_Click(object sender, EventArgs e)
         {
-           
+            ChatbotAI chatbot = new ChatbotAI();
+            chatbot.ShowDialog();
         }
 
         private void sidebar_item_click(object sender, EventArgs e)
@@ -91,6 +93,19 @@ namespace FE_ToDoApp
         {
             calendar calendar = new calendar();
             calendar.ShowDialog();
+
+        }
+
+        private void btn_logout_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Bạn chắc chắn muốn đăng xuất chứ?", "Logout Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (result == DialogResult.Yes)
+            {
+                Login1 login1 = new Login1();
+                login1.Show();
+                this.Hide();
+            }
+
             
         }
     }
