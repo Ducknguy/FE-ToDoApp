@@ -23,8 +23,6 @@ namespace FE_ToDoApp
             Application.Run(new setting());
 =======
             Application.Run(new calendar());
-
->>>>>>> 47520a1bb1243e4b420857b9396962316c6bacd9
         }
     }
 }
