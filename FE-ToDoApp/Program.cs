@@ -19,15 +19,9 @@ namespace FE_ToDoApp
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-<<<<<<< HEAD
-
-            Application.Run(new setting());
-
-=======
             Application.Run(new Login1());
 
             Application.Run(new setting());
->>>>>>> 4cb41bf704b14d7af8c97ac510df36aa48516740
         }
     }
 }
