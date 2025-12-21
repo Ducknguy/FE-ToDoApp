@@ -52,7 +52,7 @@ namespace FE_ToDoApp
 
                 if (targetForm != null)
                 {
-                    
+
                     foreach (Control control in mainPanel.Controls)
                     {
                         if (control is Form form)
@@ -61,7 +61,7 @@ namespace FE_ToDoApp
                         }
                     }
 
-                    
+
                     targetForm.Show();
                     targetForm.BringToFront();
                 }
@@ -76,29 +76,19 @@ namespace FE_ToDoApp
             newtodo.Dock = DockStyle.Left;
 
             mainPanel.Controls.Clear();
-            mainPanel.Controls.Add(newtodo);    
+            mainPanel.Controls.Add(newtodo);
             newtodo.Show();
             privatePages.Add(newtodo);
 
 
             Private_Sidebar sidebar_item = new Private_Sidebar();
-            sidebar_item.Width = private_item_panel.ClientSize.Width;
-            sidebar_item.Dock = DockStyle.Top;
-            sidebar_item.Cursor = Cursors.Hand;
 
             sidebar_item.TargetForm = newtodo;
 
-            private_item_panel.Controls.Add(sidebar_item);
-            privatePages.Add(newtodo);
+
 
             sidebar_item.Click += sidebar_item_click;
 
         }
-
-        
-           
-
-       
-        
     }
 }
