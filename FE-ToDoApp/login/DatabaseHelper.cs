@@ -9,10 +9,7 @@ namespace FE_ToDoApp.login
 {
     public class DatabaseHelper
     {
-        // Cần thay đổi chuỗi kết nối này cho phù hợp với SQL Server của bạn!
-        private static string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\VS\BTL\FE-TODOAPP\LOGIN\DATABASE1.MDF;Integrated Security=True;Connect Timeout=30";
-
-        // Hoặc sử dụng ConfigurationManager.ConnectionStrings["UserDBConnection"].ConnectionString;
+        private static string connectionString = @"Data Source=GIANG;Initial Catalog=user;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
 
         public static SqlConnection GetConnection()
         {
