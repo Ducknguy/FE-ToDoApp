@@ -94,5 +94,11 @@ namespace FE_ToDoApp
             sidebar_item.Click += sidebar_item_click;
 
         }
+
+        
+           
+
+       
+        
     }
 }

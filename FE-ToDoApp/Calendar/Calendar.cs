@@ -188,61 +188,62 @@ namespace FE_ToDoApp.Calendar
             {
                 EventDetailsForm detailsForm = new EventDetailsForm(cell.FullDate, cell.LocalEvents);
 
-                detailsForm.ShowDialog();
-
-                LoadCalendar(_month, _year);
+                if (detailsForm.ShowDialog() == DialogResult.OK)
+                {
+                    LoadCalendar(_month, _year);
+                }
             }
         }
-    }
 
-    public class DayCell : Button
-    {
-        public string FullDate { get; private set; }
-        public List<TaskItem> LocalEvents { get; set; } = new List<TaskItem>();
-
-        private bool _isToday = false;
-        private Color _colorNormal = Color.White;
-        private Color _colorHover = Color.LightSkyBlue;
-        private Color _colorToday = Color.CornflowerBlue;
-
-        public DayCell(int day, int month, int year)
+        public class DayCell : Button
         {
-            this.Text = day.ToString();
-            this.FullDate = $"{year}-{month}-{day}";
-            this.Dock = DockStyle.Fill;
-            this.FlatStyle = FlatStyle.Flat;
-            this.FlatAppearance.BorderColor = Color.Silver;
-            this.TextAlign = ContentAlignment.TopLeft;
-            this.Padding = new Padding(5);
-            this.Font = new Font("Segoe UI", 10);
-            this.BackColor = _colorNormal;
-            this.Cursor = Cursors.Hand;
+            public string FullDate { get; private set; }
+            public List<TaskItem> LocalEvents { get; set; } = new List<TaskItem>();
 
-            this.MouseEnter += (s, e) => { if (!_isToday) this.BackColor = _colorHover; };
-            this.MouseLeave += (s, e) => { if (_isToday) this.BackColor = _colorToday; else this.BackColor = _colorNormal; };
-        }
+            private bool _isToday = false;
+            private Color _colorNormal = Color.White;
+            private Color _colorHover = Color.LightSkyBlue;
+            private Color _colorToday = Color.CornflowerBlue;
 
-        public void SetToday()
-        {
-            _isToday = true;
-            this.BackColor = _colorToday;
-            this.ForeColor = Color.White;
-            this.Font = new Font(this.Font, FontStyle.Bold);
-            this.Text += " (Hôm nay)";
-        }
+            public DayCell(int day, int month, int year)
+            {
+                this.Text = day.ToString();
+                this.FullDate = $"{year}-{month}-{day}";
+                this.Dock = DockStyle.Fill;
+                this.FlatStyle = FlatStyle.Flat;
+                this.FlatAppearance.BorderColor = Color.Silver;
+                this.TextAlign = ContentAlignment.TopLeft;
+                this.Padding = new Padding(5);
+                this.Font = new Font("Segoe UI", 10);
+                this.BackColor = _colorNormal;
+                this.Cursor = Cursors.Hand;
 
-        public void ClearInfo()
-        {
-            this.Text = this.FullDate.Split('-')[2];
-            this.ForeColor = Color.Black;
-            if (!_isToday) this.BackColor = _colorNormal;
-        }
+                this.MouseEnter += (s, e) => { if (!_isToday) this.BackColor = _colorHover; };
+                this.MouseLeave += (s, e) => { if (_isToday) this.BackColor = _colorToday; else this.BackColor = _colorNormal; };
+            }
 
-        public void ShowInfo(int count)
-        {
-            this.Text = this.FullDate.Split('-')[2] + $"\n📅 {count} việc";
-            this.ForeColor = Color.DarkBlue;
-            if (!_isToday) this.BackColor = Color.AliceBlue;
+            public void SetToday()
+            {
+                _isToday = true;
+                this.BackColor = _colorToday;
+                this.ForeColor = Color.White;
+                this.Font = new Font(this.Font, FontStyle.Bold);
+                this.Text += " (Hôm nay)";
+            }
+
+            public void ClearInfo()
+            {
+                this.Text = this.FullDate.Split('-')[2];
+                this.ForeColor = Color.Black;
+                if (!_isToday) this.BackColor = _colorNormal;
+            }
+
+            public void ShowInfo(int count)
+            {
+                this.Text = this.FullDate.Split('-')[2] + $"\n📅 {count} việc";
+                this.ForeColor = Color.DarkBlue;
+                if (!_isToday) this.BackColor = Color.AliceBlue;
+            }
         }
     }
 }
