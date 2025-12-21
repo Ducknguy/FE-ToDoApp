@@ -1,5 +1,10 @@
+using FE_ToDoApp.Lich_Trinh;
 using FE_ToDoApp.login;
 using FE_ToDoApp.Setting;
+using FE_ToDoApp.Calendar;
+using ChatbotAI_Form;
+using System.Globalization;
+
 
 namespace FE_ToDoApp
 {
@@ -14,7 +19,8 @@ namespace FE_ToDoApp
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new Login1());
+            Application.Run(new Trangchu());
+
         }
     }
 }
