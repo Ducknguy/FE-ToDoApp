@@ -1,6 +1,9 @@
-﻿using FE_ToDoApp.Lich_Trinh;
+﻿using FE_ToDoApp.Calendar;
+using FE_ToDoApp.Lich_Trinh;
 using FE_ToDoApp.NewFolder;
 using FE_ToDoApp.Setting;
+using ChatbotAI_Form;
+
 
 namespace FE_ToDoApp
 {
@@ -19,20 +22,8 @@ namespace FE_ToDoApp
 
         private void btnTrash_Click(object sender, EventArgs e)
         {
-            Button btn = sender as Button;
-
-            // Tạo form ảo để LẤY CHIỀU CAO
-            ThungRac tempForm = new ThungRac(new Point(0, 0));
-            int formHeight = tempForm.Height;
-            tempForm.Close();
-
-            Point screenPoint = btn.PointToScreen(new Point(btn.Width, btn.Height)); // <-- ĐÃ SỬA
-
-            int startX = screenPoint.X;
-            int startY = screenPoint.Y - formHeight;
-
-            // Tạo và hiển thị form thật
-            ThungRac thungRacForm = new ThungRac(new Point(startX, startY));
+            
+            ThungRac thungRacForm = new ThungRac();
             thungRacForm.Show();
         }
 
@@ -40,6 +31,11 @@ namespace FE_ToDoApp
         {
             setting setting = new setting();
             setting.ShowDialog();
+        }
+
+        private void btnChatbotAI_Click(object sender, EventArgs e)
+        {
+           
         }
 
         private void sidebar_item_click(object sender, EventArgs e)
@@ -89,6 +85,13 @@ namespace FE_ToDoApp
 
             sidebar_item.Click += sidebar_item_click;
 
+        }
+
+        private void btnCalendar_Click(object sender, EventArgs e)
+        {
+            calendar calendar = new calendar();
+            calendar.ShowDialog();
+            
         }
     }
 }
