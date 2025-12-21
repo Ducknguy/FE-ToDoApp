@@ -10,6 +10,7 @@ namespace FE_ToDoApp.Calendar
     {
         private FlowLayoutPanel panelList;
         private DateTime _currentDate;
+        private bool _hasChanges = false;
 
         public EventDetailsForm(string dateString, List<TaskItem> events)
         {
@@ -29,7 +30,11 @@ namespace FE_ToDoApp.Calendar
             Button btnAdd = new Button() { Text = "+ Thêm Việc", Location = new Point(330, 20), Size = new Size(110, 35), BackColor = Color.ForestGreen, ForeColor = Color.White, Font = new Font("Segoe UI", 10, FontStyle.Bold), Cursor = Cursors.Hand };
             btnAdd.Click += (s, e) => {
                 TaskForm frm = new TaskForm(_currentDate); // Mở form thêm
-                if (frm.ShowDialog() == DialogResult.OK) ReloadData(); // Nếu thêm xong thì tải lại
+                if (frm.ShowDialog() == DialogResult.OK) 
+                { 
+                    ReloadData();
+                    _hasChanges = true;
+                }
             };
 
             pnlHeader.Controls.Add(lblTitle);
@@ -95,7 +100,11 @@ namespace FE_ToDoApp.Calendar
             Button btnEdit = new Button() { Text = "✏️", Location = new Point(330, 15), Size = new Size(40, 40), BackColor = Color.White, FlatStyle = FlatStyle.Flat, Cursor = Cursors.Hand };
             btnEdit.Click += (s, e) => {
                 TaskForm frm = new TaskForm(_currentDate, task); // Truyền task vào để sửa
-                if (frm.ShowDialog() == DialogResult.OK) ReloadData();
+                if (frm.ShowDialog() == DialogResult.OK) 
+                { 
+                    ReloadData();
+                    _hasChanges = true;
+                }
             };
 
             // --- NÚT XÓA ---
@@ -105,11 +114,28 @@ namespace FE_ToDoApp.Calendar
                 {
                     DatabaseHelper.DeleteTask(task.Id);
                     ReloadData();
+                    _hasChanges = true;
+                    
+                    // Nếu xóa hết công việc trong ngày, đóng form
+                    if (panelList.Controls.Count == 1 && panelList.Controls[0] is Label)
+                    {
+                        this.DialogResult = DialogResult.OK;
+                        this.Close();
+                    }
                 }
             };
 
             pnl.Controls.AddRange(new Control[] { lblTime, lblSummary, lblDesc, btnEdit, btnDel });
             return pnl;
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            if (_hasChanges)
+            {
+                this.DialogResult = DialogResult.OK;
+            }
+            base.OnFormClosing(e);
         }
     }
 }
