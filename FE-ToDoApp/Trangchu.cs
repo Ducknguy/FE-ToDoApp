@@ -4,6 +4,8 @@ using FE_ToDoApp.Dashboard;
 using FE_ToDoApp.Lich_Trinh;
 using FE_ToDoApp.NewFolder;
 using FE_ToDoApp.Setting;
+using ChatbotAI_Form;
+using FE_ToDoApp.login;
 
 
 namespace FE_ToDoApp
@@ -36,7 +38,8 @@ namespace FE_ToDoApp
 
         private void btnChatbotAI_Click(object sender, EventArgs e)
         {
-
+            ChatbotAI chatbot = new ChatbotAI();
+            chatbot.ShowDialog();
         }
 
         private void sidebar_item_click(object sender, EventArgs e)

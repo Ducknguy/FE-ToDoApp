@@ -22,7 +22,6 @@
             panelNavigation = new Panel();
             btnSettings = new Button();
             btnChatbotAI = new Button();
-            btnScheduleGroups = new Button();
             btnCalendar = new Button();
             btnWeekly = new Button();
             btnTasks = new Button();
@@ -30,6 +29,7 @@
             btnDashboard = new Button();
             btnHome = new Button();
             panelFooter = new Panel();
+            btn_logout = new Button();
             btnTrash = new Button();
             btnQuickAdd = new Button();
             lblSchedule = new Label();
@@ -87,10 +87,10 @@
             panelGroupsContainer.Controls.Add(btnNewGroup);
             panelGroupsContainer.Controls.Add(lblScheduleGroups);
             panelGroupsContainer.Dock = DockStyle.Fill;
-            panelGroupsContainer.Location = new Point(0, 422);
+            panelGroupsContainer.Location = new Point(0, 468);
             panelGroupsContainer.Name = "panelGroupsContainer";
             panelGroupsContainer.Padding = new Padding(20, 15, 20, 0);
-            panelGroupsContainer.Size = new Size(290, 398);
+            panelGroupsContainer.Size = new Size(290, 352);
             panelGroupsContainer.TabIndex = 11;
             // 
             // btnNewGroup
@@ -128,7 +128,6 @@
             // 
             panelNavigation.Controls.Add(btnSettings);
             panelNavigation.Controls.Add(btnChatbotAI);
-            panelNavigation.Controls.Add(btnScheduleGroups);
             panelNavigation.Controls.Add(btnCalendar);
             panelNavigation.Controls.Add(btnWeekly);
             panelNavigation.Controls.Add(btnTasks);
@@ -138,7 +137,7 @@
             panelNavigation.Dock = DockStyle.Top;
             panelNavigation.Location = new Point(0, 107);
             panelNavigation.Name = "panelNavigation";
-            panelNavigation.Size = new Size(290, 315);
+            panelNavigation.Size = new Size(290, 361);
             panelNavigation.TabIndex = 3;
             // 
             // btnSettings
@@ -148,12 +147,12 @@
             btnSettings.FlatStyle = FlatStyle.Flat;
             btnSettings.Font = new Font("Segoe UI", 11F);
             btnSettings.ForeColor = Color.FromArgb(89, 89, 89);
-            btnSettings.Location = new Point(0, 360);
+            btnSettings.Location = new Point(0, 315);
             btnSettings.Name = "btnSettings";
             btnSettings.Padding = new Padding(20, 0, 0, 0);
             btnSettings.Size = new Size(290, 45);
             btnSettings.TabIndex = 9;
-            btnSettings.Text = "⚙️ Settings";
+            btnSettings.Text = "⚙️ Cài đặt";
             btnSettings.TextAlign = ContentAlignment.MiddleLeft;
             btnSettings.UseVisualStyleBackColor = true;
             btnSettings.Click += btn_CaiDat;
@@ -165,7 +164,7 @@
             btnChatbotAI.FlatStyle = FlatStyle.Flat;
             btnChatbotAI.Font = new Font("Segoe UI", 11F);
             btnChatbotAI.ForeColor = Color.FromArgb(89, 89, 89);
-            btnChatbotAI.Location = new Point(0, 315);
+            btnChatbotAI.Location = new Point(0, 270);
             btnChatbotAI.Name = "btnChatbotAI";
             btnChatbotAI.Padding = new Padding(20, 0, 0, 0);
             btnChatbotAI.Size = new Size(290, 45);
@@ -174,22 +173,6 @@
             btnChatbotAI.TextAlign = ContentAlignment.MiddleLeft;
             btnChatbotAI.UseVisualStyleBackColor = true;
             btnChatbotAI.Click += btnChatbotAI_Click;
-            // 
-            // btnScheduleGroups
-            // 
-            btnScheduleGroups.Dock = DockStyle.Top;
-            btnScheduleGroups.FlatAppearance.BorderSize = 0;
-            btnScheduleGroups.FlatStyle = FlatStyle.Flat;
-            btnScheduleGroups.Font = new Font("Segoe UI", 11F);
-            btnScheduleGroups.ForeColor = Color.FromArgb(89, 89, 89);
-            btnScheduleGroups.Location = new Point(0, 270);
-            btnScheduleGroups.Name = "btnScheduleGroups";
-            btnScheduleGroups.Padding = new Padding(20, 0, 0, 0);
-            btnScheduleGroups.Size = new Size(290, 45);
-            btnScheduleGroups.TabIndex = 8;
-            btnScheduleGroups.Text = "📋 Schedule Groups";
-            btnScheduleGroups.TextAlign = ContentAlignment.MiddleLeft;
-            btnScheduleGroups.UseVisualStyleBackColor = true;
             // 
             // btnCalendar
             // 
@@ -252,7 +235,7 @@
             btnInbox.Padding = new Padding(20, 0, 0, 0);
             btnInbox.Size = new Size(290, 45);
             btnInbox.TabIndex = 4;
-            btnInbox.Text = "👜 Inbox";
+            btnInbox.Text = "👜 Thông báo";
             btnInbox.TextAlign = ContentAlignment.MiddleLeft;
             btnInbox.UseVisualStyleBackColor = true;
             // 
@@ -286,18 +269,36 @@
             btnHome.Padding = new Padding(20, 0, 0, 0);
             btnHome.Size = new Size(290, 45);
             btnHome.TabIndex = 2;
-            btnHome.Text = "🏠 Home";
+            btnHome.Text = "🏠 Trang chủ";
             btnHome.TextAlign = ContentAlignment.MiddleLeft;
             btnHome.UseVisualStyleBackColor = true;
             // 
             // panelFooter
             // 
+            panelFooter.Controls.Add(btn_logout);
             panelFooter.Controls.Add(btnTrash);
             panelFooter.Dock = DockStyle.Bottom;
             panelFooter.Location = new Point(0, 820);
             panelFooter.Name = "panelFooter";
             panelFooter.Size = new Size(290, 73);
             panelFooter.TabIndex = 12;
+            // 
+            // btn_logout
+            // 
+            btn_logout.Dock = DockStyle.Top;
+            btn_logout.FlatAppearance.BorderSize = 0;
+            btn_logout.FlatStyle = FlatStyle.Flat;
+            btn_logout.Font = new Font("Segoe UI", 11F);
+            btn_logout.ForeColor = Color.FromArgb(89, 89, 89);
+            btn_logout.Location = new Point(0, 35);
+            btn_logout.Name = "btn_logout";
+            btn_logout.Padding = new Padding(20, 0, 0, 0);
+            btn_logout.Size = new Size(290, 35);
+            btn_logout.TabIndex = 11;
+            btn_logout.Text = "🗑️ Đăng xuất";
+            btn_logout.TextAlign = ContentAlignment.MiddleLeft;
+            btn_logout.UseVisualStyleBackColor = true;
+            btn_logout.Click += btn_logout_Click;
             // 
             // btnTrash
             // 
@@ -309,9 +310,9 @@
             btnTrash.Location = new Point(0, 0);
             btnTrash.Name = "btnTrash";
             btnTrash.Padding = new Padding(20, 0, 0, 0);
-            btnTrash.Size = new Size(290, 45);
+            btnTrash.Size = new Size(290, 35);
             btnTrash.TabIndex = 10;
-            btnTrash.Text = "🗑️ Trash";
+            btnTrash.Text = "🗑️ Thùng rác";
             btnTrash.TextAlign = ContentAlignment.MiddleLeft;
             btnTrash.UseVisualStyleBackColor = true;
             btnTrash.Click += btnTrash_Click;
@@ -371,7 +372,7 @@
             panelFeatureCards.Dock = DockStyle.Top;
             panelFeatureCards.Location = new Point(40, 280);
             panelFeatureCards.Name = "panelFeatureCards";
-            panelFeatureCards.Size = new Size(869, 370);
+            panelFeatureCards.Size = new Size(869, 395);
             panelFeatureCards.TabIndex = 3;
             // 
             // cardSmartCalendar
@@ -383,7 +384,7 @@
             cardSmartCalendar.Controls.Add(iconSmartCalendar);
             cardSmartCalendar.Location = new Point(3, 3);
             cardSmartCalendar.Name = "cardSmartCalendar";
-            cardSmartCalendar.Size = new Size(410, 180);
+            cardSmartCalendar.Size = new Size(410, 204);
             cardSmartCalendar.TabIndex = 0;
             // 
             // descSmartCalendar
@@ -394,9 +395,9 @@
             descSmartCalendar.Location = new Point(20, 115);
             descSmartCalendar.MaximumSize = new Size(380, 0);
             descSmartCalendar.Name = "descSmartCalendar";
-            descSmartCalendar.Size = new Size(325, 69);
+            descSmartCalendar.Size = new Size(343, 46);
             descSmartCalendar.TabIndex = 2;
-            descSmartCalendar.Text = "View your schedules in daily, weekly, and monthly\r\nformats with intuitive navigation.";
+            descSmartCalendar.Text = "Xem lịch theo ngày, tuần và tháng với điều hướng trực quan.";
             // 
             // titleSmartCalendar
             // 
@@ -428,7 +429,7 @@
             cardTaskManagement.Controls.Add(iconTaskManagement);
             cardTaskManagement.Location = new Point(419, 3);
             cardTaskManagement.Name = "cardTaskManagement";
-            cardTaskManagement.Size = new Size(410, 180);
+            cardTaskManagement.Size = new Size(410, 204);
             cardTaskManagement.TabIndex = 1;
             // 
             // descTaskManagement
@@ -439,9 +440,9 @@
             descTaskManagement.Location = new Point(20, 115);
             descTaskManagement.MaximumSize = new Size(380, 0);
             descTaskManagement.Name = "descTaskManagement";
-            descTaskManagement.Size = new Size(345, 69);
+            descTaskManagement.Size = new Size(365, 46);
             descTaskManagement.TabIndex = 2;
-            descTaskManagement.Text = "Organize tasks with priorities, subtasks, and detailed\r\ntracking for better productivity.";
+            descTaskManagement.Text = "Sắp xếp công việc theo ưu tiên, công việc con và theo dõi chi tiết để tăng hiệu suất.";
             // 
             // titleTaskManagement
             // 
@@ -470,9 +471,9 @@
             cardTimePlanning.BorderStyle = BorderStyle.FixedSingle;
             cardTimePlanning.Controls.Add(descTimePlanning);
             cardTimePlanning.Controls.Add(titleTimePlanning);
-            cardTimePlanning.Location = new Point(3, 189);
+            cardTimePlanning.Location = new Point(3, 213);
             cardTimePlanning.Name = "cardTimePlanning";
-            cardTimePlanning.Size = new Size(410, 160);
+            cardTimePlanning.Size = new Size(410, 175);
             cardTimePlanning.TabIndex = 2;
             // 
             // descTimePlanning
@@ -483,9 +484,9 @@
             descTimePlanning.Location = new Point(20, 55);
             descTimePlanning.MaximumSize = new Size(380, 0);
             descTimePlanning.Name = "descTimePlanning";
-            descTimePlanning.Size = new Size(365, 69);
+            descTimePlanning.Size = new Size(377, 46);
             descTimePlanning.TabIndex = 2;
-            descTimePlanning.Text = "Schedule events with precise timing, recurring patterns,\r\nand smart reminders.";
+            descTimePlanning.Text = "Lên lịch với thời gian chính xác, lặp lại linh hoạt và nhắc nhở thông minh.";
             // 
             // titleTimePlanning
             // 
@@ -494,9 +495,9 @@
             titleTimePlanning.ForeColor = Color.FromArgb(55, 53, 47);
             titleTimePlanning.Location = new Point(20, 20);
             titleTimePlanning.Name = "titleTimePlanning";
-            titleTimePlanning.Size = new Size(179, 32);
+            titleTimePlanning.Size = new Size(271, 32);
             titleTimePlanning.TabIndex = 1;
-            titleTimePlanning.Text = "Time Planning";
+            titleTimePlanning.Text = "Lập kế hoạch thời gian";
             // 
             // cardGroupOrganization
             // 
@@ -504,9 +505,9 @@
             cardGroupOrganization.BorderStyle = BorderStyle.FixedSingle;
             cardGroupOrganization.Controls.Add(descGroupOrganization);
             cardGroupOrganization.Controls.Add(titleGroupOrganization);
-            cardGroupOrganization.Location = new Point(419, 189);
+            cardGroupOrganization.Location = new Point(419, 213);
             cardGroupOrganization.Name = "cardGroupOrganization";
-            cardGroupOrganization.Size = new Size(410, 160);
+            cardGroupOrganization.Size = new Size(410, 175);
             cardGroupOrganization.TabIndex = 3;
             // 
             // descGroupOrganization
@@ -517,9 +518,9 @@
             descGroupOrganization.Location = new Point(20, 55);
             descGroupOrganization.MaximumSize = new Size(380, 0);
             descGroupOrganization.Name = "descGroupOrganization";
-            descGroupOrganization.Size = new Size(378, 69);
+            descGroupOrganization.Size = new Size(379, 46);
             descGroupOrganization.TabIndex = 2;
-            descGroupOrganization.Text = "Categorize schedules into Work, Personal, Study, and\r\nHealth groups with custom colors.";
+            descGroupOrganization.Text = "Phân loại lịch theo Công việc, Cá nhân, Học tập và Sức khỏe với màu tùy chỉnh.";
             // 
             // titleGroupOrganization
             // 
@@ -528,22 +529,21 @@
             titleGroupOrganization.ForeColor = Color.FromArgb(55, 53, 47);
             titleGroupOrganization.Location = new Point(20, 20);
             titleGroupOrganization.Name = "titleGroupOrganization";
-            titleGroupOrganization.Size = new Size(242, 32);
+            titleGroupOrganization.Size = new Size(224, 32);
             titleGroupOrganization.TabIndex = 1;
-            titleGroupOrganization.Text = "Group Organization";
+            titleGroupOrganization.Text = "Tổ chức nhóm lịch";
             // 
             // lblMainTitle
             // 
-            lblMainTitle.AutoSize = true;
             lblMainTitle.Dock = DockStyle.Top;
             lblMainTitle.Font = new Font("Segoe UI", 36F, FontStyle.Bold);
             lblMainTitle.ForeColor = Color.FromArgb(55, 53, 47);
             lblMainTitle.Location = new Point(40, 78);
             lblMainTitle.Name = "lblMainTitle";
             lblMainTitle.Padding = new Padding(0, 20, 0, 20);
-            lblMainTitle.Size = new Size(589, 202);
+            lblMainTitle.Size = new Size(869, 202);
             lblMainTitle.TabIndex = 1;
-            lblMainTitle.Text = "Your Time,\r\nPerfectly Organized";
+            lblMainTitle.Text = "Your Time,Welcome to Schedule";
             // 
             // lblWelcome
             // 
@@ -590,6 +590,7 @@
             MinimumSize = new Size(1000, 700);
             Name = "Trangchu";
             Text = "Schedule - Home";
+            WindowState = FormWindowState.Maximized;
             sidebarPanel.ResumeLayout(false);
             sidebarPanel.PerformLayout();
             panelGroupsContainer.ResumeLayout(false);
@@ -622,7 +623,6 @@
         private Button btnTasks;
         private Button btnWeekly;
         private Button btnCalendar;
-        private Button btnScheduleGroups;
         private Button btnSettings;
         private Button btnChatbotAI;
         private Button btnTrash;
@@ -651,5 +651,6 @@
         private Button btnOpenDashboard;
         private Button btnGetStarted;
         private Button btnViewCalendar;
+        private Button btn_logout;
     }
 }
