@@ -1,4 +1,6 @@
-﻿using FE_ToDoApp.Calendar;
+﻿using ChatbotAI_Form;
+using FE_ToDoApp.Calendar;
+using FE_ToDoApp.Dashboard;
 using FE_ToDoApp.Lich_Trinh;
 using FE_ToDoApp.NewFolder;
 using FE_ToDoApp.Setting;
@@ -96,17 +98,16 @@ namespace FE_ToDoApp
 
         }
 
-        private void btn_logout_Click(object sender, EventArgs e)
+        private void btnDashboard_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show("Bạn chắc chắn muốn đăng xuất chứ?", "Logout Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-            if (result == DialogResult.Yes)
-            {
-                Login1 login1 = new Login1();
-                login1.Show();
-                this.Hide();
-            }
+            mainPanel.Controls.Clear(); // Xóa các control cũ trong panel chính
 
-            
+            // Gọi chính xác Namespace và Class để tránh lỗi CS0118
+            FE_ToDoApp.Dashboard.DashboardControl ucDashboard = new FE_ToDoApp.Dashboard.DashboardControl();
+
+            ucDashboard.Dock = DockStyle.Fill; // Để dashboard tràn đầy phần mainPanel
+            mainPanel.Controls.Add(ucDashboard);
+            ucDashboard.Show();
         }
     }
 }
