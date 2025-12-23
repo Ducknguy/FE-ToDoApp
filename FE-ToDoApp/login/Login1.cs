@@ -20,11 +20,37 @@ namespace FE_ToDoApp.login
             InitializeComponent();
         }
 
-        private void btnLogin_Click(object sender, EventArgs e)
+        private void linkRegister_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            string username = txtUsername.Text.Trim();
-            string password = txtPassword.Text;
-            string query = "SELECT COUNT(1) FROM [User] WHERE username = @User AND password = @Pass";
+            Register registerForm = new Register();
+            registerForm.Show();
+            this.Hide();
+        }
+
+        private void chkShowPassword_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkShowPassword.Checked)
+            {
+                txtPassword.PasswordChar = '\0';
+            }
+            else
+            {
+                txtPassword.PasswordChar = '*';
+            }
+        }
+
+        private void linkForgotPassword_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ForgotPasswrod forgotForm = new ForgotPasswrod();
+            forgotForm.Show();
+            this.Hide();
+        }
+
+        private void btnLogin_Click_1(object sender, EventArgs e)
+        {
+            string Username = txtUsername.Text.Trim();
+            string Password = txtPassword.Text;
+            string query = "SELECT COUNT(1) FROM [User] WHERE Username = @User AND Password = @Pass";
             using (SqlConnection connection = DatabaseHelper.GetConnection())
             {
                 using (SqlCommand command = new SqlCommand(query, connection))
@@ -32,15 +58,14 @@ namespace FE_ToDoApp.login
                     try
                     {
                         connection.Open();
-                        command.Parameters.AddWithValue("@User", username);
-                        command.Parameters.AddWithValue("@Pass", password); // So sánh mật khẩu (Chưa Hash)
+                        command.Parameters.AddWithValue("@User", Username);
+                        command.Parameters.AddWithValue("@Pass", Password);
                         int count = (int)command.ExecuteScalar();
                         if (count == 1)
                         {
                             Trangchu mainForm = new Trangchu();
                             mainForm.Show();
 
-                            // 2. Ẩn Form Login hiện tại
                             this.Hide();
                         }
                         else
@@ -56,16 +81,9 @@ namespace FE_ToDoApp.login
             }
         }
 
-        private void linkRegister_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
+        private void panelCard_Paint(object sender, PaintEventArgs e)
         {
-            Register registerForm = new Register();
-            registerForm.ShowDialog();
-        }
 
-        private void linkForgotPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            ForgotPasswrod forgotForm = new ForgotPasswrod();
-            forgotForm.ShowDialog();
         }
     }
 }

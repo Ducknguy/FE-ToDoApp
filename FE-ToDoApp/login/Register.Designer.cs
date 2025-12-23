@@ -2,165 +2,214 @@
 {
     partial class Register
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
+            if (disposing && (components != null)) components.Dispose();
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
-            label2 = new Label();
-            label1 = new Label();
+            panelCard = new Panel();
+            labelLoginLink = new Label();
+            linkLogin = new LinkLabel();
             btnRegister = new Button();
-            txtPassword = new TextBox();
-            txtUsername = new TextBox();
-            pictureBox1 = new PictureBox();
-            label3 = new Label();
+            chkShowPassword = new CheckBox();
+            labelConfirm = new Label();
             txtConfirmPassword = new TextBox();
-            label4 = new Label();
+            labelPass = new Label();
+            txtPassword = new TextBox();
+            labelEmail = new Label();
             txtEmail = new TextBox();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            labelUser = new Label();
+            txtUsername = new TextBox();
+            labelTitle = new Label();
+            pictureBoxLogo = new PictureBox();
+            panelCard.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBoxLogo).BeginInit();
             SuspendLayout();
             // 
-            // label2
+            // panelCard
             // 
-            label2.AutoSize = true;
-            label2.Location = new Point(99, 284);
-            label2.Name = "label2";
-            label2.Size = new Size(94, 22);
-            label2.TabIndex = 17;
-            label2.Text = "Password:";
+            panelCard.Anchor = AnchorStyles.None;
+            panelCard.BackColor = Color.White;
+            panelCard.Controls.Add(labelLoginLink);
+            panelCard.Controls.Add(linkLogin);
+            panelCard.Controls.Add(btnRegister);
+            panelCard.Controls.Add(chkShowPassword);
+            panelCard.Controls.Add(labelConfirm);
+            panelCard.Controls.Add(txtConfirmPassword);
+            panelCard.Controls.Add(labelPass);
+            panelCard.Controls.Add(txtPassword);
+            panelCard.Controls.Add(labelEmail);
+            panelCard.Controls.Add(txtEmail);
+            panelCard.Controls.Add(labelUser);
+            panelCard.Controls.Add(txtUsername);
+            panelCard.Controls.Add(labelTitle);
+            panelCard.Controls.Add(pictureBoxLogo);
+            panelCard.Location = new Point(100, 40);
+            panelCard.Name = "panelCard";
+            panelCard.Size = new Size(500, 720);
+            panelCard.TabIndex = 0;
             // 
-            // label1
+            // labelLoginLink
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(99, 217);
-            label1.Name = "label1";
-            label1.Size = new Size(94, 22);
-            label1.TabIndex = 16;
-            label1.Text = "Username:";
+            labelLoginLink.ForeColor = Color.FromArgb(113, 128, 150);
+            labelLoginLink.Location = new Point(60, 630);
+            labelLoginLink.Name = "labelLoginLink";
+            labelLoginLink.Size = new Size(213, 25);
+            labelLoginLink.TabIndex = 0;
+            labelLoginLink.Text = "Already have an account?";
+            // 
+            // linkLogin
+            // 
+            linkLogin.LinkColor = Color.FromArgb(37, 132, 235);
+            linkLogin.Location = new Point(300, 630);
+            linkLogin.Name = "linkLogin";
+            linkLogin.Size = new Size(60, 25);
+            linkLogin.TabIndex = 1;
+            linkLogin.TabStop = true;
+            linkLogin.Text = "Log in";
+            linkLogin.LinkClicked += linkLogin_LinkClicked;
             // 
             // btnRegister
             // 
-            btnRegister.AutoSize = true;
-            btnRegister.Location = new Point(282, 492);
+            btnRegister.BackColor = Color.FromArgb(37, 132, 235);
+            btnRegister.FlatAppearance.BorderSize = 0;
+            btnRegister.FlatStyle = FlatStyle.Flat;
+            btnRegister.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            btnRegister.ForeColor = Color.White;
+            btnRegister.Location = new Point(50, 530);
             btnRegister.Name = "btnRegister";
-            btnRegister.Size = new Size(143, 72);
-            btnRegister.TabIndex = 15;
-            btnRegister.Text = "Register";
-            btnRegister.UseVisualStyleBackColor = true;
-            btnRegister.Click += btnRegister_Click;
+            btnRegister.Size = new Size(400, 55);
+            btnRegister.TabIndex = 2;
+            btnRegister.Text = "Sign Up →";
+            btnRegister.UseVisualStyleBackColor = false;
+            btnRegister.Click += btnRegister_Click_1;
             // 
-            // txtPassword
+            // chkShowPassword
             // 
-            txtPassword.Location = new Point(309, 276);
-            txtPassword.Name = "txtPassword";
-            txtPassword.Size = new Size(294, 30);
-            txtPassword.TabIndex = 12;
+            chkShowPassword.Font = new Font("Segoe UI", 9F);
+            chkShowPassword.ForeColor = Color.FromArgb(113, 128, 150);
+            chkShowPassword.Location = new Point(50, 475);
+            chkShowPassword.Name = "chkShowPassword";
+            chkShowPassword.Size = new Size(200, 25);
+            chkShowPassword.TabIndex = 3;
+            chkShowPassword.Text = "Show password";
+            chkShowPassword.CheckedChanged += chkShowPassword_CheckedChanged;
             // 
-            // txtUsername
+            // labelConfirm
             // 
-            txtUsername.Location = new Point(309, 209);
-            txtUsername.Name = "txtUsername";
-            txtUsername.Size = new Size(294, 30);
-            txtUsername.TabIndex = 11;
-            // 
-            // pictureBox1
-            // 
-            pictureBox1.Image = Properties.Resources.search__1_;
-            pictureBox1.Location = new Point(266, 12);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(177, 172);
-            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBox1.TabIndex = 10;
-            pictureBox1.TabStop = false;
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new Point(99, 357);
-            label3.Name = "label3";
-            label3.Size = new Size(164, 22);
-            label3.TabIndex = 19;
-            label3.Text = "Confirm Password:";
+            labelConfirm.Font = new Font("Segoe UI Semibold", 10F);
+            labelConfirm.Location = new Point(260, 390);
+            labelConfirm.Name = "labelConfirm";
+            labelConfirm.Size = new Size(100, 23);
+            labelConfirm.TabIndex = 4;
+            labelConfirm.Text = "Confirm";
             // 
             // txtConfirmPassword
             // 
-            txtConfirmPassword.Location = new Point(309, 349);
+            txtConfirmPassword.Location = new Point(260, 420);
             txtConfirmPassword.Name = "txtConfirmPassword";
-            txtConfirmPassword.Size = new Size(294, 30);
-            txtConfirmPassword.TabIndex = 18;
+            txtConfirmPassword.PasswordChar = '●';
+            txtConfirmPassword.Size = new Size(190, 30);
+            txtConfirmPassword.TabIndex = 5;
             // 
-            // label4
+            // labelPass
             // 
-            label4.AutoSize = true;
-            label4.Location = new Point(99, 431);
-            label4.Name = "label4";
-            label4.Size = new Size(63, 22);
-            label4.TabIndex = 21;
-            label4.Text = "Email:";
+            labelPass.Font = new Font("Segoe UI Semibold", 10F);
+            labelPass.Location = new Point(50, 390);
+            labelPass.Name = "labelPass";
+            labelPass.Size = new Size(100, 23);
+            labelPass.TabIndex = 6;
+            labelPass.Text = "Password";
+            // 
+            // txtPassword
+            // 
+            txtPassword.Location = new Point(50, 420);
+            txtPassword.Name = "txtPassword";
+            txtPassword.PasswordChar = '●';
+            txtPassword.Size = new Size(190, 30);
+            txtPassword.TabIndex = 7;
+            // 
+            // labelEmail
+            // 
+            labelEmail.Font = new Font("Segoe UI Semibold", 10F);
+            labelEmail.Location = new Point(50, 300);
+            labelEmail.Name = "labelEmail";
+            labelEmail.Size = new Size(100, 23);
+            labelEmail.TabIndex = 8;
+            labelEmail.Text = "Email";
             // 
             // txtEmail
             // 
-            txtEmail.Location = new Point(309, 423);
+            txtEmail.Font = new Font("Segoe UI", 11F);
+            txtEmail.Location = new Point(50, 330);
             txtEmail.Name = "txtEmail";
-            txtEmail.Size = new Size(294, 30);
-            txtEmail.TabIndex = 20;
+            txtEmail.Size = new Size(400, 32);
+            txtEmail.TabIndex = 9;
+            // 
+            // labelUser
+            // 
+            labelUser.Font = new Font("Segoe UI Semibold", 10F);
+            labelUser.Location = new Point(50, 210);
+            labelUser.Name = "labelUser";
+            labelUser.Size = new Size(100, 23);
+            labelUser.TabIndex = 10;
+            labelUser.Text = "Username";
+            // 
+            // txtUsername
+            // 
+            txtUsername.Font = new Font("Segoe UI", 11F);
+            txtUsername.Location = new Point(50, 240);
+            txtUsername.Name = "txtUsername";
+            txtUsername.Size = new Size(400, 32);
+            txtUsername.TabIndex = 11;
+            // 
+            // labelTitle
+            // 
+            labelTitle.Font = new Font("Segoe UI", 22F, FontStyle.Bold);
+            labelTitle.ForeColor = Color.FromArgb(45, 55, 72);
+            labelTitle.Location = new Point(0, 130);
+            labelTitle.Name = "labelTitle";
+            labelTitle.Size = new Size(500, 50);
+            labelTitle.TabIndex = 12;
+            labelTitle.Text = "Create Account";
+            labelTitle.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // pictureBoxLogo
+            // 
+            pictureBoxLogo.Location = new Point(210, 40);
+            pictureBoxLogo.Name = "pictureBoxLogo";
+            pictureBoxLogo.Size = new Size(80, 80);
+            pictureBoxLogo.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBoxLogo.TabIndex = 13;
+            pictureBoxLogo.TabStop = false;
             // 
             // Register
             // 
-            AutoScaleDimensions = new SizeF(11F, 22F);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(711, 576);
-            Controls.Add(label4);
-            Controls.Add(txtEmail);
-            Controls.Add(label3);
-            Controls.Add(txtConfirmPassword);
-            Controls.Add(label2);
-            Controls.Add(label1);
-            Controls.Add(btnRegister);
-            Controls.Add(txtPassword);
-            Controls.Add(txtUsername);
-            Controls.Add(pictureBox1);
-            Font = new Font("Times New Roman", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            Margin = new Padding(4, 3, 4, 3);
+            BackColor = Color.FromArgb(242, 245, 249);
+            ClientSize = new Size(700, 800);
+            Controls.Add(panelCard);
+            Font = new Font("Segoe UI", 10F);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
             Name = "Register";
-            Text = "Register";
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Todo App - Create Account";
+            panelCard.ResumeLayout(false);
+            panelCard.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBoxLogo).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
-        #endregion
-
-        private Label label2;
-        private Label label1;
+        private Panel panelCard;
+        private Label labelTitle, labelUser, labelEmail, labelPass, labelConfirm, labelLoginLink;
+        private TextBox txtUsername, txtEmail, txtPassword, txtConfirmPassword;
+        private CheckBox chkShowPassword;
         private Button btnRegister;
-        private TextBox txtPassword;
-        private TextBox txtUsername;
-        private PictureBox pictureBox1;
-        private Label label3;
-        private TextBox txtConfirmPassword;
-        private Label label4;
-        private TextBox txtEmail;
+        private LinkLabel linkLogin;
+        private PictureBox pictureBoxLogo;
     }
 }

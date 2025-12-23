@@ -1,6 +1,12 @@
-﻿using FE_ToDoApp.Lich_Trinh;
+﻿using ChatbotAI_Form;
+using FE_ToDoApp.Calendar;
+using FE_ToDoApp.Dashboard;
+using FE_ToDoApp.Lich_Trinh;
 using FE_ToDoApp.NewFolder;
 using FE_ToDoApp.Setting;
+using ChatbotAI_Form;
+using FE_ToDoApp.login;
+
 
 namespace FE_ToDoApp
 {
@@ -19,20 +25,8 @@ namespace FE_ToDoApp
 
         private void btnTrash_Click(object sender, EventArgs e)
         {
-            Button btn = sender as Button;
 
-            // Tạo form ảo để LẤY CHIỀU CAO
-            ThungRac tempForm = new ThungRac(new Point(0, 0));
-            int formHeight = tempForm.Height;
-            tempForm.Close();
-
-            Point screenPoint = btn.PointToScreen(new Point(btn.Width, btn.Height)); // <-- ĐÃ SỬA
-
-            int startX = screenPoint.X;
-            int startY = screenPoint.Y - formHeight;
-
-            // Tạo và hiển thị form thật
-            ThungRac thungRacForm = new ThungRac(new Point(startX, startY));
+            ThungRac thungRacForm = new ThungRac();
             thungRacForm.Show();
         }
 
@@ -40,6 +34,12 @@ namespace FE_ToDoApp
         {
             setting setting = new setting();
             setting.ShowDialog();
+        }
+
+        private void btnChatbotAI_Click(object sender, EventArgs e)
+        {
+            ChatbotAI chatbot = new ChatbotAI();
+            chatbot.ShowDialog();
         }
 
         private void sidebar_item_click(object sender, EventArgs e)
@@ -52,7 +52,7 @@ namespace FE_ToDoApp
 
                 if (targetForm != null)
                 {
-                    
+
                     foreach (Control control in mainPanel.Controls)
                     {
                         if (control is Form form)
@@ -61,7 +61,7 @@ namespace FE_ToDoApp
                         }
                     }
 
-                    
+
                     targetForm.Show();
                     targetForm.BringToFront();
                 }
@@ -76,23 +76,38 @@ namespace FE_ToDoApp
             newtodo.Dock = DockStyle.Left;
 
             mainPanel.Controls.Clear();
-            mainPanel.Controls.Add(newtodo);    
+            mainPanel.Controls.Add(newtodo);
             newtodo.Show();
             privatePages.Add(newtodo);
 
 
             Private_Sidebar sidebar_item = new Private_Sidebar();
-            sidebar_item.Width = private_item_panel.ClientSize.Width;
-            sidebar_item.Dock = DockStyle.Top;
-            sidebar_item.Cursor = Cursors.Hand;
 
             sidebar_item.TargetForm = newtodo;
 
-            private_item_panel.Controls.Add(sidebar_item);
-            privatePages.Add(newtodo);
+
 
             sidebar_item.Click += sidebar_item_click;
 
+        }
+
+        private void btnCalendar_Click(object sender, EventArgs e)
+        {
+            calendar calendar = new calendar();
+            calendar.ShowDialog();
+
+        }
+
+        private void btnDashboard_Click(object sender, EventArgs e)
+        {
+            mainPanel.Controls.Clear(); // Xóa các control cũ trong panel chính
+
+            // Gọi chính xác Namespace và Class để tránh lỗi CS0118
+            FE_ToDoApp.Dashboard.DashboardControl ucDashboard = new FE_ToDoApp.Dashboard.DashboardControl();
+
+            ucDashboard.Dock = DockStyle.Fill; // Để dashboard tràn đầy phần mainPanel
+            mainPanel.Controls.Add(ucDashboard);
+            ucDashboard.Show();
         }
     }
 }
