@@ -109,5 +109,15 @@ namespace FE_ToDoApp
             mainPanel.Controls.Add(ucDashboard);
             ucDashboard.Show();
         }
+
+        private void btn_logout_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Ban co chac chan muon thoat khong?", "Logout Comfiirm", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (result == DialogResult.Yes) { 
+                Login1 login = new Login1();
+                login.ShowDialog();
+                this.Close();
+            }
+        }
     }
 }
