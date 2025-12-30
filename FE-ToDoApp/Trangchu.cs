@@ -44,50 +44,11 @@ namespace FE_ToDoApp
 
         private void sidebar_item_click(object sender, EventArgs e)
         {
-            Private_Sidebar clickedItem = sender as Private_Sidebar;
 
-            if (clickedItem != null)
-            {
-                Form targetForm = clickedItem.TargetForm;
-
-                if (targetForm != null)
-                {
-
-                    foreach (Control control in mainPanel.Controls)
-                    {
-                        if (control is Form form)
-                        {
-                            form.Hide();
-                        }
-                    }
-
-
-                    targetForm.Show();
-                    targetForm.BringToFront();
-                }
-            }
         }
 
         private void add_private_item_click(object sender, EventArgs e)
         {
-            ToDoList newtodo = new ToDoList();
-            newtodo.TopLevel = false;
-            newtodo.FormBorderStyle = FormBorderStyle.None;
-            newtodo.Dock = DockStyle.Left;
-
-            mainPanel.Controls.Clear();
-            mainPanel.Controls.Add(newtodo);
-            newtodo.Show();
-            privatePages.Add(newtodo);
-
-
-            Private_Sidebar sidebar_item = new Private_Sidebar();
-
-            sidebar_item.TargetForm = newtodo;
-
-
-
-            sidebar_item.Click += sidebar_item_click;
 
         }
 
@@ -100,24 +61,31 @@ namespace FE_ToDoApp
 
         private void btnDashboard_Click(object sender, EventArgs e)
         {
-            mainPanel.Controls.Clear(); // Xóa các control cũ trong panel chính
+            mainPanel.Controls.Clear();
 
-            // Gọi chính xác Namespace và Class để tránh lỗi CS0118
             FE_ToDoApp.Dashboard.DashboardControl ucDashboard = new FE_ToDoApp.Dashboard.DashboardControl();
 
-            ucDashboard.Dock = DockStyle.Fill; // Để dashboard tràn đầy phần mainPanel
+            ucDashboard.Dock = DockStyle.Fill;
             mainPanel.Controls.Add(ucDashboard);
             ucDashboard.Show();
         }
 
-        private void btn_logout_Click(object sender, EventArgs e)
+        private void btnTasks_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show("Ban co chac chan muon thoat khong?", "Logout Comfiirm", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-            if (result == DialogResult.Yes) { 
-                Login1 login = new Login1();
-                login.ShowDialog();
-                this.Close();
-            }
+            mainPanel.Controls.Clear();
+            FE_ToDoApp.Lich_Trinh.TaskItem _task = new FE_ToDoApp.Lich_Trinh.TaskItem();
+            _task.Dock = DockStyle.Fill;
+            mainPanel.Controls.Add(_task);
+            _task.Show();
+        }
+
+        private void btnWeekly_Click(object sender, EventArgs e)
+        {
+            mainPanel.Controls.Clear();
+            FE_ToDoApp.WeekList.week_group _task = new FE_ToDoApp.WeekList.week_group();
+            _task.Dock = DockStyle.Fill;
+            mainPanel.Controls.Add(_task);
+            _task.Show();
         }
     }
 }
