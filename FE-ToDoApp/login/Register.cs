@@ -94,7 +94,7 @@ namespace FE_ToDoApp.login
                                 MessageBox.Show("Đăng ký thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 Login1 loginForm = new Login1();
                                 loginForm.Show();
-                                this.Close(); // Đóng form sau khi thành công                              
+                                this.Close();                            
                             }
                             else
                             {

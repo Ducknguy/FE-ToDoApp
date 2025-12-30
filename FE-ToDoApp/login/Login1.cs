@@ -24,7 +24,7 @@ namespace FE_ToDoApp.login
         {
             Register registerForm = new Register();
             registerForm.ShowDialog();
-            //this.Hide();
+            this.Hide();
         }
 
         private void chkShowPassword_CheckedChanged(object sender, EventArgs e)
@@ -43,7 +43,7 @@ namespace FE_ToDoApp.login
         {
             ForgotPasswrod forgotForm = new ForgotPasswrod();
             forgotForm.ShowDialog();
-            //this.Hide();
+            this.Hide();
         }
 
         private void btnLogin_Click_1(object sender, EventArgs e)
