@@ -21,6 +21,7 @@ namespace FE_ToDoApp
             ApplicationConfiguration.Initialize();
             Application.Run(new Login1());
 
+            Application.Run(new setting());
         }
     }
 }
