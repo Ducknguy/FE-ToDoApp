@@ -32,16 +32,13 @@ namespace FE_ToDoApp.Dashboard
                     conn.Open();
                     LoadStats(conn);
 
-                    // 1. Today's Agenda: Lấy các task có ngày trùng với hôm nay
                     Panel pnlToday = CreateListCard("Today's Agenda");
                     string sqlToday = "SELECT Title, DueDate, Category, Status FROM [Task] " +
                                       "WHERE CAST(DueDate AS DATE) = CAST(GETDATE() AS DATE) ORDER BY DueDate ASC";
 
-                    // Truyền thêm ID người dùng vào đây
                     LoadTasksToContainer(conn, pnlToday, sqlToday);
                     tblLists.Controls.Add(pnlToday, 0, 0);
 
-                    // 2. Upcoming: Lấy các task có ngày lớn hơn ngày hôm nay
                     Panel pnlUpcoming = CreateListCard("Upcoming Schedules");
                     string sqlUpcoming = "SELECT Title, DueDate, Category, Status FROM [Task] " +
                                          "WHERE CAST(DueDate AS DATE) > CAST(GETDATE() AS DATE) ORDER BY DueDate ASC";
@@ -130,7 +127,7 @@ namespace FE_ToDoApp.Dashboard
         private Panel CreateListCard(string title)
         {
             Panel card = new Panel { Dock = DockStyle.Fill, BackColor = Color.White, Margin = new Padding(15), Padding = new Padding(10) };
-            // Vẽ viền mờ cho card
+
             card.Paint += (s, e) => ControlPaint.DrawBorder(e.Graphics, card.ClientRectangle, Color.FromArgb(230, 230, 230), ButtonBorderStyle.Solid);
 
             Label lbl = new Label { Text = title, Font = new Font("Segoe UI", 14, FontStyle.Bold), Location = new Point(15, 15), AutoSize = true };

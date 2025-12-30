@@ -23,8 +23,8 @@ namespace FE_ToDoApp.login
         private void linkRegister_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Register registerForm = new Register();
-            registerForm.Show();
-            this.Hide();
+            registerForm.ShowDialog();
+            //this.Hide();
         }
 
         private void chkShowPassword_CheckedChanged(object sender, EventArgs e)
@@ -42,8 +42,8 @@ namespace FE_ToDoApp.login
         private void linkForgotPassword_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
         {
             ForgotPasswrod forgotForm = new ForgotPasswrod();
-            forgotForm.Show();
-            this.Hide();
+            forgotForm.ShowDialog();
+            //this.Hide();
         }
 
         private void btnLogin_Click_1(object sender, EventArgs e)
