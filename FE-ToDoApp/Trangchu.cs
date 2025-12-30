@@ -1,6 +1,12 @@
-﻿using FE_ToDoApp.Lich_Trinh;
+﻿using ChatbotAI_Form;
+using FE_ToDoApp.Calendar;
+using FE_ToDoApp.Dashboard;
+using FE_ToDoApp.Lich_Trinh;
 using FE_ToDoApp.NewFolder;
 using FE_ToDoApp.Setting;
+using ChatbotAI_Form;
+using FE_ToDoApp.login;
+
 
 namespace FE_ToDoApp
 {
@@ -19,20 +25,8 @@ namespace FE_ToDoApp
 
         private void btnTrash_Click(object sender, EventArgs e)
         {
-            Button btn = sender as Button;
 
-            // Tạo form ảo để LẤY CHIỀU CAO
-            ThungRac tempForm = new ThungRac(new Point(0, 0));
-            int formHeight = tempForm.Height;
-            tempForm.Close();
-
-            Point screenPoint = btn.PointToScreen(new Point(btn.Width, btn.Height)); // <-- ĐÃ SỬA
-
-            int startX = screenPoint.X;
-            int startY = screenPoint.Y - formHeight;
-
-            // Tạo và hiển thị form thật
-            ThungRac thungRacForm = new ThungRac(new Point(startX, startY));
+            ThungRac thungRacForm = new ThungRac();
             thungRacForm.Show();
         }
 
@@ -42,57 +36,56 @@ namespace FE_ToDoApp
             setting.ShowDialog();
         }
 
+        private void btnChatbotAI_Click(object sender, EventArgs e)
+        {
+            ChatbotAI chatbot = new ChatbotAI();
+            chatbot.ShowDialog();
+        }
+
         private void sidebar_item_click(object sender, EventArgs e)
         {
-            Private_Sidebar clickedItem = sender as Private_Sidebar;
 
-            if (clickedItem != null)
-            {
-                Form targetForm = clickedItem.TargetForm;
-
-                if (targetForm != null)
-                {
-                    
-                    foreach (Control control in mainPanel.Controls)
-                    {
-                        if (control is Form form)
-                        {
-                            form.Hide();
-                        }
-                    }
-
-                    
-                    targetForm.Show();
-                    targetForm.BringToFront();
-                }
-            }
         }
 
         private void add_private_item_click(object sender, EventArgs e)
         {
-            ToDoList newtodo = new ToDoList();
-            newtodo.TopLevel = false;
-            newtodo.FormBorderStyle = FormBorderStyle.None;
-            newtodo.Dock = DockStyle.Left;
 
+        }
+
+        private void btnCalendar_Click(object sender, EventArgs e)
+        {
+            calendar calendar = new calendar();
+            calendar.ShowDialog();
+
+        }
+
+        private void btnDashboard_Click(object sender, EventArgs e)
+        {
             mainPanel.Controls.Clear();
-            mainPanel.Controls.Add(newtodo);    
-            newtodo.Show();
-            privatePages.Add(newtodo);
 
+            FE_ToDoApp.Dashboard.DashboardControl ucDashboard = new FE_ToDoApp.Dashboard.DashboardControl();
 
-            Private_Sidebar sidebar_item = new Private_Sidebar();
-            sidebar_item.Width = private_item_panel.ClientSize.Width;
-            sidebar_item.Dock = DockStyle.Top;
-            sidebar_item.Cursor = Cursors.Hand;
+            ucDashboard.Dock = DockStyle.Fill;
+            mainPanel.Controls.Add(ucDashboard);
+            ucDashboard.Show();
+        }
 
-            sidebar_item.TargetForm = newtodo;
+        private void btnTasks_Click(object sender, EventArgs e)
+        {
+            mainPanel.Controls.Clear();
+            FE_ToDoApp.Lich_Trinh.TaskItem _task = new FE_ToDoApp.Lich_Trinh.TaskItem();
+            _task.Dock = DockStyle.Fill;
+            mainPanel.Controls.Add(_task);
+            _task.Show();
+        }
 
-            private_item_panel.Controls.Add(sidebar_item);
-            privatePages.Add(newtodo);
-
-            sidebar_item.Click += sidebar_item_click;
-
+        private void btnWeekly_Click(object sender, EventArgs e)
+        {
+            mainPanel.Controls.Clear();
+            FE_ToDoApp.WeekList.week_group _task = new FE_ToDoApp.WeekList.week_group();
+            _task.Dock = DockStyle.Fill;
+            mainPanel.Controls.Add(_task);
+            _task.Show();
         }
     }
 }

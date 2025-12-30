@@ -18,30 +18,45 @@ namespace FE_ToDoApp.login
             InitializeComponent();
         }
 
-        private void btnRegister_Click(object sender, EventArgs e)
+        private void pictureBox1_Click(object sender, EventArgs e)
         {
-            string username = txtUsername.Text.Trim();
-            string password = txtPassword.Text;
-            string email = txtEmail.Text.Trim();
-            string confirmPassword = txtConfirmPassword.Text; // Giả sử bạn cũng dùng code xác nhận
 
-            // ... (Toàn bộ phần kiểm tra mật khẩu khớp và kiểm tra rỗng giữ nguyên) ...
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(confirmPassword))
+        }
+
+        private void btnRegister_Click_1(object sender, EventArgs e)
+        {
+            string Username = txtUsername.Text.Trim();
+            string Password = txtPassword.Text;
+            string Email = txtEmail.Text.Trim();
+            string confirmPassword = txtConfirmPassword.Text;
+
+            if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(confirmPassword))
             {
                 MessageBox.Show("Vui lòng nhập đầy đủ thông tin.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if (password != confirmPassword)
+            if (Password.Length < 8)
+            {
+                MessageBox.Show("Mật khẩu phải có ít nhất 8 ký tự để đảm bảo an toàn!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtPassword.Focus();
+                return;
+            }
+
+            if (Password != confirmPassword)
             {
                 MessageBox.Show("Mật khẩu và Mật khẩu xác nhận không khớp.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // --- ĐÂY LÀ DÒNG ĐÃ SỬA ---
-            // Tên bảng là [User] (số ít)
-            // Tên các cột là username, password, email (viết thường)
-            string query = "INSERT INTO [User] (username, password, email) VALUES (@User, @Pass, @Email)";
+            if (!Email.ToLower().EndsWith("@gmail.com") || Email.Length <= 10)
+            {
+                MessageBox.Show("Email đăng ký phải có định dạng @gmail.com (Ví dụ: abc@gmail.com)", "Lỗi định dạng", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtEmail.Focus();
+                return;
+            }
+
+            string query = "INSERT INTO [User] (Username, Password, Email) VALUES (@User, @Pass, @Email)";
 
             using (SqlConnection connection = DatabaseHelper.GetConnection())
             {
@@ -51,33 +66,61 @@ namespace FE_ToDoApp.login
                     {
                         connection.Open();
 
-                        // Tên tham số C# (@User, @Pass, @Email) vẫn phải khớp với
-                        // phần VALUES (@User, @Pass, @Email) của câu query
-                        command.Parameters.AddWithValue("@User", username);
-                        command.Parameters.AddWithValue("@Pass", password);
-                        command.Parameters.AddWithValue("@Email", email);
-
-                        int result = command.ExecuteNonQuery();
-
-                        if (result > 0)
+                        string checkQuery = "SELECT COUNT(1) FROM [User] WHERE username = @User";
+                        using (SqlCommand checkCommand = new SqlCommand(checkQuery, connection))
                         {
-                            MessageBox.Show("Đăng ký thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            this.Close(); // Đóng form đăng ký
+                            checkCommand.Parameters.AddWithValue("@User", Username);
+                            int count = (int)checkCommand.ExecuteScalar();
+
+                            if (count > 0)
+                            {
+                                MessageBox.Show("Tên tài khoản này đã tồn tại. Vui lòng chọn tên khác!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                txtUsername.Focus();
+                                return;
+                            }
                         }
-                        else
+
+                        string insertQuery = "INSERT INTO [User] (username, password, email) VALUES (@User, @Pass, @Email)";
+                        using (SqlCommand insertCommand = new SqlCommand(insertQuery, connection))
                         {
-                            MessageBox.Show("Đăng ký thất bại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            insertCommand.Parameters.AddWithValue("@User", Username);
+                            insertCommand.Parameters.AddWithValue("@Pass", Password);
+                            insertCommand.Parameters.AddWithValue("@Email", Email);
+
+                            int result = insertCommand.ExecuteNonQuery();
+
+                            if (result > 0)
+                            {
+                                MessageBox.Show("Đăng ký thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                this.Close(); // Đóng form sau khi thành công
+                            }
+                            else
+                            {
+                                MessageBox.Show("Đăng ký thất bại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
                         }
                     }
                     catch (SqlException ex)
                     {
-                        // Lỗi "Invalid object name" sẽ biến mất sau khi sửa
-                        // Lỗi "Must declare..." cũng sẽ biến mất nếu bạn
-                        // đảm bảo 3 dòng AddWithValue ở trên là chính xác.
                         MessageBox.Show("Lỗi CSDL: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
+        }
+
+        private void chkShowPassword_CheckedChanged(object sender, EventArgs e)
+        {
+            char passwordChar = chkShowPassword.Checked ? '\0' : '*';
+
+            txtPassword.PasswordChar = passwordChar;
+            txtConfirmPassword.PasswordChar = passwordChar;
+        }
+
+        private void linkLogin_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Login1 loginForm = new Login1();
+            loginForm.Show();
+            this.Hide();
         }
     }
 }
