@@ -1,32 +1,130 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using FE_ToDoApp.DAO;
+using FE_ToDoApp.DTO;
 
 namespace FE_ToDoApp.Setting
 {
     public partial class setting : Form
     {
+        UserDAO userDAO = new UserDAO();
+        int currentUserId = 1;
+        User currentUser;
+
         public setting()
         {
             InitializeComponent();
 
-            cmbGiaoDien.SelectedItem = "Sáng";
-            cmbNgonNgu.SelectedItem = "Tiếng Việt";
-
             SetTheme("Sáng");
-            SetLanguage("Tiếng Việt");
+            cmbGiaoDien.SelectedItem = "Sáng";
 
-            panelTaiKhoan.Click += (s, e) => ShowPanel(panelAccount);
-            lblTaiKhoan.Click += (s, e) => ShowPanel(panelAccount);
-            btnTuyChon.Click += (s, e) => ShowPanel(panelSettings);
+            ShowPanel(panelAccount);
+
+            LoadUserData();
+
+            btnThongTinCaNhan.Click += (s, e) => ShowPanel(panelAccount);
+            btnGiaoDien.Click += (s, e) => ShowPanel(panelAppearance);
         }
 
-        private void ShowPanel(Panel panelToShow)
+        private void LoadUserData()
         {
-            panelSettings.Visible = false;
+            currentUser = userDAO.GetUserById(currentUserId);
+            if (currentUser != null)
+            {
+                txtTenHienThi.Text = currentUser.Name;
+                txtEmail.Text = currentUser.Email;
+                lblSidebarName.Text = currentUser.Name;
+
+                if (currentUser.Avatar != null && currentUser.Avatar.Length > 0)
+                {
+                    panelAvatar.BackgroundImage = userDAO.ByteArrayToImage(currentUser.Avatar);
+                    lblAvatarText.Visible = false;
+                }
+            }
+        }
+
+        private void btnLuuThongTin_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtTenHienThi.Text))
+            {
+                MessageBox.Show("Tên không được để trống!");
+                return;
+            }
+
+            bool success = userDAO.UpdateUserInfo(currentUserId, txtTenHienThi.Text, txtEmail.Text);
+            if (success)
+            {
+                MessageBox.Show("Cập nhật thông tin thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                lblSidebarName.Text = txtTenHienThi.Text;
+            }
+            else
+            {
+                MessageBox.Show("Cập nhật thất bại.");
+            }
+        }
+
+        private void btnLuuMatKhau_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtPassCu.Text) || string.IsNullOrEmpty(txtPassMoi.Text) || string.IsNullOrEmpty(txtPassXacNhan.Text))
+            {
+                MessageBox.Show("Vui lòng nhập đầy đủ thông tin mật khẩu.");
+                return;
+            }
+
+            if (txtPassCu.Text != currentUser.Password)
+            {
+                MessageBox.Show("Mật khẩu cũ không chính xác!");
+                return;
+            }
+
+            if (txtPassMoi.Text != txtPassXacNhan.Text)
+            {
+                MessageBox.Show("Mật khẩu xác nhận không khớp!");
+                return;
+            }
+
+            bool success = userDAO.ChangePassword(currentUserId, txtPassMoi.Text);
+            if (success)
+            {
+                MessageBox.Show("Đổi mật khẩu thành công!");
+                txtPassCu.Clear();
+                txtPassMoi.Clear();
+                txtPassXacNhan.Clear();
+                currentUser.Password = txtPassMoi.Text;
+            }
+            else
+            {
+                MessageBox.Show("Đổi mật khẩu thất bại.");
+            }
+        }
+
+        private void btnDoiAnh_Click(object sender, EventArgs e)
+        {
+            if (openFileDialogAvatar.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    Image img = Image.FromFile(openFileDialogAvatar.FileName);
+                    panelAvatar.BackgroundImage = img;
+                    lblAvatarText.Visible = false;
+
+                    byte[] imgBytes = userDAO.ImageToByteArray(img);
+                    userDAO.UpdateUserAvatar(currentUserId, imgBytes);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi ảnh: " + ex.Message);
+                }
+            }
+        }
+
+        private void ShowPanel(Panel p)
+        {
             panelAccount.Visible = false;
-            panelToShow.Visible = true;
-            panelToShow.BringToFront();
+            panelAppearance.Visible = false;
+            p.Visible = true;
+            p.BringToFront();
         }
 
         private void cmbGiaoDien_SelectedIndexChanged(object sender, EventArgs e)
@@ -35,93 +133,37 @@ namespace FE_ToDoApp.Setting
                 SetTheme(cmbGiaoDien.SelectedItem.ToString());
         }
 
-        private void cmbNgonNgu_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cmbNgonNgu.SelectedItem != null)
-                SetLanguage(cmbNgonNgu.SelectedItem.ToString());
-        }
-
-        private void linkThemAnh_Click(object sender, EventArgs e)
-        {
-            if (openFileDialogAvatar.ShowDialog() == DialogResult.OK)
-            {
-                try
-                {
-                    panelAvatar.BackgroundImage = Image.FromFile(openFileDialogAvatar.FileName);
-                    lblAvatarText.Visible = false;
-                }
-                catch (Exception ex) { MessageBox.Show("Lỗi ảnh: " + ex.Message); }
-            }
-        }
-
         private void SetTheme(string theme)
         {
             bool isDark = (theme == "Tối");
-
             Color bgColor = isDark ? Color.FromArgb(32, 32, 32) : Color.White;
             Color fgColor = isDark ? Color.White : Color.Black;
-            Color subTextColor = isDark ? Color.DarkGray : Color.Gray;
-            Color lineColor = isDark ? Color.FromArgb(60, 60, 60) : Color.Gainsboro;
-            Color inputBg = isDark ? Color.FromArgb(50, 50, 50) : Color.White;
 
             this.BackColor = bgColor;
             this.ForeColor = fgColor;
+            sidebarPanel.BackColor = bgColor;
 
-            ApplyThemeRecursive(this.Controls, bgColor, fgColor, subTextColor, lineColor, inputBg);
+            ApplyThemeRecursive(this.Controls, bgColor, fgColor);
         }
 
-        private void ApplyThemeRecursive(Control.ControlCollection controls, Color bg, Color fg, Color subText, Color line, Color inputBg)
+        private void ApplyThemeRecursive(Control.ControlCollection controls, Color bg, Color fg)
         {
             foreach (Control c in controls)
             {
-                if (c.Controls.Count > 0) ApplyThemeRecursive(c.Controls, bg, fg, subText, line, inputBg);
+                if (c.Controls.Count > 0) ApplyThemeRecursive(c.Controls, bg, fg);
 
-                if (c is Panel p)
+                if (c is GroupBox g) g.ForeColor = fg;
+                if (c is Label l) l.ForeColor = fg;
+                if (c is TextBox t)
                 {
-                    if (p.Tag?.ToString() == "Sidebar") p.BackColor = bg;
-                    else if (p.Name.StartsWith("line")) p.BackColor = line;
-                    else p.BackColor = Color.Transparent;
+                    t.BackColor = (bg == Color.White) ? Color.WhiteSmoke : Color.FromArgb(60, 60, 60);
+                    t.ForeColor = fg;
                 }
-                else if (c is Label lbl)
+                if (c is Button b && b.FlatStyle == FlatStyle.Flat)
                 {
-                    lbl.ForeColor = lbl.Font.Bold ? fg : subText;
-                    lbl.BackColor = Color.Transparent;
-                }
-                else if (c is Button btn)
-                {
-                    btn.ForeColor = fg;
-                    btn.BackColor = (btn.FlatStyle == FlatStyle.Flat) ? bg : inputBg;
-                }
-                else if (c is ComboBox || c is TextBox)
-                {
-                    c.BackColor = inputBg;
-                    c.ForeColor = fg;
-                }
-                else if (c is LinkLabel link)
-                {
-                    link.LinkColor = Color.DodgerBlue;
-                    link.BackColor = Color.Transparent;
+                    b.ForeColor = fg;
                 }
             }
-        }
-
-        private void SetLanguage(string lang)
-        {
-            bool isEng = (lang == "Tiếng Anh");
-
-            lblTaiKhoan.Text = isEng ? "Quang Hoa Bui" : "Quang Hòa Bùi";
-            btnTuyChon.Text = isEng ? "     Settings" : "     Tùy chọn";
-
-            lblTieuDeTuyChon.Text = isEng ? "Settings" : "Tùy chọn";
-            lblGiaoDien.Text = isEng ? "Appearance" : "Giao diện";
-            lblMoTaGiaoDien.Text = isEng ? "Customize appearance on this device." : "Tùy chỉnh giao diện Notion trên thiết bị của bạn.";
-            lblNgonNgu.Text = isEng ? "Language" : "Ngôn ngữ";
-            lblMoTaNgonNgu.Text = isEng ? "Change the language used in the interface." : "Thay đổi ngôn ngữ được sử dụng trong giao diện.";
-
-            lblTieuDeTaiKhoan.Text = isEng ? "My Account" : "Tài khoản";
-            lblTenUaDung.Text = isEng ? "Preferred name" : "Tên ưa dùng";
-            linkThemAnh.Text = isEng ? "Add photo" : "Thêm ảnh";
-            lblEmail.Text = "Email";
         }
     }
 }
