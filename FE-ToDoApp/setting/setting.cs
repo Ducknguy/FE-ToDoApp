@@ -9,7 +9,7 @@ namespace FE_ToDoApp.Setting
     public partial class setting : Form
     {
         UserDAO userDAO = new UserDAO();
-        int currentUserId = 1;
+        int currentUserId = 3; //ID trong SQL
         User currentUser;
 
         public setting()
@@ -18,7 +18,6 @@ namespace FE_ToDoApp.Setting
 
             SetTheme("Sáng");
             cmbGiaoDien.SelectedItem = "Sáng";
-
             ShowPanel(panelAccount);
 
             LoadUserData();
@@ -30,54 +29,55 @@ namespace FE_ToDoApp.Setting
         private void LoadUserData()
         {
             currentUser = userDAO.GetUserById(currentUserId);
+
             if (currentUser != null)
             {
-                txtTenHienThi.Text = currentUser.Name;
+                txtTenHienThi.Text = currentUser.Username;
                 txtEmail.Text = currentUser.Email;
-                lblSidebarName.Text = currentUser.Name;
+                lblSidebarName.Text = currentUser.Username;
 
+                //Image
                 if (currentUser.Avatar != null && currentUser.Avatar.Length > 0)
                 {
-                    panelAvatar.BackgroundImage = userDAO.ByteArrayToImage(currentUser.Avatar);
-                    lblAvatarText.Visible = false;
+                    try
+                    {
+                        panelAvatar.BackgroundImage = userDAO.ByteArrayToImage(currentUser.Avatar);
+                        lblAvatarText.Visible = false;
+                    }
+                    catch {}
                 }
+            }
+            else
+            {
+                MessageBox.Show("Không tìm thấy User!");
             }
         }
 
         private void btnLuuThongTin_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtTenHienThi.Text))
-            {
-                MessageBox.Show("Tên không được để trống!");
-                return;
-            }
-
             bool success = userDAO.UpdateUserInfo(currentUserId, txtTenHienThi.Text, txtEmail.Text);
             if (success)
             {
-                MessageBox.Show("Cập nhật thông tin thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Cập nhật thành công!");
                 lblSidebarName.Text = txtTenHienThi.Text;
+                currentUser.Username = txtTenHienThi.Text;
+                currentUser.Email = txtEmail.Text;
             }
             else
             {
-                MessageBox.Show("Cập nhật thất bại.");
+                MessageBox.Show("Lỗi khi lưu thông tin.");
             }
         }
 
         private void btnLuuMatKhau_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtPassCu.Text) || string.IsNullOrEmpty(txtPassMoi.Text) || string.IsNullOrEmpty(txtPassXacNhan.Text))
-            {
-                MessageBox.Show("Vui lòng nhập đầy đủ thông tin mật khẩu.");
-                return;
-            }
+            if (currentUser == null) return;
 
             if (txtPassCu.Text != currentUser.Password)
             {
-                MessageBox.Show("Mật khẩu cũ không chính xác!");
+                MessageBox.Show("Mật khẩu cũ không đúng!");
                 return;
             }
-
             if (txtPassMoi.Text != txtPassXacNhan.Text)
             {
                 MessageBox.Show("Mật khẩu xác nhận không khớp!");
@@ -88,14 +88,12 @@ namespace FE_ToDoApp.Setting
             if (success)
             {
                 MessageBox.Show("Đổi mật khẩu thành công!");
-                txtPassCu.Clear();
-                txtPassMoi.Clear();
-                txtPassXacNhan.Clear();
                 currentUser.Password = txtPassMoi.Text;
+                txtPassCu.Clear(); txtPassMoi.Clear(); txtPassXacNhan.Clear();
             }
             else
             {
-                MessageBox.Show("Đổi mật khẩu thất bại.");
+                MessageBox.Show("Lỗi đổi mật khẩu.");
             }
         }
 
@@ -110,11 +108,13 @@ namespace FE_ToDoApp.Setting
                     lblAvatarText.Visible = false;
 
                     byte[] imgBytes = userDAO.ImageToByteArray(img);
-                    userDAO.UpdateUserAvatar(currentUserId, imgBytes);
+                    bool success = userDAO.UpdateUserAvatar(currentUserId, imgBytes);
+
+                    if (!success) MessageBox.Show("Không lưu được ảnh vào Database!");
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Lỗi ảnh: " + ex.Message);
+                    MessageBox.Show("Lỗi: " + ex.Message);
                 }
             }
         }
@@ -129,8 +129,7 @@ namespace FE_ToDoApp.Setting
 
         private void cmbGiaoDien_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cmbGiaoDien.SelectedItem != null)
-                SetTheme(cmbGiaoDien.SelectedItem.ToString());
+            if (cmbGiaoDien.SelectedItem != null) SetTheme(cmbGiaoDien.SelectedItem.ToString());
         }
 
         private void SetTheme(string theme)
@@ -142,7 +141,6 @@ namespace FE_ToDoApp.Setting
             this.BackColor = bgColor;
             this.ForeColor = fgColor;
             sidebarPanel.BackColor = bgColor;
-
             ApplyThemeRecursive(this.Controls, bgColor, fgColor);
         }
 
@@ -151,7 +149,6 @@ namespace FE_ToDoApp.Setting
             foreach (Control c in controls)
             {
                 if (c.Controls.Count > 0) ApplyThemeRecursive(c.Controls, bg, fg);
-
                 if (c is GroupBox g) g.ForeColor = fg;
                 if (c is Label l) l.ForeColor = fg;
                 if (c is TextBox t)
@@ -159,10 +156,7 @@ namespace FE_ToDoApp.Setting
                     t.BackColor = (bg == Color.White) ? Color.WhiteSmoke : Color.FromArgb(60, 60, 60);
                     t.ForeColor = fg;
                 }
-                if (c is Button b && b.FlatStyle == FlatStyle.Flat)
-                {
-                    b.ForeColor = fg;
-                }
+                if (c is Button b && b.FlatStyle == FlatStyle.Flat) b.ForeColor = fg;
             }
         }
     }
