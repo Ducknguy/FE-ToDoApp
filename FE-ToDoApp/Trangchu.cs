@@ -32,8 +32,8 @@ namespace FE_ToDoApp
 
         private void btn_CaiDat(object sender, EventArgs e)
         {
-            setting setting = new setting();
-            setting.ShowDialog();
+           setting setting = new setting();
+              setting.ShowDialog();
         }
 
         private void btnChatbotAI_Click(object sender, EventArgs e)
