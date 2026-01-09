@@ -316,7 +316,6 @@
             btnTrash.Text = "🗑️ Thùng rác";
             btnTrash.TextAlign = ContentAlignment.MiddleLeft;
             btnTrash.UseVisualStyleBackColor = true;
-            btnTrash.Click += btnTrash_Click;
             // 
             // btnQuickAdd
             // 
