@@ -1,287 +1,164 @@
-﻿namespace FE_ToDoApp.NewFolder
+﻿namespace ChatbotAI_Form
 {
-    partial class ThungRac
+    partial class Thungrac
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
-            {
                 components.Dispose();
-            }
             base.Dispose(disposing);
         }
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ThungRac));
-            panel1 = new Panel();
-            panel9 = new Panel();
-            textBox1 = new TextBox();
-            panel8 = new Panel();
-            pictureBox1 = new PictureBox();
-            panel2 = new Panel();
-            panel5 = new Panel();
-            panel7 = new Panel();
-            label1 = new Label();
-            panel4 = new Panel();
-            btnKhongGianNhom = new Button();
-            btnTrong = new Button();
-            btnChinhSuaGanNhat = new Button();
-            panel3 = new Panel();
-            label3 = new Label();
-            panel1.SuspendLayout();
-            panel9.SuspendLayout();
-            panel8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
-            panel2.SuspendLayout();
-            panel5.SuspendLayout();
-            panel7.SuspendLayout();
-            panel4.SuspendLayout();
-            panel3.SuspendLayout();
+            txtSearch = new TextBox();
+            lblEmptyIcon = new Label();
+            lblEmptyText = new Label();
+            lblFooter = new Label();
+            pnlSearch = new Panel();
+            pnlFilter = new Panel();
+            chkTodo = new CheckBox();
+            chkWeekly = new CheckBox();
+            chkCalendar = new CheckBox();
+            pnlSearch.SuspendLayout();
+            pnlFilter.SuspendLayout();
             SuspendLayout();
             // 
-            // panel1
+            // txtSearch
             // 
-            panel1.Controls.Add(panel9);
-            panel1.Controls.Add(panel8);
-            panel1.Dock = DockStyle.Top;
-            panel1.Location = new Point(0, 0);
-            panel1.Margin = new Padding(3, 4, 3, 4);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(534, 60);
-            panel1.TabIndex = 0;
+            txtSearch.BackColor = Color.WhiteSmoke;
+            txtSearch.BorderStyle = BorderStyle.None;
+            txtSearch.Dock = DockStyle.Fill;
+            txtSearch.Font = new Font("Segoe UI", 15F);
+            txtSearch.ForeColor = Color.FromArgb(80, 80, 80);
+            txtSearch.Location = new Point(10, 7);
+            txtSearch.Multiline = true;
+            txtSearch.Name = "txtSearch";
+            txtSearch.PlaceholderText = "Tìm kiếm trang trong Thùng rác";
+            txtSearch.Size = new Size(376, 32);
+            txtSearch.TabIndex = 0;
             // 
-            // panel9
+            // lblEmptyIcon
             // 
-            panel9.Controls.Add(textBox1);
-            panel9.Dock = DockStyle.Fill;
-            panel9.Location = new Point(57, 0);
-            panel9.Margin = new Padding(3, 4, 3, 4);
-            panel9.Name = "panel9";
-            panel9.Size = new Size(477, 60);
-            panel9.TabIndex = 1;
+            lblEmptyIcon.Font = new Font("Segoe UI Emoji", 32F);
+            lblEmptyIcon.ForeColor = Color.Gray;
+            lblEmptyIcon.Location = new Point(0, 195);
+            lblEmptyIcon.Name = "lblEmptyIcon";
+            lblEmptyIcon.Size = new Size(420, 60);
+            lblEmptyIcon.TabIndex = 3;
+            lblEmptyIcon.Text = "🗑";
+            lblEmptyIcon.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // textBox1
+            // lblEmptyText
             // 
-            textBox1.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            textBox1.BackColor = Color.FromArgb(247, 247, 247);
-            textBox1.BorderStyle = BorderStyle.None;
-            textBox1.Font = new Font("Segoe UI", 13F);
-            textBox1.Location = new Point(0, 12);
-            textBox1.Margin = new Padding(11, 13, 11, 13);
-            textBox1.Multiline = true;
-            textBox1.Name = "textBox1";
-            textBox1.PlaceholderText = "    Tìm kiếm trang trong Thùng rác";
-            textBox1.Size = new Size(456, 37);
-            textBox1.TabIndex = 3;
+            lblEmptyText.Font = new Font("Segoe UI", 10F);
+            lblEmptyText.ForeColor = Color.Gray;
+            lblEmptyText.Location = new Point(0, 255);
+            lblEmptyText.Name = "lblEmptyText";
+            lblEmptyText.Size = new Size(420, 25);
+            lblEmptyText.TabIndex = 2;
+            lblEmptyText.Text = "Không có kết quả";
+            lblEmptyText.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // panel8
+            // lblFooter
             // 
-            panel8.Controls.Add(pictureBox1);
-            panel8.Dock = DockStyle.Left;
-            panel8.Location = new Point(0, 0);
-            panel8.Margin = new Padding(3, 4, 3, 4);
-            panel8.Name = "panel8";
-            panel8.Size = new Size(57, 60);
-            panel8.TabIndex = 0;
+            lblFooter.BackColor = Color.FromArgb(224, 224, 224);
+            lblFooter.Dock = DockStyle.Bottom;
+            lblFooter.Font = new Font("Segoe UI", 8.5F);
+            lblFooter.ForeColor = Color.Gray;
+            lblFooter.Location = new Point(0, 470);
+            lblFooter.Name = "lblFooter";
+            lblFooter.Size = new Size(420, 30);
+            lblFooter.TabIndex = 4;
+            lblFooter.Text = "Các trang trong Thùng rác quá 30 ngày sẽ tự động bị xóa";
+            lblFooter.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // pictureBox1
+            // pnlSearch
             // 
-            pictureBox1.Anchor = AnchorStyles.Right;
-            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(10, 12);
-            pictureBox1.Margin = new Padding(0);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(47, 37);
-            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBox1.TabIndex = 6;
-            pictureBox1.TabStop = false;
+            pnlSearch.BackColor = Color.WhiteSmoke;
+            pnlSearch.Controls.Add(txtSearch);
+            pnlSearch.Location = new Point(12, 12);
+            pnlSearch.Name = "pnlSearch";
+            pnlSearch.Padding = new Padding(10, 7, 10, 7);
+            pnlSearch.Size = new Size(396, 46);
+            pnlSearch.TabIndex = 1;
             // 
-            // panel2
+            // pnlFilter
             // 
-            panel2.Controls.Add(panel5);
-            panel2.Controls.Add(panel4);
-            panel2.Dock = DockStyle.Top;
-            panel2.Location = new Point(0, 60);
-            panel2.Margin = new Padding(3, 4, 3, 4);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(534, 452);
-            panel2.TabIndex = 1;
+            pnlFilter.BackColor = Color.WhiteSmoke;
+            pnlFilter.Controls.Add(chkTodo);
+            pnlFilter.Controls.Add(chkWeekly);
+            pnlFilter.Controls.Add(chkCalendar);
+            pnlFilter.Location = new Point(12, 64);
+            pnlFilter.Name = "pnlFilter";
+            pnlFilter.Size = new Size(396, 32);
+            pnlFilter.TabIndex = 0;
             // 
-            // panel5
+            // chkTodo
             // 
-            panel5.Controls.Add(panel7);
-            panel5.Dock = DockStyle.Fill;
-            panel5.Location = new Point(0, 63);
-            panel5.Margin = new Padding(3, 4, 3, 4);
-            panel5.Name = "panel5";
-            panel5.Size = new Size(534, 389);
-            panel5.TabIndex = 1;
+            chkTodo.AutoSize = true;
+            chkTodo.BackColor = Color.WhiteSmoke;
+            chkTodo.Location = new Point(10, 7);
+            chkTodo.Name = "chkTodo";
+            chkTodo.Size = new Size(53, 19);
+            chkTodo.TabIndex = 0;
+            chkTodo.Text = "Todo";
+            chkTodo.UseVisualStyleBackColor = false;
             // 
-            // panel7
+            // chkWeekly
             // 
-            panel7.Controls.Add(label1);
-            panel7.Dock = DockStyle.Fill;
-            panel7.Location = new Point(0, 0);
-            panel7.Margin = new Padding(3, 4, 3, 4);
-            panel7.Name = "panel7";
-            panel7.Size = new Size(534, 389);
-            panel7.TabIndex = 1;
+            chkWeekly.AutoSize = true;
+            chkWeekly.Location = new Point(156, 7);
+            chkWeekly.Name = "chkWeekly";
+            chkWeekly.Size = new Size(64, 19);
+            chkWeekly.TabIndex = 1;
+            chkWeekly.Text = "Weekly";
             // 
-            // label1
+            // chkCalendar
             // 
-            label1.Anchor = AnchorStyles.None;
-            label1.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
-            label1.Location = new Point(145, 143);
-            label1.Name = "label1";
-            label1.Size = new Size(249, 69);
-            label1.TabIndex = 1;
-            label1.Text = "   🗑️\r\nKhông có kết quả\r\n\r\n\r\n\r\n\r\n.\r\n";
-            label1.TextAlign = ContentAlignment.MiddleCenter;
+            chkCalendar.AutoSize = true;
+            chkCalendar.Location = new Point(313, 7);
+            chkCalendar.Name = "chkCalendar";
+            chkCalendar.Size = new Size(73, 19);
+            chkCalendar.TabIndex = 2;
+            chkCalendar.Text = "Calendar";
             // 
-            // panel4
+            // Thungrac
             // 
-            panel4.Controls.Add(btnKhongGianNhom);
-            panel4.Controls.Add(btnTrong);
-            panel4.Controls.Add(btnChinhSuaGanNhat);
-            panel4.Dock = DockStyle.Top;
-            panel4.Location = new Point(0, 0);
-            panel4.Margin = new Padding(3, 4, 3, 4);
-            panel4.Name = "panel4";
-            panel4.Size = new Size(534, 63);
-            panel4.TabIndex = 0;
-            // 
-            // btnKhongGianNhom
-            // 
-            btnKhongGianNhom.AutoSize = true;
-            btnKhongGianNhom.BackColor = Color.FromArgb(247, 247, 247);
-            btnKhongGianNhom.Cursor = Cursors.Hand;
-            btnKhongGianNhom.FlatAppearance.BorderSize = 0;
-            btnKhongGianNhom.FlatAppearance.MouseDownBackColor = Color.FromArgb(230, 230, 230);
-            btnKhongGianNhom.FlatAppearance.MouseOverBackColor = Color.FromArgb(224, 224, 224);
-            btnKhongGianNhom.FlatStyle = FlatStyle.Flat;
-            btnKhongGianNhom.Location = new Point(357, 9);
-            btnKhongGianNhom.Name = "btnKhongGianNhom";
-            btnKhongGianNhom.Size = new Size(214, 40);
-            btnKhongGianNhom.TabIndex = 5;
-            btnKhongGianNhom.Text = "🏢 Không gian nhóm 🔽";
-            btnKhongGianNhom.UseVisualStyleBackColor = false;
-            // 
-            // btnTrong
-            // 
-            btnTrong.AutoSize = true;
-            btnTrong.BackColor = Color.FromArgb(247, 247, 247);
-            btnTrong.Cursor = Cursors.Hand;
-            btnTrong.FlatAppearance.BorderSize = 0;
-            btnTrong.FlatAppearance.MouseDownBackColor = Color.FromArgb(230, 230, 230);
-            btnTrong.FlatAppearance.MouseOverBackColor = Color.FromArgb(224, 224, 224);
-            btnTrong.FlatStyle = FlatStyle.Flat;
-            btnTrong.Location = new Point(238, 9);
-            btnTrong.Name = "btnTrong";
-            btnTrong.Size = new Size(122, 40);
-            btnTrong.TabIndex = 4;
-            btnTrong.Text = "📁 Trong 🔽";
-            btnTrong.UseVisualStyleBackColor = false;
-            // 
-            // btnChinhSuaGanNhat
-            // 
-            btnChinhSuaGanNhat.AutoSize = true;
-            btnChinhSuaGanNhat.BackColor = Color.FromArgb(247, 247, 247);
-            btnChinhSuaGanNhat.Cursor = Cursors.Hand;
-            btnChinhSuaGanNhat.FlatAppearance.BorderSize = 0;
-            btnChinhSuaGanNhat.FlatAppearance.MouseDownBackColor = Color.FromArgb(230, 230, 230);
-            btnChinhSuaGanNhat.FlatAppearance.MouseOverBackColor = Color.FromArgb(224, 224, 224);
-            btnChinhSuaGanNhat.FlatStyle = FlatStyle.Flat;
-            btnChinhSuaGanNhat.Location = new Point(14, 9);
-            btnChinhSuaGanNhat.Name = "btnChinhSuaGanNhat";
-            btnChinhSuaGanNhat.Size = new Size(253, 40);
-            btnChinhSuaGanNhat.TabIndex = 3;
-            btnChinhSuaGanNhat.Text = "👤 Chỉnh sửa gần nhất bởi 🔽";
-            btnChinhSuaGanNhat.UseVisualStyleBackColor = false;
-            // 
-            // panel3
-            // 
-            panel3.Controls.Add(label3);
-            panel3.Dock = DockStyle.Fill;
-            panel3.Location = new Point(0, 512);
-            panel3.Margin = new Padding(3, 4, 3, 4);
-            panel3.Name = "panel3";
-            panel3.Size = new Size(534, 48);
-            panel3.TabIndex = 2;
-            // 
-            // label3
-            // 
-            label3.BackColor = Color.FromArgb(247, 247, 247);
-            label3.Dock = DockStyle.Bottom;
-            label3.Font = new Font("Segoe UI", 10F);
-            label3.Location = new Point(0, 1);
-            label3.Name = "label3";
-            label3.Size = new Size(534, 47);
-            label3.TabIndex = 0;
-            label3.Text = "Các trang trong Thùng rác quá 30 ngày sẽ tự động bị xóa";
-            label3.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // ThungRac
-            // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(534, 560);
-            Controls.Add(panel3);
-            Controls.Add(panel2);
-            Controls.Add(panel1);
-            FormBorderStyle = FormBorderStyle.FixedSingle;
-            Margin = new Padding(3, 4, 3, 4);
-            MaximizeBox = false;
-            MinimizeBox = false;
-            Name = "ThungRac";
-            StartPosition = FormStartPosition.CenterScreen;
-            Text = "ThungRac";
-            Load += ThungRac_Load;
-            panel1.ResumeLayout(false);
-            panel9.ResumeLayout(false);
-            panel9.PerformLayout();
-            panel8.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
-            panel2.ResumeLayout(false);
-            panel5.ResumeLayout(false);
-            panel7.ResumeLayout(false);
-            panel4.ResumeLayout(false);
-            panel4.PerformLayout();
-            panel3.ResumeLayout(false);
+            BackColor = Color.White;
+            ClientSize = new Size(420, 500);
+            Controls.Add(pnlFilter);
+            Controls.Add(pnlSearch);
+            Controls.Add(lblEmptyText);
+            Controls.Add(lblEmptyIcon);
+            Controls.Add(lblFooter);
+            FormBorderStyle = FormBorderStyle.None;
+            Name = "Thungrac";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Thungrac";
+            pnlSearch.ResumeLayout(false);
+            pnlSearch.PerformLayout();
+            pnlFilter.ResumeLayout(false);
+            pnlFilter.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private Panel panel1;
-        private Panel panel2;
-        private Panel panel5;
-        private Panel panel4;
-        private Panel panel3;
-        private Label label3;
-        private Panel panel7;
-        private Panel panel9;
-        private Panel panel8;
-        private PictureBox pictureBox1;
-        private TextBox textBox1;
-        private Label label1;
-        private Button btnKhongGianNhom;
-        private Button btnTrong;
-        private Button btnChinhSuaGanNhat;
+        private TextBox txtSearch;
+        private Label lblEmptyIcon;
+        private Label lblEmptyText;
+        private Label lblFooter;
+        private Panel pnlSearch;
+        private Panel pnlFilter;
+        private CheckBox chkTodo;
+        private CheckBox chkWeekly;
+        private CheckBox chkCalendar;
     }
 }
