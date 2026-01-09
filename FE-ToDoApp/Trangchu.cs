@@ -66,8 +66,8 @@ namespace FE_ToDoApp
 
         private void btn_CaiDat(object sender, EventArgs e)
         {
-            setting setting = new setting();
-            setting.ShowDialog();
+           setting setting = new setting();
+              setting.ShowDialog();
         }
 
         private void btnChatbotAI_Click(object sender, EventArgs e)
@@ -129,6 +129,24 @@ namespace FE_ToDoApp
 
                 this.Close();
             }
+        }
+
+        private void btnTasks_Click(object sender, EventArgs e)
+        {
+            mainPanel.Controls.Clear();
+            FE_ToDoApp.Lich_Trinh.TaskItem _task = new FE_ToDoApp.Lich_Trinh.TaskItem();
+            _task.Dock = DockStyle.Fill;
+            mainPanel.Controls.Add(_task);
+            _task.Show();
+        }
+
+        private void btnWeekly_Click(object sender, EventArgs e)
+        {
+            mainPanel.Controls.Clear();
+            FE_ToDoApp.WeekList.week_group _task = new FE_ToDoApp.WeekList.week_group();
+            _task.Dock = DockStyle.Fill;
+            mainPanel.Controls.Add(_task);
+            _task.Show();
         }
     }
 }

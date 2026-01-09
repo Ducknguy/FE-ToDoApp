@@ -68,7 +68,7 @@
             // 
             // sidebarPanel
             // 
-            sidebarPanel.BackColor = Color.White;
+            sidebarPanel.BackColor = Color.FromArgb(243, 242, 241);
             sidebarPanel.Controls.Add(panelGroupsContainer);
             sidebarPanel.Controls.Add(panelNavigation);
             sidebarPanel.Controls.Add(panelFooter);
@@ -206,6 +206,7 @@
             btnWeekly.Text = "📅 Weekly";
             btnWeekly.TextAlign = ContentAlignment.MiddleLeft;
             btnWeekly.UseVisualStyleBackColor = true;
+            btnWeekly.Click += btnWeekly_Click;
             // 
             // btnTasks
             // 
@@ -222,6 +223,7 @@
             btnTasks.Text = "☑️ Tasks";
             btnTasks.TextAlign = ContentAlignment.MiddleLeft;
             btnTasks.UseVisualStyleBackColor = true;
+            btnTasks.Click += btnTasks_Click;
             // 
             // btnInbox
             // 
@@ -298,7 +300,6 @@
             btn_logout.Text = "🗑️ Đăng xuất";
             btn_logout.TextAlign = ContentAlignment.MiddleLeft;
             btn_logout.UseVisualStyleBackColor = true;
-            btn_logout.Click += btn_logout_Click;
             // 
             // btnTrash
             // 

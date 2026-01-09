@@ -12,6 +12,7 @@
 
         #region Windows Form Designer generated code
 
+
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
@@ -20,37 +21,39 @@
             btnEdit = new Button();
             btnMode = new Button();
             btnHide = new Button();
+            panelDropdownHistory = new Panel();
+            flowHistory = new FlowLayoutPanel();
+            panelSessionItem = new Panel();
+            lblSessionTitle = new Label();
+            lblSelected = new Label();
+            btnDeleteSession = new Button();
+            lblToday = new Label();
             panelHeader = new Panel();
             lblGreeting = new Label();
             lblAvatar = new Label();
             panelBody = new Panel();
+            flowMessages = new FlowLayoutPanel();
             flowActions = new FlowLayoutPanel();
-            btnAction1 = new Panel();
-            lblText1 = new Label();
-            lblIcon1 = new Label();
-            btnAction2 = new Panel();
-            lblText2 = new Label();
-            lblIcon2 = new Label();
-            btnAction4 = new Panel();
-            lblTagNew = new Label();
-            lblText4 = new Label();
-            lblIcon4 = new Label();
+            btnAction1 = new Button();
+            btnAction2 = new Button();
+            btnAction3 = new Button();
             panelFooter = new Panel();
             panelInputContainer = new Panel();
             txtInput = new TextBox();
+            flowFileAttachments = new FlowLayoutPanel();
             panelInputTools = new Panel();
             btnSend = new Button();
-            lblToolSource = new Label();
-            lblToolAuto = new Label();
-            lblContextTag = new Label();
+            btnSource = new Button();
+            btnAuto = new Button();
+            btnAttachment = new Button();
             toolTip1 = new ToolTip(components);
             panelTitleBar.SuspendLayout();
+            panelDropdownHistory.SuspendLayout();
+            flowHistory.SuspendLayout();
+            panelSessionItem.SuspendLayout();
             panelHeader.SuspendLayout();
             panelBody.SuspendLayout();
             flowActions.SuspendLayout();
-            btnAction1.SuspendLayout();
-            btnAction2.SuspendLayout();
-            btnAction4.SuspendLayout();
             panelFooter.SuspendLayout();
             panelInputContainer.SuspendLayout();
             panelInputTools.SuspendLayout();
@@ -65,11 +68,11 @@
             panelTitleBar.Controls.Add(btnHide);
             panelTitleBar.Dock = DockStyle.Top;
             panelTitleBar.Location = new Point(0, 0);
-            panelTitleBar.Margin = new Padding(4);
             panelTitleBar.Name = "panelTitleBar";
-            panelTitleBar.Padding = new Padding(12, 0, 6, 0);
-            panelTitleBar.Size = new Size(688, 50);
+            panelTitleBar.Padding = new Padding(10, 0, 5, 0);
+            panelTitleBar.Size = new Size(550, 40);
             panelTitleBar.TabIndex = 0;
+            panelTitleBar.MouseDown += ChatbotAI_MouseDown;
             // 
             // btnTitleLeft
             // 
@@ -77,69 +80,164 @@
             btnTitleLeft.Cursor = Cursors.Hand;
             btnTitleLeft.Dock = DockStyle.Left;
             btnTitleLeft.FlatAppearance.BorderSize = 0;
-            btnTitleLeft.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            btnTitleLeft.FlatAppearance.MouseDownBackColor = Color.FromArgb(225, 225, 225);
+            btnTitleLeft.FlatAppearance.MouseOverBackColor = Color.FromArgb(240, 240, 240);
             btnTitleLeft.FlatStyle = FlatStyle.Flat;
             btnTitleLeft.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
             btnTitleLeft.ForeColor = Color.FromArgb(55, 53, 47);
-            btnTitleLeft.Location = new Point(12, 0);
-            btnTitleLeft.Margin = new Padding(4);
+            btnTitleLeft.Location = new Point(10, 0);
             btnTitleLeft.Name = "btnTitleLeft";
-            btnTitleLeft.Size = new Size(302, 50);
+            btnTitleLeft.Size = new Size(200, 40);
             btnTitleLeft.TabIndex = 0;
-            btnTitleLeft.Text = "Cuộc trò chuyện mới với AI ⌄";
-            btnTitleLeft.TextAlign = ContentAlignment.MiddleLeft;
+            btnTitleLeft.Text = "Lịch sử trò chuyện với AI";
             btnTitleLeft.UseVisualStyleBackColor = true;
+            btnTitleLeft.Click += btnTitleLeft_Click;
             // 
             // btnEdit
             // 
             btnEdit.Cursor = Cursors.Hand;
             btnEdit.Dock = DockStyle.Right;
             btnEdit.FlatAppearance.BorderSize = 0;
-            btnEdit.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            btnEdit.FlatAppearance.MouseOverBackColor = Color.FromArgb(240, 240, 240);
             btnEdit.FlatStyle = FlatStyle.Flat;
             btnEdit.Font = new Font("Segoe UI Symbol", 10F);
             btnEdit.ForeColor = Color.FromArgb(64, 64, 64);
-            btnEdit.Location = new Point(568, 0);
-            btnEdit.Margin = new Padding(4);
+            btnEdit.Location = new Point(431, 0);
             btnEdit.Name = "btnEdit";
-            btnEdit.Size = new Size(38, 50);
+            btnEdit.Size = new Size(39, 40);
             btnEdit.TabIndex = 1;
             btnEdit.Text = "📝";
+            toolTip1.SetToolTip(btnEdit, "Tạo đoạn chat mới");
             btnEdit.UseVisualStyleBackColor = true;
+            btnEdit.Click += btnEdit_Click;
             // 
             // btnMode
             // 
             btnMode.Cursor = Cursors.Hand;
             btnMode.Dock = DockStyle.Right;
             btnMode.FlatAppearance.BorderSize = 0;
-            btnMode.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            btnMode.FlatAppearance.MouseOverBackColor = Color.FromArgb(240, 240, 240);
             btnMode.FlatStyle = FlatStyle.Flat;
             btnMode.Font = new Font("Segoe UI Symbol", 10F);
             btnMode.ForeColor = Color.FromArgb(64, 64, 64);
-            btnMode.Location = new Point(606, 0);
-            btnMode.Margin = new Padding(4);
+            btnMode.Location = new Point(470, 0);
             btnMode.Name = "btnMode";
-            btnMode.Size = new Size(38, 50);
+            btnMode.Size = new Size(38, 40);
             btnMode.TabIndex = 2;
             btnMode.Text = "🗖";
+            toolTip1.SetToolTip(btnMode, "Phóng to");
             btnMode.UseVisualStyleBackColor = true;
+            btnMode.Click += btnMode_Click;
             // 
             // btnHide
             // 
             btnHide.Cursor = Cursors.Hand;
             btnHide.Dock = DockStyle.Right;
             btnHide.FlatAppearance.BorderSize = 0;
-            btnHide.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            btnHide.FlatAppearance.MouseDownBackColor = Color.FromArgb(241, 112, 122);
+            btnHide.FlatAppearance.MouseOverBackColor = Color.FromArgb(232, 17, 35);
             btnHide.FlatStyle = FlatStyle.Flat;
             btnHide.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             btnHide.ForeColor = Color.FromArgb(64, 64, 64);
-            btnHide.Location = new Point(644, 0);
-            btnHide.Margin = new Padding(4);
+            btnHide.Location = new Point(508, 0);
             btnHide.Name = "btnHide";
-            btnHide.Size = new Size(38, 50);
+            btnHide.Size = new Size(37, 40);
             btnHide.TabIndex = 3;
             btnHide.Text = "─";
+            toolTip1.SetToolTip(btnHide, "Ẩn ");
             btnHide.UseVisualStyleBackColor = true;
+            btnHide.Click += btnHide_Click;
+            // 
+            // panelDropdownHistory
+            // 
+            panelDropdownHistory.BackColor = SystemColors.Control;
+            panelDropdownHistory.Controls.Add(flowHistory);
+            panelDropdownHistory.Controls.Add(lblToday);
+            panelDropdownHistory.Location = new Point(23, 30);
+            panelDropdownHistory.Name = "panelDropdownHistory";
+            panelDropdownHistory.Size = new Size(320, 300);
+            panelDropdownHistory.TabIndex = 2;
+            panelDropdownHistory.Visible = false;
+            // 
+            // flowHistory
+            // 
+            flowHistory.AutoScroll = true;
+            flowHistory.BackColor = SystemColors.Control;
+            flowHistory.Controls.Add(panelSessionItem);
+            flowHistory.Dock = DockStyle.Fill;
+            flowHistory.FlowDirection = FlowDirection.TopDown;
+            flowHistory.Location = new Point(0, 15);
+            flowHistory.Name = "flowHistory";
+            flowHistory.Size = new Size(320, 285);
+            flowHistory.TabIndex = 1;
+            flowHistory.WrapContents = false;
+            // 
+            // panelSessionItem
+            // 
+            panelSessionItem.BackColor = Color.White;
+            panelSessionItem.Controls.Add(lblSessionTitle);
+            panelSessionItem.Controls.Add(lblSelected);
+            panelSessionItem.Controls.Add(btnDeleteSession);
+            panelSessionItem.Cursor = Cursors.Hand;
+            panelSessionItem.Location = new Point(2, 4);
+            panelSessionItem.Margin = new Padding(2, 4, 8, 0);
+            panelSessionItem.Name = "panelSessionItem";
+            panelSessionItem.Size = new Size(287, 46);
+            panelSessionItem.TabIndex = 0;
+            panelSessionItem.Visible = false;
+            // 
+            // lblSessionTitle
+            // 
+            lblSessionTitle.AutoEllipsis = true;
+            lblSessionTitle.Dock = DockStyle.Fill;
+            lblSessionTitle.Font = new Font("Segoe UI", 9.5F);
+            lblSessionTitle.Location = new Point(26, 0);
+            lblSessionTitle.Name = "lblSessionTitle";
+            lblSessionTitle.Padding = new Padding(12, 0, 0, 0);
+            lblSessionTitle.Size = new Size(229, 46);
+            lblSessionTitle.TabIndex = 0;
+            lblSessionTitle.Text = "Session title";
+            lblSessionTitle.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // lblSelected
+            // 
+            lblSelected.Dock = DockStyle.Left;
+            lblSelected.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblSelected.ForeColor = Color.Green;
+            lblSelected.Location = new Point(0, 0);
+            lblSelected.Name = "lblSelected";
+            lblSelected.Size = new Size(26, 46);
+            lblSelected.TabIndex = 1;
+            lblSelected.Text = "✓";
+            lblSelected.TextAlign = ContentAlignment.MiddleCenter;
+            lblSelected.Visible = false;
+            // 
+            // btnDeleteSession
+            // 
+            btnDeleteSession.Dock = DockStyle.Right;
+            btnDeleteSession.FlatAppearance.BorderSize = 0;
+            btnDeleteSession.FlatStyle = FlatStyle.Flat;
+            btnDeleteSession.Font = new Font("Segoe UI Symbol", 9F);
+            btnDeleteSession.Location = new Point(255, 0);
+            btnDeleteSession.Name = "btnDeleteSession";
+            btnDeleteSession.Size = new Size(32, 46);
+            btnDeleteSession.TabIndex = 2;
+            btnDeleteSession.Text = "🗑";
+            toolTip1.SetToolTip(btnDeleteSession, "Xóa lịch sử này");
+            btnDeleteSession.UseVisualStyleBackColor = true;
+            // 
+            // lblToday
+            // 
+            lblToday.AutoSize = true;
+            lblToday.BackColor = SystemColors.ControlLightLight;
+            lblToday.Dock = DockStyle.Top;
+            lblToday.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblToday.Location = new Point(0, 0);
+            lblToday.Name = "lblToday";
+            lblToday.Size = new Size(56, 15);
+            lblToday.TabIndex = 0;
+            lblToday.Text = "Hôm nay";
+            lblToday.Visible = false;
             // 
             // panelHeader
             // 
@@ -147,23 +245,22 @@
             panelHeader.Controls.Add(lblGreeting);
             panelHeader.Controls.Add(lblAvatar);
             panelHeader.Dock = DockStyle.Top;
-            panelHeader.Location = new Point(0, 50);
-            panelHeader.Margin = new Padding(4);
+            panelHeader.Location = new Point(0, 40);
             panelHeader.Name = "panelHeader";
-            panelHeader.Padding = new Padding(25, 12, 25, 0);
-            panelHeader.Size = new Size(688, 138);
+            panelHeader.Padding = new Padding(20, 10, 20, 0);
+            panelHeader.Size = new Size(550, 110);
             panelHeader.TabIndex = 1;
+            panelHeader.MouseDown += ChatbotAI_MouseDown;
             // 
             // lblGreeting
             // 
             lblGreeting.AutoSize = true;
             lblGreeting.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
             lblGreeting.ForeColor = Color.FromArgb(55, 53, 47);
-            lblGreeting.Location = new Point(25, 88);
-            lblGreeting.Margin = new Padding(4, 0, 4, 0);
-            lblGreeting.MaximumSize = new Size(625, 0);
+            lblGreeting.Location = new Point(20, 70);
+            lblGreeting.MaximumSize = new Size(500, 0);
             lblGreeting.Name = "lblGreeting";
-            lblGreeting.Size = new Size(599, 41);
+            lblGreeting.Size = new Size(486, 32);
             lblGreeting.TabIndex = 1;
             lblGreeting.Text = "Xin hỏi hoàng thượng muốn thần làm gì?";
             // 
@@ -171,207 +268,165 @@
             // 
             lblAvatar.AutoSize = true;
             lblAvatar.Font = new Font("Segoe UI Emoji", 26F);
-            lblAvatar.Location = new Point(29, 12);
-            lblAvatar.Margin = new Padding(4, 0, 4, 0);
+            lblAvatar.Location = new Point(23, 10);
             lblAvatar.Name = "lblAvatar";
-            lblAvatar.Size = new Size(85, 58);
+            lblAvatar.Size = new Size(68, 47);
             lblAvatar.TabIndex = 0;
             lblAvatar.Text = "🤖";
             // 
             // panelBody
             // 
             panelBody.BackColor = Color.White;
+            panelBody.Controls.Add(flowMessages);
             panelBody.Controls.Add(flowActions);
             panelBody.Dock = DockStyle.Fill;
-            panelBody.Location = new Point(0, 188);
-            panelBody.Margin = new Padding(4);
+            panelBody.Location = new Point(0, 150);
             panelBody.Name = "panelBody";
-            panelBody.Padding = new Padding(25);
-            panelBody.Size = new Size(688, 387);
+            panelBody.Size = new Size(550, 260);
             panelBody.TabIndex = 2;
+            panelBody.MouseDown += ChatbotAI_MouseDown;
+            // 
+            // flowMessages
+            // 
+            flowMessages.AutoScroll = true;
+            flowMessages.BackColor = Color.White;
+            flowMessages.Dock = DockStyle.Fill;
+            flowMessages.FlowDirection = FlowDirection.TopDown;
+            flowMessages.Location = new Point(0, 0);
+            flowMessages.Margin = new Padding(0);
+            flowMessages.Name = "flowMessages";
+            flowMessages.Padding = new Padding(20, 10, 20, 20);
+            flowMessages.Size = new Size(550, 260);
+            flowMessages.TabIndex = 1;
+            flowMessages.Visible = false;
+            flowMessages.WrapContents = false;
+            flowMessages.MouseDown += ChatbotAI_MouseDown;
             // 
             // flowActions
             // 
             flowActions.Controls.Add(btnAction1);
             flowActions.Controls.Add(btnAction2);
-            flowActions.Controls.Add(btnAction4);
+            flowActions.Controls.Add(btnAction3);
             flowActions.Dock = DockStyle.Fill;
             flowActions.FlowDirection = FlowDirection.TopDown;
-            flowActions.Location = new Point(25, 25);
-            flowActions.Margin = new Padding(4);
+            flowActions.Location = new Point(0, 0);
+            flowActions.Margin = new Padding(0);
             flowActions.Name = "flowActions";
-            flowActions.Size = new Size(638, 337);
+            flowActions.Size = new Size(550, 260);
             flowActions.TabIndex = 0;
             // 
             // btnAction1
             // 
-            btnAction1.Controls.Add(lblText1);
-            btnAction1.Controls.Add(lblIcon1);
             btnAction1.Cursor = Cursors.Hand;
+            btnAction1.FlatAppearance.BorderSize = 0;
+            btnAction1.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
+            btnAction1.FlatStyle = FlatStyle.Flat;
+            btnAction1.Font = new Font("Segoe UI", 11F);
             btnAction1.Location = new Point(0, 0);
-            btnAction1.Margin = new Padding(0, 0, 0, 10);
+            btnAction1.Margin = new Padding(0, 0, 0, 8);
             btnAction1.Name = "btnAction1";
-            btnAction1.Size = new Size(638, 56);
+            btnAction1.Size = new Size(510, 45);
             btnAction1.TabIndex = 0;
-            // 
-            // lblText1
-            // 
-            lblText1.Dock = DockStyle.Fill;
-            lblText1.Font = new Font("Segoe UI", 11F);
-            lblText1.Location = new Point(56, 0);
-            lblText1.Margin = new Padding(4, 0, 4, 0);
-            lblText1.Name = "lblText1";
-            lblText1.Size = new Size(582, 56);
-            lblText1.TabIndex = 1;
-            lblText1.Text = "Tìm kiếm bất cứ điều gì";
-            lblText1.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // lblIcon1
-            // 
-            lblIcon1.Dock = DockStyle.Left;
-            lblIcon1.Font = new Font("Segoe UI Emoji", 14F);
-            lblIcon1.Location = new Point(0, 0);
-            lblIcon1.Margin = new Padding(4, 0, 4, 0);
-            lblIcon1.Name = "lblIcon1";
-            lblIcon1.Size = new Size(56, 56);
-            lblIcon1.TabIndex = 0;
-            lblIcon1.Text = "🔍";
-            lblIcon1.TextAlign = ContentAlignment.MiddleCenter;
+            btnAction1.Text = "  🔍   Dịch trang này.";
+            btnAction1.TextAlign = ContentAlignment.MiddleLeft;
+            btnAction1.UseVisualStyleBackColor = true;
+            btnAction1.Click += btnAction1_Click;
+            btnAction1.MouseDown += ChatbotAI_MouseDown;
             // 
             // btnAction2
             // 
-            btnAction2.Controls.Add(lblText2);
-            btnAction2.Controls.Add(lblIcon2);
             btnAction2.Cursor = Cursors.Hand;
-            btnAction2.Location = new Point(0, 66);
-            btnAction2.Margin = new Padding(0, 0, 0, 10);
+            btnAction2.FlatAppearance.BorderSize = 0;
+            btnAction2.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
+            btnAction2.FlatStyle = FlatStyle.Flat;
+            btnAction2.Font = new Font("Segoe UI", 11F);
+            btnAction2.Location = new Point(0, 53);
+            btnAction2.Margin = new Padding(0, 0, 0, 8);
             btnAction2.Name = "btnAction2";
-            btnAction2.Size = new Size(638, 56);
+            btnAction2.Size = new Size(510, 45);
             btnAction2.TabIndex = 1;
+            btnAction2.Text = "  📝   Tóm tắt trang này.";
+            btnAction2.TextAlign = ContentAlignment.MiddleLeft;
+            btnAction2.UseVisualStyleBackColor = true;
+            btnAction2.Click += btnAction2_Click;
+            btnAction2.MouseDown += ChatbotAI_MouseDown;
             // 
-            // lblText2
+            // btnAction3
             // 
-            lblText2.Dock = DockStyle.Fill;
-            lblText2.Font = new Font("Segoe UI", 11F);
-            lblText2.Location = new Point(56, 0);
-            lblText2.Margin = new Padding(4, 0, 4, 0);
-            lblText2.Name = "lblText2";
-            lblText2.Size = new Size(582, 56);
-            lblText2.TabIndex = 1;
-            lblText2.Text = "Soạn chương trình họp";
-            lblText2.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // lblIcon2
-            // 
-            lblIcon2.Dock = DockStyle.Left;
-            lblIcon2.Font = new Font("Segoe UI Emoji", 14F);
-            lblIcon2.Location = new Point(0, 0);
-            lblIcon2.Margin = new Padding(4, 0, 4, 0);
-            lblIcon2.Name = "lblIcon2";
-            lblIcon2.Size = new Size(56, 56);
-            lblIcon2.TabIndex = 0;
-            lblIcon2.Text = "📝";
-            lblIcon2.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // btnAction4
-            // 
-            btnAction4.Controls.Add(lblTagNew);
-            btnAction4.Controls.Add(lblText4);
-            btnAction4.Controls.Add(lblIcon4);
-            btnAction4.Cursor = Cursors.Hand;
-            btnAction4.Location = new Point(0, 132);
-            btnAction4.Margin = new Padding(0, 0, 0, 10);
-            btnAction4.Name = "btnAction4";
-            btnAction4.Size = new Size(638, 56);
-            btnAction4.TabIndex = 3;
-            // 
-            // lblTagNew
-            // 
-            lblTagNew.AutoSize = true;
-            lblTagNew.BackColor = Color.FromArgb(237, 246, 255);
-            lblTagNew.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
-            lblTagNew.ForeColor = Color.FromArgb(35, 131, 226);
-            lblTagNew.Location = new Point(338, 19);
-            lblTagNew.Margin = new Padding(4, 0, 4, 0);
-            lblTagNew.Name = "lblTagNew";
-            lblTagNew.Padding = new Padding(5, 2, 5, 2);
-            lblTagNew.Size = new Size(45, 23);
-            lblTagNew.TabIndex = 2;
-            lblTagNew.Text = "Mới";
-            // 
-            // lblText4
-            // 
-            lblText4.Dock = DockStyle.Fill;
-            lblText4.Font = new Font("Segoe UI", 11F);
-            lblText4.Location = new Point(56, 0);
-            lblText4.Margin = new Padding(4, 0, 4, 0);
-            lblText4.Name = "lblText4";
-            lblText4.Size = new Size(582, 56);
-            lblText4.TabIndex = 1;
-            lblText4.Text = "Tạo trình theo dõi nhiệm vụ";
-            lblText4.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // lblIcon4
-            // 
-            lblIcon4.Dock = DockStyle.Left;
-            lblIcon4.Font = new Font("Segoe UI Emoji", 14F);
-            lblIcon4.Location = new Point(0, 0);
-            lblIcon4.Margin = new Padding(4, 0, 4, 0);
-            lblIcon4.Name = "lblIcon4";
-            lblIcon4.Size = new Size(56, 56);
-            lblIcon4.TabIndex = 0;
-            lblIcon4.Text = "✅";
-            lblIcon4.TextAlign = ContentAlignment.MiddleCenter;
+            btnAction3.Cursor = Cursors.Hand;
+            btnAction3.FlatAppearance.BorderSize = 0;
+            btnAction3.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
+            btnAction3.FlatStyle = FlatStyle.Flat;
+            btnAction3.Font = new Font("Segoe UI", 11F);
+            btnAction3.Location = new Point(0, 106);
+            btnAction3.Margin = new Padding(0, 0, 0, 8);
+            btnAction3.Name = "btnAction3";
+            btnAction3.Size = new Size(510, 45);
+            btnAction3.TabIndex = 2;
+            btnAction3.Text = "  ✅   Tạo bảng theo dõi nhiệm vụ.";
+            btnAction3.TextAlign = ContentAlignment.MiddleLeft;
+            btnAction3.UseVisualStyleBackColor = true;
+            btnAction3.Click += btnAction3_Click;
+            btnAction3.MouseDown += ChatbotAI_MouseDown;
             // 
             // panelFooter
             // 
             panelFooter.BackColor = Color.White;
             panelFooter.Controls.Add(panelInputContainer);
             panelFooter.Dock = DockStyle.Bottom;
-            panelFooter.Location = new Point(0, 575);
-            panelFooter.Margin = new Padding(4);
+            panelFooter.Location = new Point(0, 410);
             panelFooter.Name = "panelFooter";
-            panelFooter.Padding = new Padding(25);
-            panelFooter.Size = new Size(688, 175);
+            panelFooter.Padding = new Padding(20);
+            panelFooter.Size = new Size(550, 190);
             panelFooter.TabIndex = 3;
             // 
             // panelInputContainer
             // 
             panelInputContainer.BackColor = Color.White;
             panelInputContainer.Controls.Add(txtInput);
+            panelInputContainer.Controls.Add(flowFileAttachments);
             panelInputContainer.Controls.Add(panelInputTools);
-            panelInputContainer.Controls.Add(lblContextTag);
-            panelInputContainer.Dock = DockStyle.Fill;
-            panelInputContainer.Location = new Point(25, 25);
-            panelInputContainer.Margin = new Padding(4);
+            panelInputContainer.Location = new Point(10, 6);
             panelInputContainer.Name = "panelInputContainer";
-            panelInputContainer.Padding = new Padding(15);
-            panelInputContainer.Size = new Size(638, 125);
+            panelInputContainer.Padding = new Padding(12);
+            panelInputContainer.Size = new Size(535, 172);
             panelInputContainer.TabIndex = 0;
+            panelInputContainer.MouseDown += ChatbotAI_MouseDown;
             // 
             // txtInput
             // 
             txtInput.BorderStyle = BorderStyle.None;
             txtInput.Dock = DockStyle.Fill;
             txtInput.Font = new Font("Segoe UI", 11F);
-            txtInput.Location = new Point(15, 36);
-            txtInput.Margin = new Padding(4);
+            txtInput.Location = new Point(12, 17);
             txtInput.Multiline = true;
             txtInput.Name = "txtInput";
-            txtInput.Size = new Size(608, 30);
+            txtInput.PlaceholderText = "Hỏi AI...";
+            txtInput.Size = new Size(511, 108);
             txtInput.TabIndex = 1;
-            txtInput.Text = "Hỏi AI...";
+            txtInput.MouseDown += ChatbotAI_MouseDown;
+            // 
+            // flowFileAttachments
+            // 
+            flowFileAttachments.AutoSize = true;
+            flowFileAttachments.BackColor = Color.Transparent;
+            flowFileAttachments.Dock = DockStyle.Top;
+            flowFileAttachments.Location = new Point(12, 12);
+            flowFileAttachments.Name = "flowFileAttachments";
+            flowFileAttachments.Padding = new Padding(5, 5, 5, 0);
+            flowFileAttachments.Size = new Size(511, 5);
+            flowFileAttachments.TabIndex = 0;
             // 
             // panelInputTools
             // 
             panelInputTools.Controls.Add(btnSend);
-            panelInputTools.Controls.Add(lblToolSource);
-            panelInputTools.Controls.Add(lblToolAuto);
+            panelInputTools.Controls.Add(btnSource);
+            panelInputTools.Controls.Add(btnAuto);
+            panelInputTools.Controls.Add(btnAttachment);
             panelInputTools.Dock = DockStyle.Bottom;
-            panelInputTools.Location = new Point(15, 66);
-            panelInputTools.Margin = new Padding(4);
+            panelInputTools.Location = new Point(12, 125);
             panelInputTools.Name = "panelInputTools";
-            panelInputTools.Size = new Size(608, 44);
+            panelInputTools.Size = new Size(511, 35);
             panelInputTools.TabIndex = 2;
             // 
             // btnSend
@@ -381,76 +436,78 @@
             btnSend.Dock = DockStyle.Right;
             btnSend.FlatAppearance.BorderSize = 0;
             btnSend.FlatStyle = FlatStyle.Flat;
-            btnSend.Location = new Point(564, 0);
-            btnSend.Margin = new Padding(4);
+            btnSend.Location = new Point(476, 0);
             btnSend.Name = "btnSend";
-            btnSend.Size = new Size(44, 44);
+            btnSend.Size = new Size(35, 35);
             btnSend.TabIndex = 2;
             btnSend.Text = "⬆";
+            toolTip1.SetToolTip(btnSend, "Gửi tin nhắn");
             btnSend.UseVisualStyleBackColor = false;
+            btnSend.Click += btnSend_Click;
+            btnSend.MouseHover += btnSend_Click;
             // 
-            // lblToolSource
+            // btnSource
             // 
-            lblToolSource.AutoSize = true;
-            lblToolSource.Dock = DockStyle.Left;
-            lblToolSource.ForeColor = Color.Gray;
-            lblToolSource.Location = new Point(109, 0);
-            lblToolSource.Margin = new Padding(4, 0, 4, 0);
-            lblToolSource.Name = "lblToolSource";
-            lblToolSource.Padding = new Padding(0, 10, 19, 0);
-            lblToolSource.Size = new Size(98, 30);
-            lblToolSource.TabIndex = 1;
-            lblToolSource.Text = "🌐 Nguồn";
+            btnSource.AutoSize = true;
+            btnSource.Dock = DockStyle.Left;
+            btnSource.FlatAppearance.BorderSize = 0;
+            btnSource.FlatStyle = FlatStyle.Flat;
+            btnSource.Location = new Point(110, 0);
+            btnSource.Name = "btnSource";
+            btnSource.Size = new Size(75, 35);
+            btnSource.TabIndex = 3;
+            btnSource.Text = "🌐 Nguồn";
             // 
-            // lblToolAuto
+            // btnAuto
             // 
-            lblToolAuto.AutoSize = true;
-            lblToolAuto.Dock = DockStyle.Left;
-            lblToolAuto.ForeColor = Color.Gray;
-            lblToolAuto.Location = new Point(0, 0);
-            lblToolAuto.Margin = new Padding(4, 0, 4, 0);
-            lblToolAuto.Name = "lblToolAuto";
-            lblToolAuto.Padding = new Padding(0, 10, 19, 0);
-            lblToolAuto.Size = new Size(109, 30);
-            lblToolAuto.TabIndex = 0;
-            lblToolAuto.Text = "📎 Tự động";
+            btnAuto.AutoSize = true;
+            btnAuto.Dock = DockStyle.Left;
+            btnAuto.FlatAppearance.BorderSize = 0;
+            btnAuto.FlatStyle = FlatStyle.Flat;
+            btnAuto.Location = new Point(35, 0);
+            btnAuto.Name = "btnAuto";
+            btnAuto.Size = new Size(75, 35);
+            btnAuto.TabIndex = 4;
+            btnAuto.Text = "Tự động";
             // 
-            // lblContextTag
+            // btnAttachment
             // 
-            lblContextTag.Dock = DockStyle.Top;
-            lblContextTag.ForeColor = Color.Gray;
-            lblContextTag.Location = new Point(15, 15);
-            lblContextTag.Margin = new Padding(4, 0, 4, 0);
-            lblContextTag.Name = "lblContextTag";
-            lblContextTag.Padding = new Padding(0, 0, 0, 6);
-            lblContextTag.Size = new Size(608, 21);
-            lblContextTag.TabIndex = 0;
-            lblContextTag.Text = "📄 Trang mới";
+            btnAttachment.Dock = DockStyle.Left;
+            btnAttachment.FlatAppearance.BorderSize = 0;
+            btnAttachment.FlatStyle = FlatStyle.Flat;
+            btnAttachment.Location = new Point(0, 0);
+            btnAttachment.Name = "btnAttachment";
+            btnAttachment.Size = new Size(35, 35);
+            btnAttachment.TabIndex = 5;
+            btnAttachment.Text = "📎";
+            toolTip1.SetToolTip(btnAttachment, "Đính kèm file");
+            btnAttachment.Click += btnAttachment_Click;
             // 
             // ChatbotAI
             // 
-            AutoScaleDimensions = new SizeF(120F, 120F);
+            AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(688, 750);
+            ClientSize = new Size(550, 600);
+            Controls.Add(panelDropdownHistory);
             Controls.Add(panelBody);
             Controls.Add(panelFooter);
             Controls.Add(panelHeader);
             Controls.Add(panelTitleBar);
             FormBorderStyle = FormBorderStyle.None;
-            Margin = new Padding(4);
             Name = "ChatbotAI";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "ChatbotAI";
+            MouseDown += ChatbotAI_MouseDown;
             panelTitleBar.ResumeLayout(false);
             panelTitleBar.PerformLayout();
+            panelDropdownHistory.ResumeLayout(false);
+            panelDropdownHistory.PerformLayout();
+            flowHistory.ResumeLayout(false);
+            panelSessionItem.ResumeLayout(false);
             panelHeader.ResumeLayout(false);
             panelHeader.PerformLayout();
             panelBody.ResumeLayout(false);
             flowActions.ResumeLayout(false);
-            btnAction1.ResumeLayout(false);
-            btnAction2.ResumeLayout(false);
-            btnAction4.ResumeLayout(false);
-            btnAction4.PerformLayout();
             panelFooter.ResumeLayout(false);
             panelInputContainer.ResumeLayout(false);
             panelInputContainer.PerformLayout();
@@ -459,9 +516,10 @@
             ResumeLayout(false);
         }
 
+
+
         #endregion
 
-        // Khai báo biến đầy đủ
         private System.Windows.Forms.Panel panelTitleBar;
         private System.Windows.Forms.Button btnHide;
         private System.Windows.Forms.Button btnMode;
@@ -472,25 +530,30 @@
         private System.Windows.Forms.Label lblAvatar;
         private System.Windows.Forms.Panel panelBody;
         private System.Windows.Forms.FlowLayoutPanel flowActions;
-        private System.Windows.Forms.Panel btnAction1;
-        private System.Windows.Forms.Label lblText1;
-        private System.Windows.Forms.Label lblIcon1;
-        private System.Windows.Forms.Panel btnAction2;
-        private System.Windows.Forms.Label lblText2;
-        private System.Windows.Forms.Label lblIcon2;
-
-        private System.Windows.Forms.Panel btnAction4;
-        private System.Windows.Forms.Label lblTagNew;
-        private System.Windows.Forms.Label lblText4;
-        private System.Windows.Forms.Label lblIcon4;
+        private System.Windows.Forms.Button btnAction1;
+        private System.Windows.Forms.Button btnAction2;
+        private System.Windows.Forms.Button btnAction3;
         private System.Windows.Forms.Panel panelFooter;
         private System.Windows.Forms.Panel panelInputContainer;
         private System.Windows.Forms.TextBox txtInput;
         private System.Windows.Forms.Panel panelInputTools;
         private System.Windows.Forms.Button btnSend;
-        private System.Windows.Forms.Label lblToolSource;
-        private System.Windows.Forms.Label lblToolAuto;
-        private System.Windows.Forms.Label lblContextTag;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Button btnAttachment;
+        private System.Windows.Forms.Button btnAuto;
+        private System.Windows.Forms.Button btnSource;
+        private System.Windows.Forms.FlowLayoutPanel flowFileAttachments;
+
+        private FlowLayoutPanel flowMessages;
+        private Panel panelDropdownHistory;
+        private FlowLayoutPanel flowHistory;
+        private Label lblToday;
+        private Panel panelSessionItem;
+        private Label lblSessionTitle;
+        private Button btnDeleteSession;
+        private Label lblSelected;
+
+
     }
+
 }

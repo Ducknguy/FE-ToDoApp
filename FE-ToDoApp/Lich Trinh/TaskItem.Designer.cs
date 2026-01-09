@@ -1,126 +1,184 @@
-﻿namespace FE_ToDoApp.Lich_Trinh
+﻿using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace FE_ToDoApp.Lich_Trinh
 {
     partial class TaskItem
     {
-        /// <summary> 
+        /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
-        /// <summary> 
+        /// <summary>
         /// Clean up any resources being used.
         /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
-            {
                 components.Dispose();
-            }
+
             base.Dispose(disposing);
         }
 
         #region Component Designer generated code
 
-        /// <summary> 
-        /// Required method for Designer support - do not modify 
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TaskItem));
+            task_Item = new Panel();
+            flp_task_right = new FlowLayoutPanel();
             panel1 = new Panel();
-            trashcan_delete = new PictureBox();
-            trashcan_nondelete = new PictureBox();
-            textBox1 = new TextBox();
-            checkBox1 = new CheckBox();
+            flp_task_left = new FlowLayoutPanel();
+            panel_add = new Panel();
+            btn_add = new Button();
+            head_panel = new Panel();
+            search_panel1 = new Panel();
+            pictureBox1 = new PictureBox();
+            txt_search_place = new TextBox();
+            task_Item.SuspendLayout();
             panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)trashcan_delete).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)trashcan_nondelete).BeginInit();
+            panel_add.SuspendLayout();
+            head_panel.SuspendLayout();
+            search_panel1.SuspendLayout();
+            ((ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
+            // 
+            // task_Item
+            // 
+            task_Item.Controls.Add(flp_task_right);
+            task_Item.Controls.Add(panel1);
+            task_Item.Controls.Add(head_panel);
+            task_Item.Dock = DockStyle.Fill;
+            task_Item.Location = new Point(0, 0);
+            task_Item.Margin = new Padding(0);
+            task_Item.Name = "task_Item";
+            task_Item.Size = new Size(1319, 597);
+            task_Item.TabIndex = 0;
+            // 
+            // flp_task_right
+            // 
+            flp_task_right.Dock = DockStyle.Fill;
+            flp_task_right.Location = new Point(284, 73);
+            flp_task_right.Margin = new Padding(0);
+            flp_task_right.Name = "flp_task_right";
+            flp_task_right.Size = new Size(1035, 524);
+            flp_task_right.TabIndex = 3;
             // 
             // panel1
             // 
-            panel1.Controls.Add(trashcan_delete);
-            panel1.Controls.Add(trashcan_nondelete);
-            panel1.Controls.Add(textBox1);
-            panel1.Controls.Add(checkBox1);
-            panel1.Location = new Point(0, 0);
+            panel1.Controls.Add(flp_task_left);
+            panel1.Controls.Add(panel_add);
+            panel1.Dock = DockStyle.Left;
+            panel1.Location = new Point(0, 73);
+            panel1.Margin = new Padding(0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(893, 57);
-            panel1.TabIndex = 1;
+            panel1.Size = new Size(284, 524);
+            panel1.TabIndex = 2;
             // 
-            // trashcan_delete
+            // flp_task_left
             // 
-            trashcan_delete.Cursor = Cursors.Hand;
-            trashcan_delete.Image = (Image)resources.GetObject("trashcan_delete.Image");
-            trashcan_delete.Location = new Point(836, 5);
-            trashcan_delete.Name = "trashcan_delete";
-            trashcan_delete.Size = new Size(54, 46);
-            trashcan_delete.SizeMode = PictureBoxSizeMode.Zoom;
-            trashcan_delete.TabIndex = 3;
-            trashcan_delete.TabStop = false;
-            trashcan_delete.Visible = false;
-            trashcan_delete.MouseLeave += leave_trashcan;
+            flp_task_left.Dock = DockStyle.Fill;
+            flp_task_left.Location = new Point(0, 0);
+            flp_task_left.Margin = new Padding(0);
+            flp_task_left.Name = "flp_task_left";
+            flp_task_left.Size = new Size(284, 491);
+            flp_task_left.TabIndex = 0;
             // 
-            // trashcan_nondelete
+            // panel_add
             // 
-            trashcan_nondelete.Cursor = Cursors.Hand;
-            trashcan_nondelete.Image = (Image)resources.GetObject("trashcan_nondelete.Image");
-            trashcan_nondelete.Location = new Point(836, 5);
-            trashcan_nondelete.Name = "trashcan_nondelete";
-            trashcan_nondelete.Size = new Size(54, 46);
-            trashcan_nondelete.SizeMode = PictureBoxSizeMode.Zoom;
-            trashcan_nondelete.TabIndex = 2;
-            trashcan_nondelete.TabStop = false;
-            trashcan_nondelete.MouseHover += hover_trashcan;
+            panel_add.Controls.Add(btn_add);
+            panel_add.Dock = DockStyle.Bottom;
+            panel_add.Location = new Point(0, 491);
+            panel_add.Margin = new Padding(0);
+            panel_add.Name = "panel_add";
+            panel_add.Size = new Size(284, 33);
+            panel_add.TabIndex = 1;
             // 
-            // textBox1
+            // btn_add
             // 
-            textBox1.BackColor = Color.White;
-            textBox1.BorderStyle = BorderStyle.None;
-            textBox1.Cursor = Cursors.IBeam;
-            textBox1.Font = new Font("Segoe UI", 16F);
-            textBox1.Location = new Point(71, 10);
-            textBox1.Name = "textBox1";
-            textBox1.PlaceholderText = "Việc cần làm";
-            textBox1.Size = new Size(672, 36);
-            textBox1.TabIndex = 1;
+            btn_add.Location = new Point(87, 2);
+            btn_add.Margin = new Padding(0);
+            btn_add.Name = "btn_add";
+            btn_add.Size = new Size(94, 29);
+            btn_add.TabIndex = 0;
+            btn_add.Text = "Thêm";
+            btn_add.UseVisualStyleBackColor = true;
             // 
-            // checkBox1
+            // head_panel
             // 
-            checkBox1.Cursor = Cursors.Hand;
-            checkBox1.FlatStyle = FlatStyle.System;
-            checkBox1.Font = new Font("Segoe UI", 20F);
-            checkBox1.Location = new Point(3, 3);
-            checkBox1.Name = "checkBox1";
-            checkBox1.RightToLeft = RightToLeft.Yes;
-            checkBox1.Size = new Size(40, 51);
-            checkBox1.TabIndex = 0;
-            checkBox1.TextAlign = ContentAlignment.MiddleCenter;
-            checkBox1.UseVisualStyleBackColor = true;
+            head_panel.Controls.Add(search_panel1);
+            head_panel.Dock = DockStyle.Top;
+            head_panel.Location = new Point(0, 0);
+            head_panel.Margin = new Padding(0);
+            head_panel.Name = "head_panel";
+            head_panel.Size = new Size(1319, 73);
+            head_panel.TabIndex = 1;
+            // 
+            // search_panel1
+            // 
+            search_panel1.BackColor = Color.FromArgb(243, 242, 241);
+            search_panel1.Controls.Add(pictureBox1);
+            search_panel1.Controls.Add(txt_search_place);
+            search_panel1.Location = new Point(13, 13);
+            search_panel1.Margin = new Padding(0);
+            search_panel1.Name = "search_panel1";
+            search_panel1.Size = new Size(360, 45);
+            search_panel1.TabIndex = 0;
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.Dock = DockStyle.Left;
+            pictureBox1.Image = Properties.Resources.search__1_;
+            pictureBox1.Location = new Point(0, 0);
+            pictureBox1.Margin = new Padding(0);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(43, 45);
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox1.TabIndex = 1;
+            pictureBox1.TabStop = false;
+            // 
+            // txt_search_place
+            // 
+            txt_search_place.BackColor = Color.FromArgb(243, 242, 241);
+            txt_search_place.BorderStyle = BorderStyle.None;
+            txt_search_place.Font = new Font("Segoe UI", 14F);
+            txt_search_place.Location = new Point(49, 8);
+            txt_search_place.Margin = new Padding(0);
+            txt_search_place.Name = "txt_search_place";
+            txt_search_place.PlaceholderText = "Search task and events ....";
+            txt_search_place.Size = new Size(308, 32);
+            txt_search_place.TabIndex = 0;
             // 
             // TaskItem
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
-            AutoScaleMode = AutoScaleMode.Font;
-            AutoSize = true;
-            Controls.Add(panel1);
+            AutoScaleMode = AutoScaleMode.None;
+            Controls.Add(task_Item);
+            Margin = new Padding(0);
             Name = "TaskItem";
-            Size = new Size(896, 60);
+            Size = new Size(1319, 597);
+            task_Item.ResumeLayout(false);
             panel1.ResumeLayout(false);
-            panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)trashcan_delete).EndInit();
-            ((System.ComponentModel.ISupportInitialize)trashcan_nondelete).EndInit();
+            panel_add.ResumeLayout(false);
+            head_panel.ResumeLayout(false);
+            search_panel1.ResumeLayout(false);
+            search_panel1.PerformLayout();
+            ((ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
 
+        private Panel head_panel;
+        private Panel search_panel1;
+        private TextBox txt_search_place;
+        private PictureBox pictureBox1;
+        private FlowLayoutPanel flp_task_left;
         private Panel panel1;
-        private PictureBox trashcan_delete;
-        private PictureBox trashcan_nondelete;
-        private TextBox textBox1;
-        private CheckBox checkBox1;
+        private Panel panel_add;
+        private FlowLayoutPanel flp_task_right;
+        private Button btn_add;
+        private Panel task_Item;
     }
 }
