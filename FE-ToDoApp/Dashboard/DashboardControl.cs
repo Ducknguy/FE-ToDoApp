@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Drawing;
-using System.Security.Cryptography;
 using System.Windows.Forms;
 
 namespace FE_ToDoApp.Dashboard
@@ -11,17 +10,36 @@ namespace FE_ToDoApp.Dashboard
     {
         private string strConn = @"Data Source=.;Initial Catalog=user;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
 
-        public DashboardControl()
+        private int _currentUserId;
+        private string _currentUsername;
+
+        public DashboardControl(int userId, string username)
         {
             InitializeComponent();
+
+            this._currentUserId = userId;
+            this._currentUsername = username;
+
+            CleanupOldTasks();
+
             LoadDashboardData();
         }
 
-        private int currentUserID = 1;
+        public DashboardControl()
+        {
+            InitializeComponent();
+
+            this._currentUserId = 1;
+            this._currentUsername = "User";
+        }
 
         public void LoadDashboardData()
         {
+
+            if (lblTitle != null) lblTitle.Text = $"Today {_currentUsername}";
+
             lblDate.Text = DateTime.Now.ToString("dddd, MMMM dd");
+
             flowStats.Controls.Clear();
             tblLists.Controls.Clear();
 
@@ -32,44 +50,83 @@ namespace FE_ToDoApp.Dashboard
                     conn.Open();
                     LoadStats(conn);
 
-                    Panel pnlToday = CreateListCard("Today's Agenda");
-                    string sqlToday = "SELECT Title, DueDate, Category, Status FROM [Task] " +
-                                      "WHERE CAST(DueDate AS DATE) = CAST(GETDATE() AS DATE) ORDER BY DueDate ASC";
+                    Panel pnlActive = CreateListCard($"Today {_currentUsername}");
 
-                    LoadTasksToContainer(conn, pnlToday, sqlToday);
-                    tblLists.Controls.Add(pnlToday, 0, 0);
+                    string sqlActive = @"SELECT Title, DueDate, Category, Status 
+                                         FROM [Task] 
+                                         WHERE UserId = @UID 
+                                         AND Status != 'Done' 
+                                         AND CAST(DueDate AS DATE) >= CAST(GETDATE() AS DATE) 
+                                         ORDER BY DueDate ASC";
 
-                    Panel pnlUpcoming = CreateListCard("Upcoming Schedules");
-                    string sqlUpcoming = "SELECT Title, DueDate, Category, Status FROM [Task] " +
-                                         "WHERE CAST(DueDate AS DATE) > CAST(GETDATE() AS DATE) ORDER BY DueDate ASC";
+                    LoadTasksToContainer(conn, pnlActive, sqlActive);
+                    tblLists.Controls.Add(pnlActive, 0, 0);
 
-                    LoadTasksToContainer(conn, pnlUpcoming, sqlUpcoming);
-                    tblLists.Controls.Add(pnlUpcoming, 1, 0);
+
+                    Panel pnlHistory = CreateListCard("History & Overdue (30 Days)");
+
+                    string sqlHistory = @"SELECT Title, DueDate, Category, Status 
+                                          FROM [Task] 
+                                          WHERE UserId = @UID 
+                                          AND (Status = 'Done' OR CAST(DueDate AS DATE) < CAST(GETDATE() AS DATE))
+                                          AND DueDate >= DATEADD(day, -30, GETDATE())
+                                          ORDER BY DueDate DESC";
+
+                    LoadTasksToContainer(conn, pnlHistory, sqlHistory);
+                    tblLists.Controls.Add(pnlHistory, 1, 0);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi SQL: " + ex.Message, "Thông báo");
+                MessageBox.Show("Lỗi tải dữ liệu: " + ex.Message);
             }
+        }
+
+        private void CleanupOldTasks()
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    conn.Open();
+                    string sqlDelete = "DELETE FROM [Task] WHERE DueDate < DATEADD(day, -30, GETDATE())";
+                    using (SqlCommand cmd = new SqlCommand(sqlDelete, conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch { /* Im lặng bỏ qua nếu lỗi xóa, không làm crash app */ }
         }
 
         private void LoadTasksToContainer(SqlConnection conn, Panel card, string query)
         {
             FlowLayoutPanel container = (FlowLayoutPanel)card.Controls["listContainer"];
+
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
-                // Xóa dòng cmd.Parameters.AddWithValue nếu có
+                cmd.Parameters.AddWithValue("@UID", _currentUserId);
+
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
                         string title = reader["Title"].ToString();
-                        string category = reader["Category"]?.ToString() ?? "General";
+
+                        string category = reader["Category"] != DBNull.Value ? reader["Category"].ToString() : "General";
                         DateTime dueDate = Convert.ToDateTime(reader["DueDate"]);
-                        bool isDone = reader["Status"].ToString() == "Done";
+
+                        string status = reader["Status"] != DBNull.Value ? reader["Status"].ToString() : "Pending";
+                        bool isDone = status == "Done";
 
                         Color color = GetColorByCategory(category);
-                        string timeInfo = dueDate.ToString("HH:mm") + " • " + category;
+                        string timeInfo = dueDate.ToString("dd/MM HH:mm") + " • " + category;
+
+                        if (!isDone && dueDate < DateTime.Now)
+                        {
+                            timeInfo += " (Overdue)";
+                            color = Color.Red;
+                        }
 
                         container.Controls.Add(CreateTaskRow(title, timeInfo, color, isDone));
                     }
@@ -127,7 +184,6 @@ namespace FE_ToDoApp.Dashboard
         private Panel CreateListCard(string title)
         {
             Panel card = new Panel { Dock = DockStyle.Fill, BackColor = Color.White, Margin = new Padding(15), Padding = new Padding(10) };
-
             card.Paint += (s, e) => ControlPaint.DrawBorder(e.Graphics, card.ClientRectangle, Color.FromArgb(230, 230, 230), ButtonBorderStyle.Solid);
 
             Label lbl = new Label { Text = title, Font = new Font("Segoe UI", 14, FontStyle.Bold), Location = new Point(15, 15), AutoSize = true };
@@ -150,10 +206,10 @@ namespace FE_ToDoApp.Dashboard
 
         private void LoadStats(SqlConnection conn)
         {
-            int today = GetCount(conn, "SELECT COUNT(*) FROM [Task] WHERE CAST(DueDate AS DATE) = CAST(GETDATE() AS DATE)");
-            int upcoming = GetCount(conn, "SELECT COUNT(*) FROM [Task] WHERE DueDate > GETDATE()");
-            int overdue = GetCount(conn, "SELECT COUNT(*) FROM [Task] WHERE DueDate < GETDATE() AND Status != 'Done'");
-            int done = GetCount(conn, "SELECT COUNT(*) FROM [Task] WHERE Status = 'Done'");
+            int today = GetCount(conn, "SELECT COUNT(*) FROM [Task] WHERE UserId = @UID AND CAST(DueDate AS DATE) = CAST(GETDATE() AS DATE)");
+            int upcoming = GetCount(conn, "SELECT COUNT(*) FROM [Task] WHERE UserId = @UID AND DueDate > GETDATE()");
+            int overdue = GetCount(conn, "SELECT COUNT(*) FROM [Task] WHERE UserId = @UID AND DueDate < GETDATE() AND Status != 'Done'");
+            int done = GetCount(conn, "SELECT COUNT(*) FROM [Task] WHERE UserId = @UID AND Status = 'Done'");
 
             flowStats.Controls.Add(CreateStatCard(today.ToString(), "Today Tasks", Color.AliceBlue, "📅"));
             flowStats.Controls.Add(CreateStatCard(upcoming.ToString(), "Upcoming", Color.Beige, "🕒"));
@@ -165,6 +221,7 @@ namespace FE_ToDoApp.Dashboard
         {
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
+                cmd.Parameters.AddWithValue("@UID", _currentUserId);
                 return Convert.ToInt32(cmd.ExecuteScalar() ?? 0);
             }
         }

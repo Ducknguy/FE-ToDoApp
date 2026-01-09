@@ -2,32 +2,66 @@
 using FE_ToDoApp.Calendar;
 using FE_ToDoApp.Dashboard;
 using FE_ToDoApp.Lich_Trinh;
+using FE_ToDoApp.login;
 using FE_ToDoApp.NewFolder;
 using FE_ToDoApp.Setting;
-using ChatbotAI_Form;
-using FE_ToDoApp.login;
-
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace FE_ToDoApp
 {
     public partial class Trangchu : Form
     {
         private List<Form> privatePages = new List<Form>();
+
+        private int _currentUserId;
+        private string _currentUsername;
+
+        public Trangchu(int userId, string username)
+        {
+            InitializeComponent();
+
+            this._currentUserId = userId;
+            this._currentUsername = username;
+
+            //gOpenDashboard();
+        }
+
         public Trangchu()
         {
             InitializeComponent();
+
+            this._currentUserId = 1;
+            this._currentUsername = "Test User";
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
 
+            this.Text = $"ToDo App - Xin chào, {_currentUsername}!";
+        }
+
+        private void btnDashboard_Click(object sender, EventArgs e)
+        {
+            OpenDashboard();
+        }
+
+        private void OpenDashboard()
+        {
+            mainPanel.Controls.Clear();
+
+            DashboardControl ucDashboard = new DashboardControl(_currentUserId, _currentUsername);
+
+            ucDashboard.Dock = DockStyle.Fill;
+            mainPanel.Controls.Add(ucDashboard);
+            ucDashboard.Show();
         }
 
         private void btnTrash_Click(object sender, EventArgs e)
         {
-
             ThungRac thungRacForm = new ThungRac();
-            thungRacForm.Show();
+            thungRacForm.ShowDialog();
         }
 
         private void btn_CaiDat(object sender, EventArgs e)
@@ -42,26 +76,24 @@ namespace FE_ToDoApp
             chatbot.ShowDialog();
         }
 
+        private void btnCalendar_Click(object sender, EventArgs e)
+        {
+            calendar calendar = new calendar();
+            calendar.ShowDialog();
+        }
+
         private void sidebar_item_click(object sender, EventArgs e)
         {
             Private_Sidebar clickedItem = sender as Private_Sidebar;
-
             if (clickedItem != null)
             {
                 Form targetForm = clickedItem.TargetForm;
-
                 if (targetForm != null)
                 {
-
                     foreach (Control control in mainPanel.Controls)
                     {
-                        if (control is Form form)
-                        {
-                            form.Hide();
-                        }
+                        if (control is Form form) form.Hide();
                     }
-
-
                     targetForm.Show();
                     targetForm.BringToFront();
                 }
@@ -80,34 +112,23 @@ namespace FE_ToDoApp
             newtodo.Show();
             privatePages.Add(newtodo);
 
-
             Private_Sidebar sidebar_item = new Private_Sidebar();
-
             sidebar_item.TargetForm = newtodo;
-
-
-
             sidebar_item.Click += sidebar_item_click;
 
         }
 
-        private void btnCalendar_Click(object sender, EventArgs e)
+        private void btn_logout_Click(object sender, EventArgs e)
         {
-            calendar calendar = new calendar();
-            calendar.ShowDialog();
+            DialogResult result = MessageBox.Show("Bạn có chắc chắn muốn đăng xuất?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-        }
+            if (result == DialogResult.Yes)
+            {
+                Login1 loginForm = new Login1();
+                loginForm.Show();
 
-        private void btnDashboard_Click(object sender, EventArgs e)
-        {
-            mainPanel.Controls.Clear(); // Xóa các control cũ trong panel chính
-
-            // Gọi chính xác Namespace và Class để tránh lỗi CS0118
-            FE_ToDoApp.Dashboard.DashboardControl ucDashboard = new FE_ToDoApp.Dashboard.DashboardControl();
-
-            ucDashboard.Dock = DockStyle.Fill; // Để dashboard tràn đầy phần mainPanel
-            mainPanel.Controls.Add(ucDashboard);
-            ucDashboard.Show();
+                this.Close();
+            }
         }
     }
 }
