@@ -2,7 +2,7 @@
 using FE_ToDoApp.Calendar;
 using FE_ToDoApp.Dashboard;
 using FE_ToDoApp.Lich_Trinh;
-using FE_ToDoApp.NewFolder;
+
 using FE_ToDoApp.Setting;
 using ChatbotAI_Form;
 using FE_ToDoApp.login;
@@ -26,8 +26,7 @@ namespace FE_ToDoApp
         private void btnTrash_Click(object sender, EventArgs e)
         {
 
-            ThungRac thungRacForm = new ThungRac();
-            thungRacForm.Show();
+            
         }
 
         private void btn_CaiDat(object sender, EventArgs e)
