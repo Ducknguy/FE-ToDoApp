@@ -33,6 +33,8 @@ namespace FE_ToDoApp.Lich_Trinh
             flp_task_left = new FlowLayoutPanel();
             panel_add = new Panel();
             btn_add = new Button();
+            btn_edit = new Button();
+            btn_delete = new Button();
             head_panel = new Panel();
             search_panel1 = new Panel();
             pictureBox1 = new PictureBox();
@@ -89,6 +91,8 @@ namespace FE_ToDoApp.Lich_Trinh
             // panel_add
             // 
             panel_add.Controls.Add(btn_add);
+            panel_add.Controls.Add(btn_edit);
+            panel_add.Controls.Add(btn_delete);
             panel_add.Dock = DockStyle.Bottom;
             panel_add.Location = new Point(0, 491);
             panel_add.Margin = new Padding(0);
@@ -98,13 +102,33 @@ namespace FE_ToDoApp.Lich_Trinh
             // 
             // btn_add
             // 
-            btn_add.Location = new Point(87, 2);
+            btn_add.Location = new Point(8, 2);
             btn_add.Margin = new Padding(0);
             btn_add.Name = "btn_add";
-            btn_add.Size = new Size(94, 29);
+            btn_add.Size = new Size(80, 29);
             btn_add.TabIndex = 0;
             btn_add.Text = "Thêm";
             btn_add.UseVisualStyleBackColor = true;
+            // 
+            // btn_edit
+            // 
+            btn_edit.Location = new Point(98, 2);
+            btn_edit.Margin = new Padding(0);
+            btn_edit.Name = "btn_edit";
+            btn_edit.Size = new Size(80, 29);
+            btn_edit.TabIndex = 1;
+            btn_edit.Text = "Sửa";
+            btn_edit.UseVisualStyleBackColor = true;
+            // 
+            // btn_delete
+            // 
+            btn_delete.Location = new Point(188, 2);
+            btn_delete.Margin = new Padding(0);
+            btn_delete.Name = "btn_delete";
+            btn_delete.Size = new Size(80, 29);
+            btn_delete.TabIndex = 2;
+            btn_delete.Text = "Xóa";
+            btn_delete.UseVisualStyleBackColor = true;
             // 
             // head_panel
             // 
@@ -179,6 +203,8 @@ namespace FE_ToDoApp.Lich_Trinh
         private Panel panel_add;
         private FlowLayoutPanel flp_task_right;
         private Button btn_add;
+        private Button btn_edit;
+        private Button btn_delete;
         private Panel task_Item;
     }
 }
