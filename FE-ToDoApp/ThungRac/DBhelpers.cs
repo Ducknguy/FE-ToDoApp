@@ -116,5 +116,28 @@ namespace FE_ToDoApp.ThungRac
 
             return Execute(sql, new SqlParameter("@id", itemId));
         }
+
+        // ✅ Xóa mềm: chuyển vào Thùng rác
+public static int XoaVaoThungRac(string sourceTable, int itemId)
+{
+    string sql = "";
+
+    if (sourceTable == "Todo")
+        sql = "UPDATE Todo_List_Detail SET IsDeleted = 1, DeletedAt = GETDATE() WHERE id_todo = @id";
+    else if (sourceTable == "Week_Plan")
+        sql = "UPDATE Week_Plan SET IsDeleted = 1, DeletedAt = GETDATE() WHERE id_week = @id";
+    else if (sourceTable == "Calendar")
+        sql = "UPDATE Calendar SET IsDeleted = 1, DeletedAt = GETDATE() WHERE Id = @id";
+    else
+        return 0;
+
+    return Execute(sql, new SqlParameter("@id", itemId));
+}
+
+            
+
+
+
+
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Linq; // Cần cái này để dùng .OrderBy
+using FE_ToDoApp.ThungRac; // nút xóa thùng rác
 
 namespace FE_ToDoApp.Calendar
 {
@@ -110,12 +111,14 @@ namespace FE_ToDoApp.Calendar
             // --- NÚT XÓA ---
             Button btnDel = new Button() { Text = "🗑️", Location = new Point(380, 15), Size = new Size(40, 40), BackColor = Color.MistyRose, FlatStyle = FlatStyle.Flat, Cursor = Cursors.Hand };
             btnDel.Click += (s, e) => {
-                if (MessageBox.Show("Bạn chắc chắn muốn xóa?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                if (MessageBox.Show("Bạn chắc chắn muốn xóa? (Sẽ chuyển vào Thùng rác)",
+                    "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
-                    DatabaseHelper.DeleteTask(task.Id);
+                    DB.XoaVaoThungRac("Calendar", task.Id); // ✅ chuyển vào thùng rác
+
                     ReloadData();
                     _hasChanges = true;
-                    
+
                     // Nếu xóa hết công việc trong ngày, đóng form
                     if (panelList.Controls.Count == 1 && panelList.Controls[0] is Label)
                     {
