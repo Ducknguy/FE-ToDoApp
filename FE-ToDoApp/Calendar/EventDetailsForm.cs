@@ -56,7 +56,7 @@ namespace FE_ToDoApp.Calendar
             panelList.Controls.Clear(); // Xóa cũ
 
             // Sắp xếp theo giờ tăng dần cho dễ nhìn
-            var sortedEvents = events.OrderBy(t => t.StartDate).ToList();
+            var sortedEvents = events.OrderBy(t => t.DuaDate).ToList();
 
             if (sortedEvents.Count == 0)
             {
@@ -76,7 +76,7 @@ namespace FE_ToDoApp.Calendar
         {
             // Gọi lại DatabaseHelper để lấy danh sách mới nhất
             var allTasks = DatabaseHelper.GetTasksByMonth(_currentDate.Month, _currentDate.Year);
-            var tasksForDay = allTasks.Where(t => t.StartDate.Date == _currentDate.Date).ToList();
+            var tasksForDay = allTasks.Where(t => t.DuaDate.Date == _currentDate.Date).ToList();
             RenderList(tasksForDay);
         }
 
@@ -86,7 +86,7 @@ namespace FE_ToDoApp.Calendar
             Panel pnl = new Panel() { Size = new Size(430, 80), BackColor = Color.AliceBlue, Margin = new Padding(0, 0, 0, 10), BorderStyle = BorderStyle.FixedSingle };
 
             // Giờ
-            Label lblTime = new Label() { Text = task.StartDate.ToString("HH:mm"), Location = new Point(10, 15), Size = new Size(60, 25), Font = new Font("Segoe UI", 11, FontStyle.Bold), ForeColor = Color.OrangeRed };
+            Label lblTime = new Label() { Text = task.DuaDate.ToString("HH:mm"), Location = new Point(10, 15), Size = new Size(60, 25), Font = new Font("Segoe UI", 11, FontStyle.Bold), ForeColor = Color.OrangeRed };
 
             // Tên
             Label lblSummary = new Label() { Text = task.Title, Location = new Point(80, 15), Size = new Size(240, 25), Font = new Font("Segoe UI", 11, FontStyle.Bold) };

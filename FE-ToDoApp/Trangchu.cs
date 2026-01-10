@@ -3,7 +3,7 @@ using FE_ToDoApp.Calendar;
 using FE_ToDoApp.Dashboard;
 using FE_ToDoApp.Lich_Trinh;
 using FE_ToDoApp.login;
-using FE_ToDoApp.NewFolder;
+//using FE_ToDoApp.NewFolder;
 using FE_ToDoApp.Setting;
 using System;
 using System.Collections.Generic;
@@ -22,24 +22,24 @@ namespace FE_ToDoApp
         {
             InitializeComponent();
 
-            this._currentUserId = userId;
-            this._currentUsername = username;
+            //this._currentUserId = userId;
+            //this._currentUsername = username;
 
-            //gOpenDashboard();
+            ////gOpenDashboard();
         }
 
         public Trangchu()
         {
             InitializeComponent();
 
-            this._currentUserId = 1;
-            this._currentUsername = "Test User";
+            //this._currentUserId = 1;
+            //this._currentUsername = "Test User";
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
 
-            this.Text = $"ToDo App - Xin chào, {_currentUsername}!";
+            //this.Text = $"ToDo App - Xin chào, {_currentUsername}!";
         }
 
         private void btnDashboard_Click(object sender, EventArgs e)
@@ -51,18 +51,18 @@ namespace FE_ToDoApp
         {
             mainPanel.Controls.Clear();
 
-            DashboardControl ucDashboard = new DashboardControl(_currentUserId, _currentUsername);
+            DashboardControl ucDashboard = new DashboardControl();
 
             ucDashboard.Dock = DockStyle.Fill;
             mainPanel.Controls.Add(ucDashboard);
             ucDashboard.Show();
         }
 
-        private void btnTrash_Click(object sender, EventArgs e)
-        {
-            ThungRac thungRacForm = new ThungRac();
-            thungRacForm.ShowDialog();
-        }
+        //private void btnTrash_Click(object sender, EventArgs e)
+        //{
+        //    ThungRac thungRacForm = new ThungRac();
+        //    thungRacForm.ShowDialog();
+        //}
 
         private void btn_CaiDat(object sender, EventArgs e)
         {
@@ -100,23 +100,23 @@ namespace FE_ToDoApp
             }
         }
 
-        private void add_private_item_click(object sender, EventArgs e)
-        {
-            ToDoList newtodo = new ToDoList();
-            newtodo.TopLevel = false;
-            newtodo.FormBorderStyle = FormBorderStyle.None;
-            newtodo.Dock = DockStyle.Left;
+        //private void add_private_item_click(object sender, EventArgs e)
+        //{
+        //    ToDoList newtodo = new ToDoList();
+        //    newtodo.TopLevel = false;
+        //    newtodo.FormBorderStyle = FormBorderStyle.None;
+        //    newtodo.Dock = DockStyle.Left;
 
-            mainPanel.Controls.Clear();
-            mainPanel.Controls.Add(newtodo);
-            newtodo.Show();
-            privatePages.Add(newtodo);
+        //    mainPanel.Controls.Clear();
+        //    mainPanel.Controls.Add(newtodo);
+        //    newtodo.Show();
+        //    privatePages.Add(newtodo);
 
-            Private_Sidebar sidebar_item = new Private_Sidebar();
-            sidebar_item.TargetForm = newtodo;
-            sidebar_item.Click += sidebar_item_click;
+        //    Private_Sidebar sidebar_item = new Private_Sidebar();
+        //    sidebar_item.TargetForm = newtodo;
+        //    sidebar_item.Click += sidebar_item_click;
 
-        }
+        //}
 
         private void btn_logout_Click(object sender, EventArgs e)
         {
