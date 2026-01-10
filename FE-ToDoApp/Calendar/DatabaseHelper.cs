@@ -19,7 +19,7 @@ namespace FE_ToDoApp.Calendar
                 try
                 {
                     conn.Open();
-                    string sql = "SELECT * FROM Tasks WHERE MONTH(StartDate) = @m AND YEAR(StartDate) = @y";
+                    string sql = "SELECT * FROM Calendar WHERE MONTH(StartDate) = @m AND YEAR(StartDate) = @y";
 
                     using (SqlCommand cmd = new SqlCommand(sql, conn))
                     {
@@ -57,7 +57,7 @@ namespace FE_ToDoApp.Calendar
                 try
                 {
                     conn.Open();
-                    string sql = "INSERT INTO Tasks (Title, Description, StartDate, Status) VALUES (@Title, @Desc, @Start, 'New')";
+                    string sql = "INSERT INTO Calendar (Title, Description, StartDate, Status) VALUES (@Title, @Desc, @Start, 'New')";
                     using (SqlCommand cmd = new SqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@Title", task.Title);
@@ -77,7 +77,7 @@ namespace FE_ToDoApp.Calendar
                 try
                 {
                     conn.Open();
-                    string sql = "UPDATE Tasks SET Title = @Title, Description = @Desc, StartDate = @Start WHERE Id = @Id";
+                    string sql = "UPDATE Calendar SET Title = @Title, Description = @Desc, StartDate = @Start WHERE Id = @Id";
                     using (SqlCommand cmd = new SqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@Id", task.Id); // Quan trọng: Phải có ID để biết sửa dòng nào
@@ -98,7 +98,7 @@ namespace FE_ToDoApp.Calendar
                 try
                 {
                     conn.Open();
-                    string sql = "DELETE FROM Tasks WHERE Id = @Id";
+                    string sql = "DELETE FROM Calendar WHERE Id = @Id";
                     using (SqlCommand cmd = new SqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@Id", id);

@@ -13,6 +13,9 @@ namespace FE_ToDoApp.Lich_Trinh
 
         private int _selectedTodoId = -1;
 
+        // ===== STATE (GIỐNG TODODETAILITEMCONTROL) =====
+        private bool _deleteMode = false;
+        private bool _editMode = false;
 
         private readonly TodoDetailItemControl _detail = new TodoDetailItemControl();
 
@@ -44,6 +47,8 @@ namespace FE_ToDoApp.Lich_Trinh
         private void WireEvents()
         {
             btn_add.Click += btn_add_Click;
+            btn_edit.Click += btn_edit_Click;
+            btn_delete.Click += btn_delete_Click;
 
             flp_task_left.SizeChanged += (s, e) => ResizeLeftListItemsToFullWidth();
             flp_task_right.SizeChanged += (s, e) => ResizeRightDetailToFullWidth();
@@ -99,20 +104,104 @@ namespace FE_ToDoApp.Lich_Trinh
                 int id = Convert.ToInt32(row["id_todo"]);
                 string title = Convert.ToString(row["title"]) ?? "(no title)";
 
+                // Tạo Panel container chứa ToDoListItem + 2 nút
+                Panel container = new Panel
+                {
+                    Width = GetLeftWidth(),
+                    Height = 56,
+                    Margin = new Padding(0, 0, 0, 8),
+                    Tag = id,
+                    BackColor = Color.Transparent
+                };
+
                 var item = new ToDoListItem
                 {
                     TodoId = id,
                     Tag = id,
                     Height = 56,
                     AutoSize = false,
-                    Margin = new Padding(0, 0, 0, 8)
+                    Margin = new Padding(0),
+                    Dock = DockStyle.Fill
                 };
 
                 item.SetTitle(title);
-                item.Width = GetLeftWidth();
                 item.Clicked += (s, e) => SelectTodo(id);
 
-                flp_task_left.Controls.Add(item);
+                // Tạo nút Xóa (màu đỏ nhạt)
+                Button btnDeleteItem = new Button
+                {
+                    Name = "btnDelete",
+                    Text = "X",
+                    Width = 30,
+                    Height = 30,
+                    BackColor = Color.FromArgb(255, 200, 200),
+                    ForeColor = Color.DarkRed,
+                    FlatStyle = FlatStyle.Flat,
+                    Cursor = Cursors.Hand,
+                    Visible = false,
+                    Font = new Font("Segoe UI", 10F, FontStyle.Bold)
+                };
+                btnDeleteItem.FlatAppearance.BorderSize = 0;
+                btnDeleteItem.Location = new Point(container.Width - 35, 13);
+                btnDeleteItem.Anchor = AnchorStyles.Right | AnchorStyles.Top;
+
+                // Tạo nút Sửa (màu xanh nhạt)
+                Button btnEditItem = new Button
+                {
+                    Name = "btnEdit",
+                    Text = "✎",
+                    Width = 30,
+                    Height = 30,
+                    BackColor = Color.FromArgb(173, 216, 230), // LightBlue
+                    ForeColor = Color.DarkBlue,
+                    FlatStyle = FlatStyle.Flat,
+                    Cursor = Cursors.Hand,
+                    Visible = false,
+                    Font = new Font("Segoe UI", 10F, FontStyle.Bold)
+                };
+                btnEditItem.FlatAppearance.BorderSize = 0;
+                btnEditItem.Location = new Point(container.Width - 70, 13);
+                btnEditItem.Anchor = AnchorStyles.Right | AnchorStyles.Top;
+
+                // Sự kiện Xóa
+                btnDeleteItem.Click += (s, e) =>
+                {
+                    var result = MessageBox.Show(
+                        $"Bạn có chắc muốn xóa '{title}'?",
+                        "Xác nhận xóa",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Warning);
+
+                    if (result == DialogResult.Yes)
+                    {
+                        Db_DeleteTodo(id);
+                        LoadTodosToLeftList();
+                    }
+                };
+
+                // Sự kiện Sửa
+                btnEditItem.Click += (s, e) =>
+                {
+                    string newTitle = Microsoft.VisualBasic.Interaction.InputBox(
+                        "Nhập tiêu đề mới:", "Sửa detail", title);
+
+                    if (string.IsNullOrWhiteSpace(newTitle) || newTitle == title) return;
+
+                    Db_UpdateTodoTitle(id, newTitle);
+                    LoadTodosToLeftList();
+                    SelectTodo(id);
+                };
+
+                // Thêm vào container
+                container.Controls.Add(item);
+                container.Controls.Add(btnEditItem);
+                container.Controls.Add(btnDeleteItem);
+
+                // BringToFront để nút hiển thị trên cùng
+                btnEditItem.BringToFront();
+                btnDeleteItem.BringToFront();
+
+                flp_task_left.Controls.Add(container);
             }
 
             flp_task_left.ResumeLayout();
@@ -128,6 +217,18 @@ namespace FE_ToDoApp.Lich_Trinh
             {
                 _detail.LoadTodo(-1);
             }
+
+            // Reset chế độ sau khi reload
+            if (_deleteMode || _editMode)
+            {
+                _deleteMode = false;
+                _editMode = false;
+                btn_delete.Text = "Xóa";
+                btn_edit.Text = "Sửa";
+            }
+
+            // Cập nhật nút hiển thị
+            UpdateItemButtons();
         }
 
         private void SelectTodo(int todoId)
@@ -136,15 +237,27 @@ namespace FE_ToDoApp.Lich_Trinh
 
             foreach (Control c in flp_task_left.Controls)
             {
-                bool selected = c.Tag is int id && id == todoId;
-                if (c is ToDoListItem t) t.SetSelected(selected);
+                if (c is Panel container)
+                {
+                    bool selected = container.Tag is int id && id == todoId;
+                    
+                    // Tìm ToDoListItem trong container
+                    foreach (Control child in container.Controls)
+                    {
+                        if (child is ToDoListItem t)
+                        {
+                            t.SetSelected(selected);
+                            break;
+                        }
+                    }
+                }
             }
 
             _detail.Width = GetRightWidth();
             _detail.LoadTodo(todoId);
         }
 
-        // ADD Todo detail
+        // ===== CHỨC NĂNG THÊM TODO =====
         private void btn_add_Click(object? sender, EventArgs e)
         {
             string title = Microsoft.VisualBasic.Interaction.InputBox(
@@ -157,7 +270,63 @@ namespace FE_ToDoApp.Lich_Trinh
             SelectTodo(newId);
         }
 
-        // DB Todo_List_Detail
+        // ===== CHỨC NĂNG SỬA TODO (GIỐNG TODODETAILITEMCONTROL) =====
+        private void btn_edit_Click(object? sender, EventArgs e)
+        {
+            _editMode = !_editMode;
+            btn_edit.Text = _editMode ? "Xong" : "Sửa";
+
+            if (_editMode)
+            {
+                _deleteMode = false;
+                btn_delete.Text = "Xóa";
+            }
+
+            UpdateItemButtons();
+        }
+
+        // ===== CHỨC NĂNG XÓA TODO (GIỐNG TODODETAILITEMCONTROL) =====
+        private void btn_delete_Click(object? sender, EventArgs e)
+        {
+            _deleteMode = !_deleteMode;
+            btn_delete.Text = _deleteMode ? "Xong" : "Xóa";
+
+            if (_deleteMode)
+            {
+                _editMode = false;
+                btn_edit.Text = "Sửa";
+            }
+
+            UpdateItemButtons();
+        }
+
+        // ===== CẬP NHẬT NÚT HIỂN THỊ (GIỐNG TODODETAILITEMCONTROL) =====
+        private void UpdateItemButtons()
+        {
+            foreach (Control c in flp_task_left.Controls)
+            {
+                if (c is Panel container)
+                {
+                    // Tìm nút Xóa
+                    foreach (Control child in container.Controls)
+                    {
+                        if (child is Button btn)
+                        {
+                            if (btn.Name == "btnDelete")
+                            {
+                                btn.Visible = _deleteMode;
+                            }
+                            else if (btn.Name == "btnEdit")
+                            {
+                                btn.Visible = _editMode;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // ===== DATABASE OPERATIONS =====
         private static DataTable Db_GetTodos()
         {
             using var conn = new SqlConnection(ConnectionString);
@@ -186,6 +355,39 @@ namespace FE_ToDoApp.Lich_Trinh
             return Convert.ToInt32(cmd.ExecuteScalar());
         }
 
+        private static void Db_UpdateTodoTitle(int todoId, string newTitle)
+        {
+            using var conn = new SqlConnection(ConnectionString);
+            conn.Open();
+
+            using var cmd = new SqlCommand(@"
+                UPDATE Todo_List_Detail
+                SET title = @title, updated_at = GETDATE()
+                WHERE id_todo = @id;", conn);
+
+            cmd.Parameters.AddWithValue("@title", newTitle);
+            cmd.Parameters.AddWithValue("@id", todoId);
+            cmd.ExecuteNonQuery();
+        }
+
+        private static void Db_DeleteTodo(int todoId)
+        {
+            using var conn = new SqlConnection(ConnectionString);
+            conn.Open();
+
+            // Xóa các items trước
+            using var cmdItems = new SqlCommand(@"
+                DELETE FROM Todo_List_Item WHERE id_todo = @id;", conn);
+            cmdItems.Parameters.AddWithValue("@id", todoId);
+            cmdItems.ExecuteNonQuery();
+
+            // Sau đó xóa todo
+            using var cmdTodo = new SqlCommand(@"
+                DELETE FROM Todo_List_Detail WHERE id_todo = @id;", conn);
+            cmdTodo.Parameters.AddWithValue("@id", todoId);
+            cmdTodo.ExecuteNonQuery();
+        }
+
         // widths
         private int GetLeftWidth()
         {
@@ -202,7 +404,29 @@ namespace FE_ToDoApp.Lich_Trinh
         private void ResizeLeftListItemsToFullWidth()
         {
             int w = GetLeftWidth();
-            foreach (Control c in flp_task_left.Controls) c.Width = w;
+            foreach (Control c in flp_task_left.Controls)
+            {
+                if (c is Panel container)
+                {
+                    container.Width = w;
+                    
+                    // Cập nhật vị trí nút khi resize
+                    foreach (Control child in container.Controls)
+                    {
+                        if (child is Button btn)
+                        {
+                            if (btn.Name == "btnDelete")
+                            {
+                                btn.Left = container.Width - 35;
+                            }
+                            else if (btn.Name == "btnEdit")
+                            {
+                                btn.Left = container.Width - 70;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private void ResizeRightDetailToFullWidth()

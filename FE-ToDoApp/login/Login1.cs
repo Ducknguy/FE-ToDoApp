@@ -23,7 +23,7 @@ namespace FE_ToDoApp.login
         private void linkRegister_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Register registerForm = new Register();
-            registerForm.Show();
+            registerForm.ShowDialog();
             this.Hide();
         }
 
@@ -42,7 +42,7 @@ namespace FE_ToDoApp.login
         private void linkForgotPassword_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
         {
             ForgotPasswrod forgotForm = new ForgotPasswrod();
-            forgotForm.Show();
+            forgotForm.ShowDialog();
             this.Hide();
         }
 
@@ -50,7 +50,9 @@ namespace FE_ToDoApp.login
         {
             string Username = txtUsername.Text.Trim();
             string Password = txtPassword.Text;
-            string query = "SELECT COUNT(1) FROM [User] WHERE Username = @User AND Password = @Pass";
+
+            string query = "SELECT Id, Username FROM [User] WHERE Username = @User AND Password = @Pass";
+
             using (SqlConnection connection = DatabaseHelper.GetConnection())
             {
                 using (SqlCommand command = new SqlCommand(query, connection))
@@ -60,22 +62,30 @@ namespace FE_ToDoApp.login
                         connection.Open();
                         command.Parameters.AddWithValue("@User", Username);
                         command.Parameters.AddWithValue("@Pass", Password);
-                        int count = (int)command.ExecuteScalar();
-                        if (count == 1)
-                        {
-                            Trangchu mainForm = new Trangchu();
-                            mainForm.Show();
 
-                            this.Hide();
-                        }
-                        else
+                        using (SqlDataReader reader = command.ExecuteReader())
                         {
-                            MessageBox.Show("Tên đăng nhập hoặc mật khẩu không đúng.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            if (reader.Read())
+                            {
+
+                                int userId = reader.GetInt32(0);
+                                string userName = reader.GetString(1);
+
+                                MessageBox.Show("Đăng nhập thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                                Trangchu mainForm = new Trangchu(userId, userName);
+                                mainForm.Show();
+                                this.Hide();
+                            }
+                            else
+                            {
+                                MessageBox.Show("Tên đăng nhập hoặc mật khẩu không đúng.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
                         }
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Lỗi kết nối cơ sở dữ liệu: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Lỗi kết nối: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }

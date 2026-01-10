@@ -48,6 +48,8 @@ namespace FE_ToDoApp.login
                         if (rowsAffected > 0)
                         {
                             MessageBox.Show("Đặt lại mật khẩu thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            Login1 loginForm = new Login1();
+                            loginForm.Show();
                             this.Close();
                         }
                         else
