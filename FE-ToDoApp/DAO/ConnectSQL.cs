@@ -12,7 +12,7 @@ namespace FE_ToDoApp
     class ConnectSQL
     {
         // --- QUAN TRỌNG: ĐỂ public static ĐỂ CÁC DAO KHÁC DÙNG KÉ ---
-        public static string strCon = @"Data Source=LAPTOP-HJ0H2N4I;Initial Catalog=ChatBotDB;Integrated Security=True";
+        public static string strCon = @"Data Source=Money\SQLEXPRESS;Initial Catalog=ChatBotDB;Integrated Security=True";
 
         // Đối tượng kết nối
         private SqlConnection conn = null;

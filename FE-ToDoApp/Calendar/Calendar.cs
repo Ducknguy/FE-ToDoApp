@@ -15,6 +15,9 @@ namespace FE_ToDoApp.Calendar
 
             _month = DateTime.Now.Month;
             _year = DateTime.Now.Year;
+
+            lblMonthYear.Click += LblMonthYear_Click;
+
             LoadCalendar(_month, _year);
         }
 
@@ -22,49 +25,51 @@ namespace FE_ToDoApp.Calendar
         {
             lblMonthYear.Text = $"THÁNG {month} / {year}";
 
-            for (int i = pnlGrid.Controls.Count - 1; i >= 7; i--)
-            {
-                pnlGrid.Controls.RemoveAt(i);
-            }
+            pnlGrid.SuspendLayout();
 
-            DateTime firstDay = new DateTime(year, month, 1);
+            DateTime firstDayOfMonth = new DateTime(year, month, 1);
             int daysInMonth = DateTime.DaysInMonth(year, month);
-            int startCol = (int)firstDay.DayOfWeek;
-
-            int row = 1;
-            int col = startCol;
+            int startCol = (int)firstDayOfMonth.DayOfWeek;
 
             List<TaskItem> dbTasks = DatabaseHelper.GetTasksByMonth(month, year);
 
-            for (int day = 1; day <= daysInMonth; day++)
+            for (int i = 0; i < 42; i++)
             {
-                DayCell btnDay = new DayCell(day, month, year);
+                DayCell cell = matrixDays[i];
+                cell.Clear();
 
-                if (day == DateTime.Now.Day && month == DateTime.Now.Month && year == DateTime.Now.Year)
-                {
-                    btnDay.SetToday();
-                }
+                int dayVal = i - startCol + 1;
 
-                foreach (var task in dbTasks)
+                if (dayVal > 0 && dayVal <= daysInMonth)
                 {
-                    if (task.StartDate.Date == DateTime.Parse(btnDay.FullDate).Date)
+                    cell.Visible = true;
+                    cell.SetDate(dayVal, month, year);
+
+                    if (dayVal == DateTime.Now.Day && month == DateTime.Now.Month && year == DateTime.Now.Year)
                     {
-                        btnDay.LocalEvents.Add(task);
+                        cell.SetToday();
+                    }
+
+                    foreach (var task in dbTasks)
+                    {
+                        if (task.StartDate.Date == DateTime.Parse(cell.FullDate).Date)
+                        {
+                            cell.LocalEvents.Add(task);
+                        }
+                    }
+
+                    if (cell.LocalEvents.Count > 0)
+                    {
+                        cell.ShowInfo(cell.LocalEvents.Count);
                     }
                 }
-
-                if (btnDay.LocalEvents.Count > 0)
+                else
                 {
-                    btnDay.ShowInfo(btnDay.LocalEvents.Count);
+                    cell.Visible = false;
                 }
-
-                btnDay.MouseUp += DayCell_MouseUp;
-
-                pnlGrid.Controls.Add(btnDay, col, row);
-
-                col++;
-                if (col > 6) { col = 0; row++; }
             }
+
+            pnlGrid.ResumeLayout();
         }
 
         private void ChangeMonth(int step)
@@ -75,10 +80,21 @@ namespace FE_ToDoApp.Calendar
             LoadCalendar(_month, _year);
         }
 
+        private void LblMonthYear_Click(object sender, EventArgs e)
+        {
+            GotoDateForm frm = new GotoDateForm(_month, _year);
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                _month = frm.SelectedMonth;
+                _year = frm.SelectedYear;
+                LoadCalendar(_month, _year);
+            }
+        }
+
         private void DayCell_MouseUp(object sender, MouseEventArgs e)
         {
             DayCell cell = sender as DayCell;
-            if (cell == null) return;
+            if (cell == null || string.IsNullOrEmpty(cell.FullDate)) return;
 
             if (e.Button == MouseButtons.Right)
             {
@@ -90,8 +106,11 @@ namespace FE_ToDoApp.Calendar
 
                     if (addForm.ShowDialog() == DialogResult.OK)
                     {
-                        LoadCalendar(_month, _year);
-                        MessageBox.Show("Đã thêm công việc thành công!");
+                        if (addForm.CreatedTask != null && addForm.CreatedTask.Id != -1)
+                        {
+                            cell.LocalEvents.Add(addForm.CreatedTask);
+                            cell.ShowInfo(cell.LocalEvents.Count);
+                        }
                     }
                 });
                 menu.Show(cell, e.Location);
@@ -115,10 +134,8 @@ namespace FE_ToDoApp.Calendar
         private Color _colorHover = Color.LightSkyBlue;
         private Color _colorToday = Color.CornflowerBlue;
 
-        public DayCell(int day, int month, int year)
+        public DayCell()
         {
-            this.Text = day.ToString();
-            this.FullDate = $"{year}-{month}-{day}";
             this.Dock = DockStyle.Fill;
             this.FlatStyle = FlatStyle.Flat;
             this.FlatAppearance.BorderColor = Color.Silver;
@@ -128,8 +145,25 @@ namespace FE_ToDoApp.Calendar
             this.BackColor = _colorNormal;
             this.Cursor = Cursors.Hand;
 
-            this.MouseEnter += (s, e) => { if (!_isToday) this.BackColor = _colorHover; };
-            this.MouseLeave += (s, e) => { if (_isToday) this.BackColor = _colorToday; else this.BackColor = _colorNormal; };
+            this.MouseEnter += (s, e) => { if (!_isToday && this.Visible) this.BackColor = _colorHover; };
+            this.MouseLeave += (s, e) => { if (_isToday && this.Visible) this.BackColor = _colorToday; else this.BackColor = _colorNormal; };
+        }
+
+        public void Clear()
+        {
+            this.Text = "";
+            this.FullDate = "";
+            this.LocalEvents.Clear();
+            this._isToday = false;
+            this.BackColor = _colorNormal;
+            this.ForeColor = Color.Black;
+            this.Font = new Font("Segoe UI", 10);
+        }
+
+        public void SetDate(int day, int month, int year)
+        {
+            this.Text = day.ToString();
+            this.FullDate = $"{year}-{month}-{day}";
         }
 
         public void SetToday()
@@ -143,9 +177,14 @@ namespace FE_ToDoApp.Calendar
 
         public void ShowInfo(int count)
         {
-            this.Text = this.FullDate.Split('-')[2] + $"\n📅 {count} việc";
-            this.ForeColor = Color.DarkBlue;
-            if (!_isToday) this.BackColor = Color.AliceBlue;
+            string dayPart = this.FullDate.Split('-')[2];
+            this.Text = dayPart + $"\n📅 {count} việc";
+
+            if (!_isToday)
+            {
+                this.ForeColor = Color.DarkBlue;
+                this.BackColor = Color.AliceBlue;
+            }
         }
     }
 }

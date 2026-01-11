@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace FE_ToDoApp.Calendar
 {
@@ -8,6 +9,8 @@ namespace FE_ToDoApp.Calendar
         private System.ComponentModel.IContainer components = null;
         private Label lblMonthYear;
         private TableLayoutPanel pnlGrid;
+
+        public List<DayCell> matrixDays = new List<DayCell>();
 
         protected override void Dispose(bool disposing)
         {
@@ -26,6 +29,8 @@ namespace FE_ToDoApp.Calendar
             this.Size = new Size(1100, 760);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.BackColor = Color.White;
+
+            this.DoubleBuffered = true;
 
             Panel pnlHeader = new Panel();
             pnlHeader.Dock = DockStyle.Top;
@@ -46,6 +51,11 @@ namespace FE_ToDoApp.Calendar
             lblMonthYear.TextAlign = ContentAlignment.MiddleCenter;
             lblMonthYear.Font = new Font("Segoe UI", 16, FontStyle.Bold);
             lblMonthYear.ForeColor = Color.DarkSlateGray;
+            lblMonthYear.Cursor = Cursors.Hand;
+
+            ToolTip tt = new ToolTip();
+            tt.SetToolTip(lblMonthYear, "Nhấn vào đây để chọn nhanh Tháng/Năm");
+
             pnlHeader.Controls.Add(lblMonthYear);
             lblMonthYear.BringToFront();
 
@@ -81,6 +91,15 @@ namespace FE_ToDoApp.Calendar
                 lbl.BackColor = Color.AliceBlue;
                 if (i == 0 || i == 6) lbl.ForeColor = Color.Red;
                 pnlGrid.Controls.Add(lbl, i, 0);
+            }
+
+            matrixDays.Clear();
+            for (int i = 0; i < 42; i++)
+            {
+                DayCell cell = new DayCell();
+                cell.MouseUp += DayCell_MouseUp;
+                pnlGrid.Controls.Add(cell);
+                matrixDays.Add(cell);
             }
         }
 

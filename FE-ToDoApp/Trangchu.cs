@@ -4,13 +4,16 @@ using FE_ToDoApp.NewFolder;
 using FE_ToDoApp.Setting;
 using ChatbotAI_Form;
 using FE_ToDoApp.login;
-
+using System.Windows.Forms;
+using System.Collections.Generic;
+using System;
 
 namespace FE_ToDoApp
 {
     public partial class Trangchu : Form
     {
         private List<Form> privatePages = new List<Form>();
+
         public Trangchu()
         {
             InitializeComponent();
@@ -23,7 +26,6 @@ namespace FE_ToDoApp
 
         private void btnTrash_Click(object sender, EventArgs e)
         {
-
             ThungRac thungRacForm = new ThungRac();
             thungRacForm.Show();
         }
@@ -50,7 +52,6 @@ namespace FE_ToDoApp
 
                 if (targetForm != null)
                 {
-
                     foreach (Control control in mainPanel.Controls)
                     {
                         if (control is Form form)
@@ -58,7 +59,6 @@ namespace FE_ToDoApp
                             form.Hide();
                         }
                     }
-
 
                     targetForm.Show();
                     targetForm.BringToFront();
@@ -78,22 +78,24 @@ namespace FE_ToDoApp
             newtodo.Show();
             privatePages.Add(newtodo);
 
-
             Private_Sidebar sidebar_item = new Private_Sidebar();
-
             sidebar_item.TargetForm = newtodo;
 
-
-
             sidebar_item.Click += sidebar_item_click;
-
         }
 
         private void btnCalendar_Click(object sender, EventArgs e)
         {
-            calendar calendar = new calendar();
-            calendar.ShowDialog();
+            mainPanel.Controls.Clear();
 
+            calendar frmCalendar = new calendar();
+
+            frmCalendar.TopLevel = false;
+            frmCalendar.FormBorderStyle = FormBorderStyle.None;
+            frmCalendar.Dock = DockStyle.Fill;
+
+            mainPanel.Controls.Add(frmCalendar);
+            frmCalendar.Show();
         }
 
         private void btn_logout_Click(object sender, EventArgs e)
@@ -105,8 +107,6 @@ namespace FE_ToDoApp
                 login1.Show();
                 this.Hide();
             }
-
-            
         }
     }
 }

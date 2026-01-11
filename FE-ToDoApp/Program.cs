@@ -20,7 +20,7 @@ namespace FE_ToDoApp
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();          
 
-            Application.Run(new setting());
+            Application.Run(new Trangchu());
         }
     }
 }
