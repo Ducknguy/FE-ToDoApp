@@ -9,7 +9,7 @@ namespace FE_ToDoApp.Lich_Trinh
     public partial class TaskItem : UserControl
     {
         private const string ConnectionString =
-            "Data Source=LAPTOP-HJ0H2N4I;Initial Catalog=ToDoApp;Integrated Security=True;Encrypt=False";
+            "Data Source=GIANG;Initial Catalog=ToDoApp;Integrated Security=True;Encrypt=False";
 
         private int _selectedTodoId = -1;
 
