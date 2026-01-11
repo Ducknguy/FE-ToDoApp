@@ -47,7 +47,7 @@ namespace FE_ToDoApp.Calendar
 
                 foreach (var task in dbTasks)
                 {
-                    if (task.StartDate.Date == DateTime.Parse(btnDay.FullDate).Date)
+                    if (task.DuaDate.Date == DateTime.Parse(btnDay.FullDate).Date)
                     {
                         btnDay.LocalEvents.Add(task);
                     }
@@ -147,5 +147,7 @@ namespace FE_ToDoApp.Calendar
             this.ForeColor = Color.DarkBlue;
             if (!_isToday) this.BackColor = Color.AliceBlue;
         }
+
+
     }
 }

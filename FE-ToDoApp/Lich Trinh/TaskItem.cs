@@ -9,7 +9,7 @@ namespace FE_ToDoApp.Lich_Trinh
     public partial class TaskItem : UserControl
     {
         private const string ConnectionString =
-            "Data Source=duc;Initial Catalog=ToDoApp;Integrated Security=True;Encrypt=False";
+            "Data Source=GIANG;Initial Catalog=ToDoApp;Integrated Security=True;Encrypt=False";
 
         private int _selectedTodoId = -1;
 
@@ -47,8 +47,8 @@ namespace FE_ToDoApp.Lich_Trinh
         private void WireEvents()
         {
             btn_add.Click += btn_add_Click;
-            btn_edit.Click += btn_edit_Click;
-            btn_delete.Click += btn_delete_Click;
+            //btn_edit.Click += btn_edit_Click;
+            //btn_delete.Click += btn_delete_Click;
 
             flp_task_left.SizeChanged += (s, e) => ResizeLeftListItemsToFullWidth();
             flp_task_right.SizeChanged += (s, e) => ResizeRightDetailToFullWidth();
@@ -223,8 +223,8 @@ namespace FE_ToDoApp.Lich_Trinh
             {
                 _deleteMode = false;
                 _editMode = false;
-                btn_delete.Text = "Xóa";
-                btn_edit.Text = "Sửa";
+                //btn_delete.Text = "Xóa";
+                //btn_edit.Text = "Sửa";
             }
 
             // Cập nhật nút hiển thị
@@ -273,14 +273,14 @@ namespace FE_ToDoApp.Lich_Trinh
         // ===== CHỨC NĂNG SỬA TODO (GIỐNG TODODETAILITEMCONTROL) =====
         private void btn_edit_Click(object? sender, EventArgs e)
         {
-            _editMode = !_editMode;
-            btn_edit.Text = _editMode ? "Xong" : "Sửa";
+            //_editMode = !_editMode;
+            //btn_edit.Text = _editMode ? "Xong" : "Sửa";
 
-            if (_editMode)
-            {
-                _deleteMode = false;
-                btn_delete.Text = "Xóa";
-            }
+            //if (_editMode)
+            //{
+            //    _deleteMode = false;
+            //    btn_delete.Text = "Xóa";
+            //}
 
             UpdateItemButtons();
         }
@@ -288,14 +288,14 @@ namespace FE_ToDoApp.Lich_Trinh
         // ===== CHỨC NĂNG XÓA TODO (GIỐNG TODODETAILITEMCONTROL) =====
         private void btn_delete_Click(object? sender, EventArgs e)
         {
-            _deleteMode = !_deleteMode;
-            btn_delete.Text = _deleteMode ? "Xong" : "Xóa";
+            //_deleteMode = !_deleteMode;
+            //btn_delete.Text = _deleteMode ? "Xong" : "Xóa";
 
-            if (_deleteMode)
-            {
-                _editMode = false;
-                btn_edit.Text = "Sửa";
-            }
+            //if (_deleteMode)
+            //{
+            //    _editMode = false;
+            //    btn_edit.Text = "Sửa";
+            //}
 
             UpdateItemButtons();
         }

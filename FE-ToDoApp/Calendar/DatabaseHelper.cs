@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
 
@@ -8,18 +7,18 @@ namespace FE_ToDoApp.Calendar
 {
     public static class DatabaseHelper
     {
-        private static string connectionString = "Data Source=duc;Initial Catalog=ToDoApp;Integrated Security=True;";
+        private static string connectionString = "Data Source=LAPTOP-HJ0H2N4I;Initial Catalog=ToDoApp;Integrated Security=True;";
 
         public static List<TaskItem> GetTasksByMonth(int month, int year)
         {
             List<TaskItem> list = new List<TaskItem>();
-
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 try
                 {
                     conn.Open();
-                    string sql = "SELECT * FROM Calendar WHERE MONTH(StartDate) = @m AND YEAR(StartDate) = @y";
+                    // Lấy dữ liệu từ bảng [Task] thay vì Calendar
+                    string sql = "SELECT * FROM [Task] WHERE MONTH(DueDate) = @m AND YEAR(DueDate) = @y";
 
                     using (SqlCommand cmd = new SqlCommand(sql, conn))
                     {
@@ -33,19 +32,16 @@ namespace FE_ToDoApp.Calendar
                                 TaskItem item = new TaskItem();
                                 item.Id = Convert.ToInt32(reader["Id"]);
                                 item.Title = reader["Title"].ToString();
+                                // Kiểm tra null cho các cột có thể trống
                                 item.Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : "";
-                                item.StartDate = Convert.ToDateTime(reader["StartDate"]);
-                                item.Status = reader["Status"] != DBNull.Value ? reader["Status"].ToString() : "New";
-
+                                item.DuaDate = Convert.ToDateTime(reader["DueDate"]);
+                                item.Status = reader["Status"] != DBNull.Value ? reader["Status"].ToString() : "Pending";
                                 list.Add(item);
                             }
                         }
                     }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Lỗi kết nối SQL: " + ex.Message);
-                }
+                catch (Exception ex) { MessageBox.Show("Lỗi tải lịch: " + ex.Message); }
             }
             return list;
         }
@@ -57,19 +53,20 @@ namespace FE_ToDoApp.Calendar
                 try
                 {
                     conn.Open();
-                    string sql = "INSERT INTO Calendar (Title, Description, StartDate, Status) VALUES (@Title, @Desc, @Start, 'New')";
+                    // INSERT vào bảng [Task] và KHÔNG cần UserID nữa
+                    string sql = "INSERT INTO [Task] (Title, Description, DueDate, Status, Category) VALUES (@Title, @Desc, @Date, 'Pending', 'General')";
                     using (SqlCommand cmd = new SqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@Title", task.Title);
                         cmd.Parameters.AddWithValue("@Desc", task.Description ?? "");
-                        cmd.Parameters.AddWithValue("@Start", task.StartDate);
+                        cmd.Parameters.AddWithValue("@Date", task.DuaDate);
                         cmd.ExecuteNonQuery();
                     }
                 }
                 catch (Exception ex) { MessageBox.Show("Lỗi thêm việc: " + ex.Message); }
             }
         }
-        // 3. Hàm Sửa công việc
+
         public static void UpdateTask(TaskItem task)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -77,20 +74,21 @@ namespace FE_ToDoApp.Calendar
                 try
                 {
                     conn.Open();
-                    string sql = "UPDATE Calendar SET Title = @Title, Description = @Desc, StartDate = @Start WHERE Id = @Id";
+                    // Update bảng [Task]
+                    string sql = "UPDATE [Task] SET Title = @Title, Description = @Desc, DueDate = @Date WHERE Id = @Id";
                     using (SqlCommand cmd = new SqlCommand(sql, conn))
                     {
-                        cmd.Parameters.AddWithValue("@Id", task.Id); // Quan trọng: Phải có ID để biết sửa dòng nào
+                        cmd.Parameters.AddWithValue("@Id", task.Id);
                         cmd.Parameters.AddWithValue("@Title", task.Title);
                         cmd.Parameters.AddWithValue("@Desc", task.Description ?? "");
-                        cmd.Parameters.AddWithValue("@Start", task.StartDate);
+                        cmd.Parameters.AddWithValue("@Date", task.DuaDate);
                         cmd.ExecuteNonQuery();
                     }
                 }
                 catch (Exception ex) { MessageBox.Show("Lỗi sửa: " + ex.Message); }
             }
         }
-        // 4. Hàm Xóa công việc
+
         public static void DeleteTask(int id)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -98,7 +96,8 @@ namespace FE_ToDoApp.Calendar
                 try
                 {
                     conn.Open();
-                    string sql = "DELETE FROM Calendar WHERE Id = @Id";
+                    // Delete từ bảng [Task]
+                    string sql = "DELETE FROM [Task] WHERE Id = @Id";
                     using (SqlCommand cmd = new SqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@Id", id);
