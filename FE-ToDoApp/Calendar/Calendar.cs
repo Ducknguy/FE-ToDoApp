@@ -147,5 +147,7 @@ namespace FE_ToDoApp.Calendar
             this.ForeColor = Color.DarkBlue;
             if (!_isToday) this.BackColor = Color.AliceBlue;
         }
+
+
     }
 }

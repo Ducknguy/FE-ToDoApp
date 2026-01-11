@@ -5,9 +5,11 @@ using FE_ToDoApp.Lich_Trinh;
 using FE_ToDoApp.login;
 //using FE_ToDoApp.NewFolder;
 using FE_ToDoApp.Setting;
+using FE_ToDoApp.ThungRac;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+    
 
 namespace FE_ToDoApp
 {
@@ -49,13 +51,13 @@ namespace FE_ToDoApp
 
         private void OpenDashboard()
         {
-            mainPanel.Controls.Clear();
+            //mainPanel.Controls.Clear();
 
             DashboardControl ucDashboard = new DashboardControl();
 
-            ucDashboard.Dock = DockStyle.Fill;
-            mainPanel.Controls.Add(ucDashboard);
-            ucDashboard.Show();
+            //ucDashboard.Dock = DockStyle.Fill;
+            //mainPanel.Controls.Add(ucDashboard);
+            //ucDashboard.Show();
         }
 
         //private void btnTrash_Click(object sender, EventArgs e)

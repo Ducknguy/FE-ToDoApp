@@ -8,6 +8,7 @@ namespace FE_ToDoApp.Lich_Trinh
     {
         private IContainer components = null!;
 
+        private Panel pnlHeader = null!;
         private Label lblTitle = null!;
         private FlowLayoutPanel flpBody = null!;
         private Panel pnlFooter = null!;
@@ -23,71 +24,105 @@ namespace FE_ToDoApp.Lich_Trinh
 
         private void InitializeComponent()
         {
-            components = new Container();
-
+            pnlHeader = new Panel();
             lblTitle = new Label();
             flpBody = new FlowLayoutPanel();
             pnlFooter = new Panel();
             btnAdd = new Button();
             btnEdit = new Button();
             btnDelete = new Button();
-
+            pnlHeader.SuspendLayout();
+            flpBody.SuspendLayout();
+            pnlFooter.SuspendLayout();
             SuspendLayout();
-
-            AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.White;
-            BorderStyle = BorderStyle.FixedSingle;
-            Padding = new Padding(12);
-            Size = new Size(600, 500);
-
-            // Header
-            lblTitle.Name = "lblTitle";
-            lblTitle.Text = "ten detail";
-            lblTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold, GraphicsUnit.Point);
+            // 
+            // pnlHeader
+            // 
+            pnlHeader.BackColor = Color.White;
+            pnlHeader.Controls.Add(lblTitle);
+            pnlHeader.Dock = DockStyle.Top;
+            pnlHeader.Location = new Point(12, 12);
+            pnlHeader.Name = "pnlHeader";
+            pnlHeader.Padding = new Padding(0, 0, 0, 12);
+            pnlHeader.Size = new Size(576, 50);
+            pnlHeader.TabIndex = 0;
+            // 
+            // lblTitle
+            // 
             lblTitle.AutoSize = true;
-            lblTitle.Margin = new Padding(0, 0, 0, 12);
-
-            // Body (items + footer)
-            flpBody.Name = "flpBody";
+            lblTitle.Dock = DockStyle.Fill;
+            lblTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            lblTitle.Location = new Point(0, 0);
+            lblTitle.Name = "lblTitle";
+            lblTitle.Size = new Size(140, 37);
+            lblTitle.TabIndex = 0;
+            lblTitle.Text = "ten detail";
+            lblTitle.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // flpBody
+            // 
+            flpBody.AutoScroll = true;
+            flpBody.Controls.Add(pnlFooter);
             flpBody.Dock = DockStyle.Fill;
             flpBody.FlowDirection = FlowDirection.TopDown;
-            flpBody.WrapContents = false;
-            flpBody.AutoScroll = true;
-            flpBody.Padding = new Padding(0);
+            flpBody.Location = new Point(12, 12);
             flpBody.Margin = new Padding(0);
-
-            // Footer panel
-            pnlFooter.Name = "pnlFooter";
-            pnlFooter.Height = 44;
-            pnlFooter.Width = 400;
-            pnlFooter.Margin = new Padding(0, 8, 0, 0);
-
-            btnAdd.Name = "btnAdd";
-            btnAdd.Text = "Thêm";
-            btnAdd.Size = new Size(80, 30);
-            btnAdd.Location = new Point(0, 7);
-
-            btnEdit.Name = "btnEdit";
-            btnEdit.Text = "Sửa";
-            btnEdit.Size = new Size(80, 30);
-            btnEdit.Location = new Point(90, 7);
-
-            btnDelete.Name = "btnDelete";
-            btnDelete.Text = "Xóa";
-            btnDelete.Size = new Size(80, 30);
-            btnDelete.Location = new Point(180, 7);
-
+            flpBody.Name = "flpBody";
+            flpBody.Size = new Size(576, 476);
+            flpBody.TabIndex = 1;
+            flpBody.WrapContents = false;
+            // 
+            // pnlFooter
+            // 
             pnlFooter.Controls.Add(btnAdd);
             pnlFooter.Controls.Add(btnEdit);
             pnlFooter.Controls.Add(btnDelete);
-
-            flpBody.Controls.Add(pnlFooter);
-
+            pnlFooter.Location = new Point(0, 8);
+            pnlFooter.Margin = new Padding(0, 8, 0, 0);
+            pnlFooter.Name = "pnlFooter";
+            pnlFooter.Size = new Size(400, 44);
+            pnlFooter.TabIndex = 0;
+            // 
+            // btnAdd
+            // 
+            btnAdd.Location = new Point(0, 7);
+            btnAdd.Name = "btnAdd";
+            btnAdd.Size = new Size(80, 30);
+            btnAdd.TabIndex = 0;
+            btnAdd.Text = "Thêm";
+            // 
+            // btnEdit
+            // 
+            btnEdit.Location = new Point(90, 7);
+            btnEdit.Name = "btnEdit";
+            btnEdit.Size = new Size(80, 30);
+            btnEdit.TabIndex = 1;
+            btnEdit.Text = "Sửa";
+            // 
+            // btnDelete
+            // 
+            btnDelete.Location = new Point(180, 7);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Size = new Size(80, 30);
+            btnDelete.TabIndex = 2;
+            btnDelete.Text = "Xóa";
+            // 
+            // TodoDetailItemControl
+            // 
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.White;
+            BorderStyle = BorderStyle.FixedSingle;
+            Controls.Add(pnlHeader);
             Controls.Add(flpBody);
-            Controls.Add(lblTitle);
-
+            Name = "TodoDetailItemControl";
+            Padding = new Padding(12);
+            Size = new Size(600, 500);
+            pnlHeader.ResumeLayout(false);
+            pnlHeader.PerformLayout();
+            flpBody.ResumeLayout(false);
+            pnlFooter.ResumeLayout(false);
             ResumeLayout(false);
-            PerformLayout();
         }
     }
 }

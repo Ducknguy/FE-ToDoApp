@@ -4,6 +4,7 @@ using FE_ToDoApp.Setting;
 using FE_ToDoApp.Calendar;
 using ChatbotAI_Form;
 using System.Globalization;
+using FE_ToDoApp.ThungRac;
 
 
 namespace FE_ToDoApp
@@ -20,7 +21,7 @@ namespace FE_ToDoApp
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();          
 
-            Application.Run(new Login1());
+            Application.Run(new Trangchu());
         }
     }
 }

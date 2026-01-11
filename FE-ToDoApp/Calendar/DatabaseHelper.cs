@@ -7,8 +7,7 @@ namespace FE_ToDoApp.Calendar
 {
     public static class DatabaseHelper
     {
-        // QUAN TRỌNG: Dùng chuỗi kết nối tới database 'user' (nơi chứa bảng Task)
-        private static string connectionString = @"Data Source=.;Initial Catalog=user;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
+        private static string connectionString = "Data Source=LAPTOP-HJ0H2N4I;Initial Catalog=ToDoApp;Integrated Security=True;";
 
         public static List<TaskItem> GetTasksByMonth(int month, int year)
         {
