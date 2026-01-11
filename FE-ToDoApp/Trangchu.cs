@@ -3,11 +3,13 @@ using FE_ToDoApp.Calendar;
 using FE_ToDoApp.Dashboard;
 using FE_ToDoApp.Lich_Trinh;
 using FE_ToDoApp.login;
-using FE_ToDoApp.NewFolder;
+//using FE_ToDoApp.NewFolder;
 using FE_ToDoApp.Setting;
+using FE_ToDoApp.ThungRac;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+    
 
 namespace FE_ToDoApp
 {
@@ -49,19 +51,26 @@ namespace FE_ToDoApp
 
         private void OpenDashboard()
         {
-            mainPanel.Controls.Clear();
+            //mainPanel.Controls.Clear();
 
-            DashboardControl ucDashboard = new DashboardControl(_currentUserId, _currentUsername);
+            ////DashboardControl ucDashboard = new DashboardControl(_currentUserId, _currentUsername);
 
-            ucDashboard.Dock = DockStyle.Fill;
-            mainPanel.Controls.Add(ucDashboard);
-            ucDashboard.Show();
+            //ucDashboard.Dock = DockStyle.Fill;
+            //mainPanel.Controls.Add(ucDashboard);
+            //ucDashboard.Show();
         }
 
         private void btnTrash_Click(object sender, EventArgs e)
         {
-            ThungRac thungRacForm = new ThungRac();
-            thungRacForm.ShowDialog();
+            try
+            {
+                var f = new FE_ToDoApp.ThungRac.Thungrac();
+                f.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Không mở được Thùng rác: " + ex.Message);
+            }
         }
 
         private void btn_CaiDat(object sender, EventArgs e)
@@ -102,19 +111,19 @@ namespace FE_ToDoApp
 
         private void add_private_item_click(object sender, EventArgs e)
         {
-            ToDoList newtodo = new ToDoList();
-            newtodo.TopLevel = false;
-            newtodo.FormBorderStyle = FormBorderStyle.None;
-            newtodo.Dock = DockStyle.Left;
+            //ToDoList newtodo = new ToDoList();
+            //newtodo.TopLevel = false;
+            //newtodo.FormBorderStyle = FormBorderStyle.None;
+            //newtodo.Dock = DockStyle.Left;
 
-            mainPanel.Controls.Clear();
-            mainPanel.Controls.Add(newtodo);
-            newtodo.Show();
-            privatePages.Add(newtodo);
+            //mainPanel.Controls.Clear();
+            //mainPanel.Controls.Add(newtodo);
+            //newtodo.Show();
+            //privatePages.Add(newtodo);
 
-            Private_Sidebar sidebar_item = new Private_Sidebar();
-            sidebar_item.TargetForm = newtodo;
-            sidebar_item.Click += sidebar_item_click;
+            //Private_Sidebar sidebar_item = new Private_Sidebar();
+            //sidebar_item.TargetForm = newtodo;
+            //sidebar_item.Click += sidebar_item_click;
 
         }
 

@@ -8,7 +8,7 @@ namespace FE_ToDoApp.Calendar
 {
     public static class DatabaseHelper
     {
-        private static string connectionString = "Data Source=duc;Initial Catalog=ToDoApp;Integrated Security=True;";
+        private static string connectionString = "Data Source=LAPTOP-HJ0H2N4I;Initial Catalog=ToDoApp;Integrated Security=True;";
 
         public static List<TaskItem> GetTasksByMonth(int month, int year)
         {
@@ -19,7 +19,7 @@ namespace FE_ToDoApp.Calendar
                 try
                 {
                     conn.Open();
-                    string sql = "SELECT * FROM Calendar WHERE MONTH(StartDate) = @m AND YEAR(StartDate) = @y";
+                    string sql = "SELECT * FROM Calendar WHERE MONTH(StartDate) = @m AND YEAR(StartDate) = @y AND IsDeleted = 0";
 
                     using (SqlCommand cmd = new SqlCommand(sql, conn))
                     {

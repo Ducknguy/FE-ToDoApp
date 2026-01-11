@@ -1,4 +1,4 @@
-﻿namespace ChatbotAI_Form
+﻿namespace FE_ToDoApp.ThungRac
 {
     partial class Thungrac
     {
@@ -24,9 +24,18 @@
             chkTodo = new CheckBox();
             chkWeekly = new CheckBox();
             chkCalendar = new CheckBox();
-            panel1 = new Panel();
+            flpTrashList = new FlowLayoutPanel();
+            pTrashItemSample = new Panel();
+            btnDeleteForever = new Button();
+            btnRestore = new Button();
+            lblTypeTag = new Label();
+            lblTrashMeta = new Label();
+            lblTrashTitle = new Label();
+            pTypeColor = new Panel();
             pnlSearch.SuspendLayout();
             pnlFilter.SuspendLayout();
+            flpTrashList.SuspendLayout();
+            pTrashItemSample.SuspendLayout();
             SuspendLayout();
             // 
             // txtSearch
@@ -103,6 +112,7 @@
             // 
             chkTodo.AutoSize = true;
             chkTodo.BackColor = Color.WhiteSmoke;
+            chkTodo.Cursor = Cursors.Hand;
             chkTodo.Location = new Point(10, 7);
             chkTodo.Name = "chkTodo";
             chkTodo.Size = new Size(53, 19);
@@ -113,6 +123,7 @@
             // chkWeekly
             // 
             chkWeekly.AutoSize = true;
+            chkWeekly.Cursor = Cursors.Hand;
             chkWeekly.Location = new Point(156, 7);
             chkWeekly.Name = "chkWeekly";
             chkWeekly.Size = new Size(64, 19);
@@ -122,19 +133,112 @@
             // chkCalendar
             // 
             chkCalendar.AutoSize = true;
+            chkCalendar.Cursor = Cursors.Hand;
             chkCalendar.Location = new Point(313, 7);
             chkCalendar.Name = "chkCalendar";
             chkCalendar.Size = new Size(73, 19);
             chkCalendar.TabIndex = 2;
             chkCalendar.Text = "Calendar";
             // 
-            // panel1
+            // flpTrashList
             // 
-            panel1.Location = new Point(0, 124);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(420, 354);
-            panel1.TabIndex = 5;
-            panel1.Visible = false;
+            flpTrashList.AutoScroll = true;
+            flpTrashList.BackColor = Color.White;
+            flpTrashList.Controls.Add(pTrashItemSample);
+            flpTrashList.FlowDirection = FlowDirection.TopDown;
+            flpTrashList.Location = new Point(0, 108);
+            flpTrashList.Name = "flpTrashList";
+            flpTrashList.Padding = new Padding(12, 10, 12, 10);
+            flpTrashList.Size = new Size(420, 362);
+            flpTrashList.TabIndex = 5;
+            flpTrashList.Visible = false;
+            flpTrashList.WrapContents = false;
+            // 
+            // pTrashItemSample
+            // 
+            pTrashItemSample.BackColor = Color.WhiteSmoke;
+            pTrashItemSample.BorderStyle = BorderStyle.FixedSingle;
+            pTrashItemSample.Controls.Add(btnDeleteForever);
+            pTrashItemSample.Controls.Add(btnRestore);
+            pTrashItemSample.Controls.Add(lblTypeTag);
+            pTrashItemSample.Controls.Add(lblTrashMeta);
+            pTrashItemSample.Controls.Add(lblTrashTitle);
+            pTrashItemSample.Controls.Add(pTypeColor);
+            pTrashItemSample.Location = new Point(12, 10);
+            pTrashItemSample.Margin = new Padding(0, 0, 0, 10);
+            pTrashItemSample.Name = "pTrashItemSample";
+            pTrashItemSample.Size = new Size(396, 78);
+            pTrashItemSample.TabIndex = 0;
+            pTrashItemSample.Visible = false;
+            // 
+            // btnDeleteForever
+            // 
+            btnDeleteForever.BackColor = Color.MistyRose;
+            btnDeleteForever.Cursor = Cursors.Hand;
+            btnDeleteForever.FlatAppearance.BorderSize = 0;
+            btnDeleteForever.FlatStyle = FlatStyle.Flat;
+            btnDeleteForever.Font = new Font("Segoe UI", 9F);
+            btnDeleteForever.ForeColor = Color.DarkRed;
+            btnDeleteForever.Location = new Point(330, 42);
+            btnDeleteForever.Name = "btnDeleteForever";
+            btnDeleteForever.Size = new Size(45, 24);
+            btnDeleteForever.TabIndex = 5;
+            btnDeleteForever.Text = "✖";
+            btnDeleteForever.UseVisualStyleBackColor = false;
+            // 
+            // btnRestore
+            // 
+            btnRestore.BackColor = Color.PaleGreen;
+            btnRestore.Cursor = Cursors.Hand;
+            btnRestore.FlatAppearance.BorderSize = 0;
+            btnRestore.FlatStyle = FlatStyle.Flat;
+            btnRestore.Font = new Font("Segoe UI", 9F);
+            btnRestore.Location = new Point(330, 12);
+            btnRestore.Name = "btnRestore";
+            btnRestore.Size = new Size(45, 24);
+            btnRestore.TabIndex = 4;
+            btnRestore.Text = "♻";
+            btnRestore.UseVisualStyleBackColor = false;
+            // 
+            // lblTypeTag
+            // 
+            lblTypeTag.BackColor = Color.LightSkyBlue;
+            lblTypeTag.Font = new Font("Segoe UI Semibold", 8.5F);
+            lblTypeTag.ForeColor = Color.DarkBlue;
+            lblTypeTag.Location = new Point(255, 10);
+            lblTypeTag.Name = "lblTypeTag";
+            lblTypeTag.Size = new Size(70, 22);
+            lblTypeTag.TabIndex = 3;
+            lblTypeTag.Text = "TODO";
+            lblTypeTag.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // lblTrashMeta
+            // 
+            lblTrashMeta.Font = new Font("Segoe UI", 9F);
+            lblTrashMeta.ForeColor = Color.Gray;
+            lblTrashMeta.Location = new Point(14, 40);
+            lblTrashMeta.Name = "lblTrashMeta";
+            lblTrashMeta.Size = new Size(235, 20);
+            lblTrashMeta.TabIndex = 2;
+            lblTrashMeta.Text = "Đã xóa: 10/01/2026 14:20";
+            // 
+            // lblTrashTitle
+            // 
+            lblTrashTitle.Font = new Font("Segoe UI Semibold", 11F);
+            lblTrashTitle.ForeColor = Color.FromArgb(40, 40, 40);
+            lblTrashTitle.Location = new Point(14, 10);
+            lblTrashTitle.Name = "lblTrashTitle";
+            lblTrashTitle.Size = new Size(235, 24);
+            lblTrashTitle.TabIndex = 1;
+            lblTrashTitle.Text = "Tiêu đề công việc bị xóa";
+            // 
+            // pTypeColor
+            // 
+            pTypeColor.BackColor = Color.DodgerBlue;
+            pTypeColor.Location = new Point(0, 0);
+            pTypeColor.Name = "pTypeColor";
+            pTypeColor.Size = new Size(10, 78);
+            pTypeColor.TabIndex = 0;
             // 
             // Thungrac
             // 
@@ -142,7 +246,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             ClientSize = new Size(420, 500);
-            Controls.Add(panel1);
+            Controls.Add(flpTrashList);
             Controls.Add(pnlFilter);
             Controls.Add(pnlSearch);
             Controls.Add(lblEmptyText);
@@ -156,6 +260,8 @@
             pnlSearch.PerformLayout();
             pnlFilter.ResumeLayout(false);
             pnlFilter.PerformLayout();
+            flpTrashList.ResumeLayout(false);
+            pTrashItemSample.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -170,7 +276,17 @@
         private CheckBox chkTodo;
         private CheckBox chkWeekly;
         private CheckBox chkCalendar;
-        private Panel panel1;
-        //
+
+        // ✅ thay panel1
+        private FlowLayoutPanel flpTrashList;
+
+        // ✅ controls card mẫu
+        private Panel pTrashItemSample;
+        private Panel pTypeColor;
+        private Label lblTrashTitle;
+        private Label lblTrashMeta;
+        private Label lblTypeTag;
+        private Button btnRestore;
+        private Button btnDeleteForever;
     }
 }
