@@ -8,12 +8,8 @@ namespace FE_ToDoApp.Lich_Trinh
 {
     public partial class TaskItem : UserControl
     {
-        private const string ConnectionString =
-            "Data Source=GIANG;Initial Catalog=ToDoApp;Integrated Security=True;Encrypt=False";
-
         private int _selectedTodoId = -1;
 
-        // ===== STATE (GIỐNG TODODETAILITEMCONTROL) =====
         private bool _deleteMode = false;
         private bool _editMode = false;
 
@@ -47,8 +43,6 @@ namespace FE_ToDoApp.Lich_Trinh
         private void WireEvents()
         {
             btn_add.Click += btn_add_Click;
-            //btn_edit.Click += btn_edit_Click;
-            //btn_delete.Click += btn_delete_Click;
 
             flp_task_left.SizeChanged += (s, e) => ResizeLeftListItemsToFullWidth();
             flp_task_right.SizeChanged += (s, e) => ResizeRightDetailToFullWidth();
@@ -72,12 +66,11 @@ namespace FE_ToDoApp.Lich_Trinh
             };
         }
 
-        // RIGHT detail control pinned
         private void SetupRightDetail()
         {
             flp_task_right.Controls.Clear();
 
-            _detail.ConnectionString = ConnectionString;
+            _detail.ConnectionString = DatabaseHelper.ConnectionString;
             _detail.AutoSize = false;
             _detail.Margin = new Padding(0);
             _detail.Width = GetRightWidth();
@@ -329,10 +322,11 @@ namespace FE_ToDoApp.Lich_Trinh
         // ===== DATABASE OPERATIONS =====
         private static DataTable Db_GetTodos()
         {
-            using var conn = new SqlConnection(ConnectionString);
+            using var conn = DatabaseHelper.GetConnection();
             using var cmd = new SqlCommand(@"
                 SELECT id_todo, title
                 FROM Todo_List_Detail
+                WHERE (IsDeleted = 0 OR IsDeleted IS NULL)
                 ORDER BY updated_at DESC, id_todo DESC;", conn);
 
             using var da = new SqlDataAdapter(cmd);
@@ -343,13 +337,13 @@ namespace FE_ToDoApp.Lich_Trinh
 
         private static int Db_InsertTodo(string title)
         {
-            using var conn = new SqlConnection(ConnectionString);
+            using var conn = DatabaseHelper.GetConnection();
             conn.Open();
 
             using var cmd = new SqlCommand(@"
-                INSERT INTO Todo_List_Detail (title, created_at, updated_at)
+                INSERT INTO Todo_List_Detail (title, userid, created_at, updated_at)
                 OUTPUT INSERTED.id_todo
-                VALUES (@title, GETDATE(), GETDATE());", conn);
+                VALUES (@title, 1, GETDATE(), GETDATE());", conn);
 
             cmd.Parameters.Add("@title", SqlDbType.NVarChar, 255).Value = title;
             return Convert.ToInt32(cmd.ExecuteScalar());
@@ -357,7 +351,7 @@ namespace FE_ToDoApp.Lich_Trinh
 
         private static void Db_UpdateTodoTitle(int todoId, string newTitle)
         {
-            using var conn = new SqlConnection(ConnectionString);
+            using var conn = DatabaseHelper.GetConnection();
             conn.Open();
 
             using var cmd = new SqlCommand(@"
@@ -372,20 +366,15 @@ namespace FE_ToDoApp.Lich_Trinh
 
         private static void Db_DeleteTodo(int todoId)
         {
-            using var conn = new SqlConnection(ConnectionString);
+            using var conn = DatabaseHelper.GetConnection();
             conn.Open();
 
-            // Xóa các items trước
-            using var cmdItems = new SqlCommand(@"
-                DELETE FROM Todo_List_Item WHERE id_todo = @id;", conn);
-            cmdItems.Parameters.AddWithValue("@id", todoId);
-            cmdItems.ExecuteNonQuery();
-
-            // Sau đó xóa todo
-            using var cmdTodo = new SqlCommand(@"
-                DELETE FROM Todo_List_Detail WHERE id_todo = @id;", conn);
-            cmdTodo.Parameters.AddWithValue("@id", todoId);
-            cmdTodo.ExecuteNonQuery();
+            using var cmd = new SqlCommand(@"
+                UPDATE Todo_List_Detail 
+                SET IsDeleted = 1, DeletedAt = GETDATE() 
+                WHERE id_todo = @id;", conn);
+            cmd.Parameters.AddWithValue("@id", todoId);
+            cmd.ExecuteNonQuery();
         }
 
         // widths

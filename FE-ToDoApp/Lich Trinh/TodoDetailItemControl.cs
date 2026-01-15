@@ -11,7 +11,7 @@ namespace FE_ToDoApp.Lich_Trinh
     public partial class TodoDetailItemControl : UserControl
     {
         // ===== PUBLIC (TaskItem dùng) =====
-        public string ConnectionString { get; set; }
+        public string ConnectionString { get; set; } = DatabaseHelper.ConnectionString;
 
         public int TodoId { get; private set; } = -1;
 
@@ -166,19 +166,20 @@ namespace FE_ToDoApp.Lich_Trinh
                 Width = rowWidth,
                 Margin = new Padding(4, 4, 4, 4),
                 BackColor = Color.White,
-                BorderStyle = BorderStyle.FixedSingle
+                BorderStyle = BorderStyle.FixedSingle,
+                Tag = itemId
             };
 
             CheckBox chk = new CheckBox
             {
                 Location = new Point(4, 10),
                 Checked = status == 2,
-                AutoSize = false,  // CHANGED: Fixed size
-                Width = 20,        // CHANGED: Specific width
-                Height = 20        // CHANGED: Specific height
+                AutoSize = false,
+                Width = 20,
+                Height = 20,
+                FlatStyle = FlatStyle.Flat
             };
 
-            // DEBUG: Make label VERY visible
             string displayText = string.IsNullOrWhiteSpace(text) ? "[EMPTY TEXT]" : text;
             
             Label lbl = new Label
@@ -192,6 +193,20 @@ namespace FE_ToDoApp.Lich_Trinh
                 Font = new Font("Segoe UI", 11F, FontStyle.Regular, GraphicsUnit.Point),
                 ForeColor = Color.Black,
                 TextAlign = ContentAlignment.MiddleLeft
+            };
+
+            // Icon hoàn thành (ban đầu ẩn)
+            Label lblDoneIcon = new Label
+            {
+                Name = "lblDoneIcon",
+                Text = "✓",
+                Location = new Point(rowWidth - 110, 8),
+                Width = 30,
+                Height = 24,
+                Font = new Font("Segoe UI", 14F, FontStyle.Bold, GraphicsUnit.Point),
+                ForeColor = Color.Green,
+                TextAlign = ContentAlignment.MiddleCenter,
+                Visible = false
             };
 
             Button btnDelete = new Button
@@ -222,7 +237,7 @@ namespace FE_ToDoApp.Lich_Trinh
             chk.CheckedChanged += (s, e) =>
             {
                 Db_UpdateItemStatus(itemId, chk.Checked ? (byte)2 : (byte)0);
-                ApplyDoneStyle(lbl, chk.Checked);
+                ApplyDoneStyle(row, lbl, chk, lblDoneIcon, chk.Checked);
             };
 
             // ===== DELETE =====
@@ -239,15 +254,17 @@ namespace FE_ToDoApp.Lich_Trinh
                 EditItem(itemId);
             };
 
-            ApplyDoneStyle(lbl, chk.Checked);
-
             row.Controls.Add(chk);
             row.Controls.Add(lbl);
+            row.Controls.Add(lblDoneIcon);
             row.Controls.Add(btnDelete);
             row.Controls.Add(btnEdit);
             
-            // CRITICAL: Bring label to front to ensure it's visible
             lbl.BringToFront();
+            lblDoneIcon.BringToFront();
+
+            // Apply initial style
+            ApplyDoneStyle(row, lbl, chk, lblDoneIcon, chk.Checked);
 
             return row;
         }
@@ -366,10 +383,13 @@ namespace FE_ToDoApp.Lich_Trinh
                     // Resize label và buttons trong row
                     foreach (Control child in row.Controls)
                     {
-                        if (child is Label lbl)
+                        if (child is Label lbl && child.Name != "lblDoneIcon")
                         {
                             lbl.Width = rowWidth - 80;
-                            // REMOVED: lbl.MaximumSize was causing height to be 0
+                        }
+                        else if (child is Label doneIcon && child.Name == "lblDoneIcon")
+                        {
+                            doneIcon.Left = rowWidth - 110;
                         }
                         else if (child is Button btn && btn.Name == "btnDelete")
                         {
@@ -387,11 +407,38 @@ namespace FE_ToDoApp.Lich_Trinh
         // =============================
         // STYLE
         // =============================
-        private void ApplyDoneStyle(Label lbl, bool done)
+        private void ApplyDoneStyle(Panel row, Label lbl, CheckBox chk, Label doneIcon, bool done)
         {
-            lbl.Font = new Font(lbl.Font,
-                done ? FontStyle.Strikeout : FontStyle.Regular);
-            lbl.ForeColor = done ? Color.Gray : Color.Black;
+            if (done)
+            {
+                // Row background - màu xanh nhạt
+                row.BackColor = Color.FromArgb(240, 255, 240); // Light green
+                
+                // Label - gạch ngang + màu xám + opacity effect
+                lbl.Font = new Font(lbl.Font, FontStyle.Strikeout);
+                lbl.ForeColor = Color.FromArgb(120, 120, 120); // Darker gray
+                
+                // Checkbox - màu xanh lá khi checked
+                chk.ForeColor = Color.Green;
+                
+                // Show done icon
+                doneIcon.Visible = true;
+            }
+            else
+            {
+                // Row background - trắng
+                row.BackColor = Color.White;
+                
+                // Label - bình thường
+                lbl.Font = new Font(lbl.Font, FontStyle.Regular);
+                lbl.ForeColor = Color.Black;
+                
+                // Checkbox - màu mặc định
+                chk.ForeColor = Color.Black;
+                
+                // Hide done icon
+                doneIcon.Visible = false;
+            }
         }
 
         // =============================
@@ -435,18 +482,10 @@ namespace FE_ToDoApp.Lich_Trinh
             using var conn = new SqlConnection(ConnectionString);
             conn.Open();
 
-            // Lấy id_item tiếp theo (MAX + 1)
-            using var cmdMax = new SqlCommand(@"
-                SELECT ISNULL(MAX(id_item), 0) + 1 
-                FROM Todo_List_Item;", conn);
-            int nextId = Convert.ToInt32(cmdMax.ExecuteScalar());
-
-            // INSERT với id_item đã được generate
             using var cmd = new SqlCommand(@"
-        INSERT INTO Todo_List_Item (id_item, id_todo, item_detail, status)
-        VALUES (@id_item, @todoId, @item_detail, 0);", conn);
+                INSERT INTO Todo_List_Item (id_todo, item_detail, status)
+                VALUES (@todoId, @item_detail, 0);", conn);
 
-            cmd.Parameters.AddWithValue("@id_item", nextId);
             cmd.Parameters.AddWithValue("@todoId", todoId);
             cmd.Parameters.AddWithValue("@item_detail", text);
 
