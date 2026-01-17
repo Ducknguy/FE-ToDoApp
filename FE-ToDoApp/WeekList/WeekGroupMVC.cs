@@ -10,20 +10,13 @@ using FE_ToDoApp.WeekList.Views.Dialogs;
 
 namespace FE_ToDoApp.WeekList       
 {
-    /// <summary>
-    /// WeekList với MVC Pattern và Category Management (Simplified)
-    /// Render 7 ngày trực tiếp, không dùng WeekItemsControl
-    /// </summary>
     public partial class WeekGroupMVC : UserControl
     {
-        // ===== CONNECTION =====
         private const string ConnectionString = "Data Source=duc;Initial Catalog=ToDoApp;Integrated Security=True;Encrypt=False";
 
-        // ===== CONTROLLERS =====
         private WeekCategoryController _categoryController;
         private WeekTaskController _taskController;
 
-        // ===== STATE =====
         private List<WeekCategory> _categories = new List<WeekCategory>();
         private week_category_item? _selectedCategoryItem;
         private int _currentCategoryId = -1;
@@ -35,49 +28,31 @@ namespace FE_ToDoApp.WeekList
         {
             InitializeComponent();
 
-            // Initialize Controllers
             _categoryController = new WeekCategoryController(ConnectionString);
             _taskController = new WeekTaskController(ConnectionString);
 
-            // Calculate current week
             _currentWeekStart = GetMonday(DateTime.Now);
-
-            // Wire button events - THÊM/SỬA/XÓA TASKS (không phải categories)
-            button1.Click += BtnAddTask_Click;      // Thêm task
-            button2.Click += BtnEditTask_Click;     // Sửa task
-            button3.Click += BtnDeleteTask_Click;   // Xóa task
-
-            // Đổi text của buttons cho rõ ràng
+            button1.Click += BtnAddTask_Click;     
+            button2.Click += BtnEditTask_Click;     
+            button3.Click += BtnDeleteTask_Click;   
             button1.Text = "➕ Thêm";
             button2.Text = "✏️ Sửa";
             button3.Text = "🗑️ Xóa";
-
-            // Wire search event
             txt_search_place.TextChanged += TxtSearch_TextChanged;
-
-            // Load initial data
             LoadCategories();
         }
-
-        // =============================
-        // CATEGORY MANAGEMENT
-        // =============================
-        
         private void LoadCategories()
         {
             try
             {
                 _categories = _categoryController.GetAllCategories();
 
-                // Clear old items
                 var toRemove = flowLayoutPanel1.Controls.OfType<week_category_item>().ToList();
                 foreach (var item in toRemove)
                 {
                     flowLayoutPanel1.Controls.Remove(item);
                     item.Dispose();
                 }
-
-                // Render new items after panel4
                 int insertIndex = flowLayoutPanel1.Controls.IndexOf(panel4) + 1;
                 
                 foreach (var category in _categories)
@@ -87,16 +62,19 @@ namespace FE_ToDoApp.WeekList
                         CategoryId = category.CategoryId,
                         CategoryName = category.CategoryName,
                         Width = 267,
-                        Height = 50,
+                        Height = 70,
                         Margin = new Padding(3)
                     };
 
+                    item.SetWeekRange(category.WeekStartDate, category.WeekEndDate);
                     item.Clicked += CategoryItem_Clicked;
+                    item.EditRequested += CategoryItem_EditRequested;
+                    item.DeleteRequested += CategoryItem_DeleteRequested;
+                    
                     flowLayoutPanel1.Controls.Add(item);
                     flowLayoutPanel1.Controls.SetChildIndex(item, insertIndex++);
                 }
 
-                // Auto-select first category
                 if (_categories.Any())
                 {
                     var firstItem = flowLayoutPanel1.Controls.OfType<week_category_item>().FirstOrDefault();
@@ -129,15 +107,86 @@ namespace FE_ToDoApp.WeekList
             _selectedCategoryItem = clickedItem;
             _selectedCategoryItem.SetSelected(true);
             _currentCategoryId = clickedItem.CategoryId;
-
-            // Load tasks cho category này
             LoadWeek();
         }
 
-        // =============================
-        // TASK MANAGEMENT (Render trực tiếp)
-        // =============================
-        
+        private void CategoryItem_EditRequested(object? sender, EventArgs e)
+        {
+            var item = sender as week_category_item;
+            if (item == null) return;
+
+            var category = _categories.FirstOrDefault(c => c.CategoryId == item.CategoryId);
+            if (category == null) return;
+
+            // Hỏi xác nhận trước khi sửa
+            var confirmResult = MessageBox.Show(
+                $"Bạn có muốn sửa nhóm công việc '{category.CategoryName}' không?",
+                "Xác nhận sửa",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (confirmResult != DialogResult.Yes)
+                return;
+
+            try
+            {
+                var dialog = new CategoryEditDialog(
+                    category.CategoryName, 
+                    category.WeekStartDate, 
+                    category.WeekEndDate);
+
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    _categoryController.UpdateCategory(
+                        category.CategoryId,
+                        dialog.CategoryName,
+                        dialog.WeekStartDate,
+                        dialog.WeekEndDate);
+
+                    LoadCategories();
+
+                    MessageBox.Show("Cập nhật nhóm công việc thành công!", "Thông báo",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void CategoryItem_DeleteRequested(object? sender, EventArgs e)
+        {
+            var item = sender as week_category_item;
+            if (item == null) return;
+
+            var category = _categories.FirstOrDefault(c => c.CategoryId == item.CategoryId);
+            if (category == null) return;
+            var confirmResult = MessageBox.Show(
+                $"Bạn có chắc chắn muốn xóa nhóm công việc '{category.CategoryName}' không?\n\n" +
+                "Tất cả các task trong nhóm này sẽ không bị xóa nhưng sẽ không hiển thị trong view này nữa.",
+                "Xác nhận xóa",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (confirmResult != DialogResult.Yes)
+                return;
+
+            try
+            {
+                _categoryController.DeleteCategory(category.CategoryId);
+                LoadCategories();
+
+                MessageBox.Show("Xóa nhóm công việc thành công!", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
         private void LoadWeek()
         {
             if (_currentCategoryId <= 0)
@@ -148,10 +197,8 @@ namespace FE_ToDoApp.WeekList
 
             try
             {
-                // Load từ Controller
                 _allTasks = _taskController.GetTasksByCategory(_currentCategoryId, _currentWeekStart);
 
-                // Apply search filter
                 var filtered = _allTasks;
                 string searchKeyword = txt_search_place.Text.Trim();
 
@@ -161,8 +208,6 @@ namespace FE_ToDoApp.WeekList
                         .Where(t => t.Title.IndexOf(searchKeyword, StringComparison.OrdinalIgnoreCase) >= 0)
                         .ToList();
                 }
-
-                // Group theo ngày và render
                 var grouped = filtered
                     .GroupBy(t => t.DayOfWeek)
                     .ToDictionary(g => g.Key, g => g.ToList());
@@ -185,16 +230,12 @@ namespace FE_ToDoApp.WeekList
         private void ClearAndRenderDay(Panel dayPanel, List<WeekTask> tasks)
         {
             if (dayPanel == null) return;
-
-            // Xóa tất cả checkbox cũ
             var toRemove = dayPanel.Controls.OfType<CheckBox>().ToList();
             foreach (var chk in toRemove)
             {
                 dayPanel.Controls.Remove(chk);
                 chk.Dispose();
             }
-
-            // Render checkboxes mới
             int yPos = 70;
             foreach (var task in tasks)
             {
@@ -216,74 +257,59 @@ namespace FE_ToDoApp.WeekList
                 yPos += 30;
             }
         }
+        //private int GetDayOfWeekFromPanel(Panel panel)
+        //{
+        //    if (panel == panel5) return 1;  // Monday
+        //    if (panel == panel7) return 2;  // Tuesday
+        //    if (panel == panel9) return 3;  // Wednesday
+        //    if (panel == panel11) return 4; // Thursday
+        //    if (panel == panel15) return 5; // Friday
+        //    if (panel == panel17) return 6; // Saturday
+        //    if (panel == panel19) return 7; // Sunday
+        //    return 1; // Default Monday
+        //}
+        //private void AddTaskToDay(int dayOfWeek)
+        //{
+        //    if (_currentCategoryId <= 0)
+        //    {
+        //        MessageBox.Show("Vui lòng chọn category trước!", "Thông báo",
+        //            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        //        return;
+        //    }
 
-        /// <summary>
-        /// Lấy dayOfWeek từ panel name
-        /// </summary>
-        private int GetDayOfWeekFromPanel(Panel panel)
-        {
-            if (panel == panel5) return 1;  // Monday
-            if (panel == panel7) return 2;  // Tuesday
-            if (panel == panel9) return 3;  // Wednesday
-            if (panel == panel11) return 4; // Thursday
-            if (panel == panel15) return 5; // Friday
-            if (panel == panel17) return 6; // Saturday
-            if (panel == panel19) return 7; // Sunday
-            return 1; // Default Monday
-        }
+        //    var dialog = new TaskEditDialog("", dayOfWeek);
+        //    if (dialog.ShowDialog() == DialogResult.OK)
+        //    {
+        //        try
+        //        {
+        //            int newTaskId = _taskController.AddTask(
+        //                _currentCategoryId,
+        //                _currentWeekStart,
+        //                dialog.DayOfWeek,
+        //                dialog.TaskTitle);
 
-        /// <summary>
-        /// Thêm task vào ngày cụ thể
-        /// </summary>
-        private void AddTaskToDay(int dayOfWeek)
-        {
-            if (_currentCategoryId <= 0)
-            {
-                MessageBox.Show("Vui lòng chọn category trước!", "Thông báo",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+        //            _allTasks.Add(new WeekTask
+        //            {
+        //                TaskId = newTaskId,
+        //                CategoryId = _currentCategoryId,
+        //                DayOfWeek = dialog.DayOfWeek,
+        //                Title = dialog.TaskTitle,
+        //                IsDone = false,
+        //                OrderIndex = 0
+        //            });
 
-            var dialog = new TaskEditDialog("", dayOfWeek);
-            if (dialog.ShowDialog() == DialogResult.OK)
-            {
-                try
-                {
-                    int newTaskId = _taskController.AddTask(
-                        _currentCategoryId,
-                        _currentWeekStart,
-                        dialog.DayOfWeek,
-                        dialog.TaskTitle);
+        //            LoadWeek();
+        //            MessageBox.Show("Thêm task thành công!", "Thông báo",
+        //                MessageBoxButtons.OK, MessageBoxIcon.Information);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi",
+        //                MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //        }
+        //    }
+        //}
 
-                    _allTasks.Add(new WeekTask
-                    {
-                        TaskId = newTaskId,
-                        CategoryId = _currentCategoryId,
-                        DayOfWeek = dialog.DayOfWeek,
-                        Title = dialog.TaskTitle,
-                        IsDone = false,
-                        OrderIndex = 0
-                    });
-
-                    LoadWeek();
-                    MessageBox.Show("Thêm task thành công!", "Thông báo",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
-
-        // =============================
-        // TASK CRUD - TOOLBAR BUTTONS
-        // =============================
-        
-        /// <summary>
-        /// Nút Thêm - Hiện dropdown chọn ngày
-        /// </summary>
         private void BtnAddTask_Click(object? sender, EventArgs e)
         {
             if (_currentCategoryId <= 0)
@@ -326,25 +352,16 @@ namespace FE_ToDoApp.WeekList
             }
         }
 
-        /// <summary>
-        /// Nút Sửa - Sửa task đang chọn
-        /// </summary>
         private void BtnEditTask_Click(object? sender, EventArgs e)
         {
             EditTask();
         }
 
-        /// <summary>
-        /// Nút Xóa - Xóa task đang chọn
-        /// </summary>
         private void BtnDeleteTask_Click(object? sender, EventArgs e)
         {
             DeleteTaskPrompt();
         }
 
-        /// <summary>
-        /// Sửa task (logic)
-        /// </summary>
         private void EditTask()
         {
             if (_selectedCheckBox == null || _selectedCheckBox.Tag == null)
@@ -379,10 +396,6 @@ namespace FE_ToDoApp.WeekList
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-        /// <summary>
-        /// Xóa task (logic)
-        /// </summary>
         private void DeleteTaskPrompt()
         {
             if (_selectedCheckBox == null || _selectedCheckBox.Tag == null)
@@ -422,11 +435,6 @@ namespace FE_ToDoApp.WeekList
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-        // =============================
-        // CHECKBOX EVENTS
-        // =============================
-        
         private void Chk_Click(object sender, EventArgs e)
         {
             _selectedCheckBox = sender as CheckBox;
@@ -469,12 +477,7 @@ namespace FE_ToDoApp.WeekList
             {
                 chk.Enabled = true;
             }
-        }
-
-        // =============================
-        // SEARCH
-        // =============================
-        
+        } 
         private void TxtSearch_TextChanged(object? sender, EventArgs e)
         {
             if (_currentCategoryId > 0)
@@ -483,10 +486,6 @@ namespace FE_ToDoApp.WeekList
             }
         }
 
-        // =============================
-        // HELPER
-        // =============================
-        
         private DateTime GetMonday(DateTime date)
         {
             int daysFromMonday = ((int)date.DayOfWeek - 1 + 7) % 7;
@@ -502,6 +501,40 @@ namespace FE_ToDoApp.WeekList
             ClearAndRenderDay(panel15, new List<WeekTask>());
             ClearAndRenderDay(panel17, new List<WeekTask>());
             ClearAndRenderDay(panel19, new List<WeekTask>());
+        }
+
+        private void btnAddCategory_Click(object sender, EventArgs e)
+        {
+            var dialog = new Views.Dialogs.CategoryAddDialog();
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    int newCategoryId = _categoryController.AddCategory(
+                        dialog.CategoryName, 
+                        dialog.WeekStartDate, 
+                        dialog.WeekEndDate);
+
+                    LoadCategories();
+
+                    var newItem = flowLayoutPanel1.Controls.OfType<week_category_item>()
+                        .FirstOrDefault(item => item.CategoryId == newCategoryId);
+
+                    if (newItem != null)
+                    {
+                        CategoryItem_Clicked(newItem, EventArgs.Empty);
+                    }
+
+                    MessageBox.Show("Thêm nhóm công việc thành công!", "Thông báo",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -25,7 +25,7 @@ namespace FE_ToDoApp.WeekList
 
         private void InitializeComponents()
         {
-            this.Text = string.IsNullOrEmpty(TaskTitle) ? "Th�m Task" : "S?a Task";
+            this.Text = string.IsNullOrEmpty(TaskTitle) ? "Thêm Task" : "Sửa Task";
             this.Size = new Size(400, 200);
             this.StartPosition = FormStartPosition.CenterParent;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -35,7 +35,7 @@ namespace FE_ToDoApp.WeekList
             // Label Title
             lblTitle = new Label
             {
-                Text = "Ti�u ??:",
+                Text = "Tiêu đề:",
                 Location = new Point(20, 20),
                 Size = new Size(80, 23),
                 Font = new Font("Segoe UI", 10F)
@@ -55,7 +55,7 @@ namespace FE_ToDoApp.WeekList
             // Label Day
             lblDay = new Label
             {
-                Text = "Ng�y:",
+                Text = "Ngày:",
                 Location = new Point(20, 60),
                 Size = new Size(80, 23),
                 Font = new Font("Segoe UI", 10F)
@@ -98,7 +98,7 @@ namespace FE_ToDoApp.WeekList
             // Button Cancel
             btnCancel = new Button
             {
-                Text = "H?y",
+                Text = "Hủy",
                 Location = new Point(270, 110),
                 Size = new Size(90, 30),
                 Font = new Font("Segoe UI", 10F),
@@ -114,7 +114,7 @@ namespace FE_ToDoApp.WeekList
         {
             if (string.IsNullOrWhiteSpace(txtTitle.Text))
             {
-                MessageBox.Show("Vui l�ng nh?p ti�u ?? task!", "Th�ng b�o", 
+                MessageBox.Show("Vui lòng nhập tiêu đề task!", "Thông báo", 
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtTitle.Focus();
                 this.DialogResult = DialogResult.None;

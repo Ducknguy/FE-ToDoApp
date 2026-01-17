@@ -3,21 +3,17 @@ using System.Windows.Forms;
 
 namespace FE_ToDoApp.WeekList.Views.Dialogs
 {
-    public partial class CategoryEditDialog : Form
+    public partial class CategoryAddDialog : Form
     {
         public string CategoryName { get; private set; } = string.Empty;
         public DateTime WeekStartDate { get; private set; }
         public DateTime WeekEndDate { get; private set; }
 
-        public CategoryEditDialog(string currentName, DateTime currentWeekStart, DateTime currentWeekEnd)
+        public CategoryAddDialog()
         {
             InitializeComponent();
             
-            txtCategoryName.Text = currentName;
-            datePickerWeek.Value = currentWeekStart;
-            WeekStartDate = currentWeekStart;
-            WeekEndDate = currentWeekEnd;
-            
+            datePickerWeek.Value = DateTime.Now;
             UpdateWeekRange();
         }
 

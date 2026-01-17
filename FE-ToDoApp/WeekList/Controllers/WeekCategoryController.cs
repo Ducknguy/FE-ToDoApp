@@ -1,13 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using FE_ToDoApp.WeekList.Data;
 using FE_ToDoApp.WeekList.Models;
 
 namespace FE_ToDoApp.WeekList.Controllers
 {
-    /// <summary>
-    /// Controller x? l� logic nghi?p v? cho Category
-    /// </summary>
+    
     public class WeekCategoryController
     {
         private readonly WeekCategoryRepository _repository;
@@ -17,9 +15,7 @@ namespace FE_ToDoApp.WeekList.Controllers
             _repository = new WeekCategoryRepository(connectionString);
         }
 
-        /// <summary>
-        /// L?y t?t c? categories
-        /// </summary>
+  
         public List<WeekCategory> GetAllCategories()
         {
             try
@@ -28,63 +24,93 @@ namespace FE_ToDoApp.WeekList.Controllers
             }
             catch (Exception ex)
             {
-                throw new Exception($"L?i khi load danh s�ch categories: {ex.Message}", ex);
+                throw new Exception($"Lỗi khi load danh sách categories: {ex.Message}", ex);
             }
         }
 
-        /// <summary>
-        /// Th�m category m?i
-        /// </summary>
-        public int AddCategory(string categoryName)
+        //public WeekCategory? GetCategoryById(int categoryId)
+        //{
+        //    try
+        //    {
+        //        return _repository.GetById(categoryId);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception($"L?i khi load category: {ex.Message}", ex);
+        //    }
+        //}
+
+  
+        public int AddCategory(string categoryName, DateTime weekStartDate, DateTime weekEndDate)
         {
             if (string.IsNullOrWhiteSpace(categoryName))
             {
-                throw new ArgumentException("T�n category kh�ng ???c ?? tr?ng");
+                throw new ArgumentException("Tên category không được để trống");
+            }
+
+            if (weekEndDate < weekStartDate)
+            {
+                throw new ArgumentException("Ngày kết thúc phải sau ngày bắt đầu");
+            }
+
+            if ((weekEndDate - weekStartDate).Days != 6)
+            {
+                throw new ArgumentException("Khoảng thời gian phải đúng 7 ngày (1 tuần)");
             }
 
             try
             {
-                return _repository.Insert(categoryName.Trim());
+                return _repository.Insert(categoryName.Trim(), weekStartDate, weekEndDate);
             }
             catch (Exception ex)
             {
-                throw new Exception($"L?i khi th�m category: {ex.Message}", ex);
+                throw new Exception($"Lỗi khi thêm category: {ex.Message}", ex);
             }
         }
 
         /// <summary>
-        /// S?a category
+        /// Sửa category
         /// </summary>
-        public void UpdateCategory(int categoryId, string categoryName)
+        public void UpdateCategory(int categoryId, string categoryName, DateTime weekStartDate, DateTime weekEndDate)
         {
             if (categoryId <= 0)
             {
-                throw new ArgumentException("CategoryId kh�ng h?p l?");
+                throw new ArgumentException("CategoryId không hợp lệ");
             }
 
             if (string.IsNullOrWhiteSpace(categoryName))
             {
-                throw new ArgumentException("T�n category kh�ng ???c ?? tr?ng");
+                throw new ArgumentException("Tên category không được để trống");
+            }
+
+            if (weekEndDate < weekStartDate)
+            {
+                throw new ArgumentException("Ngày kết thúc phải sau ngày bắt đầu");
+            }
+
+            if ((weekEndDate - weekStartDate).Days != 6)
+            {
+                throw new ArgumentException("Khoảng thời gian phải đúng 7 ngày (1 tuần)");
             }
 
             try
             {
-                _repository.Update(categoryId, categoryName.Trim());
+                _repository.Update(categoryId, categoryName.Trim(), weekStartDate, weekEndDate);
             }
             catch (Exception ex)
             {
-                throw new Exception($"L?i khi c?p nh?t category: {ex.Message}", ex);
+                throw new Exception($"Lỗi khi cập nhật category: {ex.Message}", ex);
             }
         }
 
         /// <summary>
-        /// X�a category
+        /// Xóa category
         /// </summary>
         public void DeleteCategory(int categoryId)
         {
             if (categoryId <= 0)
             {
-                throw new ArgumentException("CategoryId kh�ng h?p l?");
+                throw new ArgumentException("CategoryId không hợp lệ");
             }
 
             try
@@ -93,7 +119,7 @@ namespace FE_ToDoApp.WeekList.Controllers
             }
             catch (Exception ex)
             {
-                throw new Exception($"L?i khi x�a category: {ex.Message}", ex);
+                throw new Exception($"Lỗi khi xóa category: {ex.Message}", ex);
             }
         }
     }

@@ -1,13 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using FE_ToDoApp.WeekList.Data;
 using FE_ToDoApp.WeekList.Models;
 
 namespace FE_ToDoApp.WeekList.Controllers
 {
-    /// <summary>
-    /// Controller x? l� logic nghi?p v? cho Task
-    /// </summary>
+
     public class WeekTaskController
     {
         private readonly WeekTaskRepository _repository;
@@ -17,14 +15,11 @@ namespace FE_ToDoApp.WeekList.Controllers
             _repository = new WeekTaskRepository(connectionString);
         }
 
-        /// <summary>
-        /// L?y t?t c? tasks c?a 1 category trong tu?n
-        /// </summary>
         public List<WeekTask> GetTasksByCategory(int categoryId, DateTime weekStart)
         {
             if (categoryId <= 0)
             {
-                throw new ArgumentException("CategoryId kh�ng h?p l?");
+                throw new ArgumentException("CategoryId không hợp lệ");
             }
 
             try
@@ -33,28 +28,25 @@ namespace FE_ToDoApp.WeekList.Controllers
             }
             catch (Exception ex)
             {
-                throw new Exception($"L?i khi load tasks: {ex.Message}", ex);
+                throw new Exception($"Lỗi khi load tasks: {ex.Message}", ex);
             }
         }
 
-        /// <summary>
-        /// Th�m task m?i
-        /// </summary>
         public int AddTask(int categoryId, DateTime weekStart, int dayOfWeek, string title)
         {
             if (categoryId <= 0)
             {
-                throw new ArgumentException("CategoryId kh�ng h?p l?");
+                throw new ArgumentException("CategoryId không hợp lệ");
             }
 
             if (dayOfWeek < 1 || dayOfWeek > 7)
             {
-                throw new ArgumentException("DayOfWeek ph?i t? 1 (Monday) ??n 7 (Sunday)");
+                throw new ArgumentException("DayOfWeek phải từ 1 (Monday) đến 7 (Sunday)");
             }
 
             if (string.IsNullOrWhiteSpace(title))
             {
-                throw new ArgumentException("Ti�u ?? task kh�ng ???c ?? tr?ng");
+                throw new ArgumentException("Tiêu đề task không được để trống");
             }
 
             try
@@ -63,28 +55,26 @@ namespace FE_ToDoApp.WeekList.Controllers
             }
             catch (Exception ex)
             {
-                throw new Exception($"L?i khi th�m task: {ex.Message}", ex);
+                throw new Exception($"Lỗi khi thêm task: {ex.Message}", ex);
             }
         }
 
-        /// <summary>
-        /// S?a task
-        /// </summary>
+       
         public void UpdateTask(int taskId, string title, int dayOfWeek)
         {
             if (taskId <= 0)
             {
-                throw new ArgumentException("TaskId kh�ng h?p l?");
+                throw new ArgumentException("TaskId không hợp lệ");
             }
 
             if (dayOfWeek < 1 || dayOfWeek > 7)
             {
-                throw new ArgumentException("DayOfWeek ph?i t? 1 (Monday) ??n 7 (Sunday)");
+                throw new ArgumentException("DayOfWeek phải từ 1 (Monday) đến 7 (Sunday)");
             }
 
             if (string.IsNullOrWhiteSpace(title))
             {
-                throw new ArgumentException("Ti�u ?? task kh�ng ???c ?? tr?ng");
+                throw new ArgumentException("Tiêu đề task không được để trống");
             }
 
             try
@@ -93,18 +83,16 @@ namespace FE_ToDoApp.WeekList.Controllers
             }
             catch (Exception ex)
             {
-                throw new Exception($"L?i khi c?p nh?t task: {ex.Message}", ex);
+                throw new Exception($"Lỗi khi cập nhật task: {ex.Message}", ex);
             }
         }
 
-        /// <summary>
-        /// Toggle tr?ng th�i Done/Undone
-        /// </summary>
+        
         public void ToggleTaskStatus(int taskId, bool isDone)
         {
             if (taskId <= 0)
             {
-                throw new ArgumentException("TaskId kh�ng h?p l?");
+                throw new ArgumentException("TaskId không hợp lệ");
             }
 
             try
@@ -113,18 +101,16 @@ namespace FE_ToDoApp.WeekList.Controllers
             }
             catch (Exception ex)
             {
-                throw new Exception($"L?i khi c?p nh?t tr?ng th�i: {ex.Message}", ex);
+                throw new Exception($"Lỗi khi cập nhật trạng thái: {ex.Message}", ex);
             }
         }
 
-        /// <summary>
-        /// X�a task
-        /// </summary>
+        
         public void DeleteTask(int taskId)
         {
             if (taskId <= 0)
             {
-                throw new ArgumentException("TaskId kh�ng h?p l?");
+                throw new ArgumentException("TaskId không hợp lệ");
             }
 
             try
@@ -133,7 +119,7 @@ namespace FE_ToDoApp.WeekList.Controllers
             }
             catch (Exception ex)
             {
-                throw new Exception($"L?i khi x�a task: {ex.Message}", ex);
+                throw new Exception($"Lỗi khi xóa task: {ex.Message}", ex);
             }
         }
     }

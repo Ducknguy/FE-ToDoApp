@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -8,23 +8,15 @@ using FE_ToDoApp.WeekList.Models;
 
 namespace FE_ToDoApp.WeekList.Views
 {
-    /// <summary>
-    /// UserControl hi?n th? tasks c?a 1 category trong tu?n (7 ng‡y)
-    /// Gi?ng TodoDetailItemControl trong Lich Trinh
-    /// </summary>
     public partial class WeekItemsControl : UserControl
     {
-        // ===== PUBLIC =====
         public string ConnectionString { get; set; }
         public int CategoryId { get; private set; } = -1;
         public DateTime CurrentWeekStart { get; private set; }
 
         public event EventHandler? TaskChanged;
 
-        // ===== CONTROLLERS =====
         private WeekTaskController _taskController;
-
-        // ===== STATE =====
         private List<WeekTask> _allTasks = new List<WeekTask>();
         private CheckBox? _selectedCheckBox;
 
@@ -32,22 +24,14 @@ namespace FE_ToDoApp.WeekList.Views
         {
             InitializeComponent();
         }
-
-        /// <summary>
-        /// Kh?i t?o controller v?i connection string
-        /// </summary>
         public void Initialize(string connectionString)
         {
             ConnectionString = connectionString;
             _taskController = new WeekTaskController(connectionString);
         }
-
-        /// <summary>
-        /// Load tasks c?a 1 category trong tu?n
-        /// </summary>
         public void LoadWeekItems(int categoryId, DateTime weekStart)
         {
-            MessageBox.Show($"LoadWeekItems ???c g?i!\nCategoryId: {categoryId}\nWeekStart: {weekStart:yyyy-MM-dd}", 
+            MessageBox.Show($"LoadWeekItems ƒë∆∞·ª£c g·ªçi!\nCategoryId: {categoryId}\nWeekStart: {weekStart:yyyy-MM-dd}", 
                 "DEBUG", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             CategoryId = categoryId;
@@ -63,12 +47,12 @@ namespace FE_ToDoApp.WeekList.Views
             try
             {
                 _allTasks = _taskController.GetTasksByCategory(CategoryId, CurrentWeekStart);
-                
-                MessageBox.Show($"?„ load {_allTasks.Count} tasks t? DB", "DEBUG");
-                
+
+                MessageBox.Show($"ƒê√£ load {_allTasks.Count} tasks t·ª´ DB", "DEBUG");
+
                 RenderWeek();
-                
-                MessageBox.Show($"?„ g?i RenderWeek() xong!\nControls trong flowLayoutPanel2: {flowLayoutPanel2.Controls.Count}", 
+
+                MessageBox.Show($"ƒê√£ g·ªçi RenderWeek() xong!\nControls trong flowLayoutPanel2: {flowLayoutPanel2.Controls.Count}", 
                     "DEBUG");
                     
                 // Force hi?n th?
@@ -79,39 +63,33 @@ namespace FE_ToDoApp.WeekList.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"L?i load d? li?u: {ex.Message}\n\nStack trace: {ex.StackTrace}", "L?i", 
+                MessageBox.Show($"L·ªói load d·ªØ li·ªáu: {ex.Message}\n\nStack trace: {ex.StackTrace}", "L·ªói", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        /// <summary>
-        /// Render tasks lÍn 7 ng‡y
-        /// </summary>
+     
         private void RenderWeek()
         {
-            // Group theo ng‡y
             var grouped = _allTasks
                 .GroupBy(t => t.DayOfWeek)
                 .ToDictionary(g => g.Key, g => g.ToList());
 
-            // Render cho c? 7 ng‡y
-            ClearAndRenderDay(panel5, grouped.ContainsKey(1) ? grouped[1] : new List<WeekTask>());   // Monday
-            ClearAndRenderDay(panel7, grouped.ContainsKey(2) ? grouped[2] : new List<WeekTask>());   // Tuesday
-            ClearAndRenderDay(panel9, grouped.ContainsKey(3) ? grouped[3] : new List<WeekTask>());   // Wednesday
-            ClearAndRenderDay(panel11, grouped.ContainsKey(4) ? grouped[4] : new List<WeekTask>()); // Thursday
-            ClearAndRenderDay(panel15, grouped.ContainsKey(5) ? grouped[5] : new List<WeekTask>()); // Friday
-            ClearAndRenderDay(panel17, grouped.ContainsKey(6) ? grouped[6] : new List<WeekTask>()); // Saturday
-            ClearAndRenderDay(panel19, grouped.ContainsKey(7) ? grouped[7] : new List<WeekTask>()); // Sunday
+            // Render cho c? 7 ng√†y
+            ClearAndRenderDay(panel5, grouped.ContainsKey(1) ? grouped[1] : new List<WeekTask>());  
+            ClearAndRenderDay(panel7, grouped.ContainsKey(2) ? grouped[2] : new List<WeekTask>());   
+            ClearAndRenderDay(panel9, grouped.ContainsKey(3) ? grouped[3] : new List<WeekTask>());   
+            ClearAndRenderDay(panel11, grouped.ContainsKey(4) ? grouped[4] : new List<WeekTask>()); 
+            ClearAndRenderDay(panel15, grouped.ContainsKey(5) ? grouped[5] : new List<WeekTask>()); 
+            ClearAndRenderDay(panel17, grouped.ContainsKey(6) ? grouped[6] : new List<WeekTask>()); 
+            ClearAndRenderDay(panel19, grouped.ContainsKey(7) ? grouped[7] : new List<WeekTask>()); 
         }
 
-        /// <summary>
-        /// XÛa v‡ render l?i 1 ng‡y
-        /// </summary>
+   
         private void ClearAndRenderDay(Panel dayPanel, List<WeekTask> tasks)
         {
             if (dayPanel == null) return;
 
-            // XÛa t?t c? checkbox c? (gi? l?i panel header)
             var toRemove = dayPanel.Controls.OfType<CheckBox>().ToList();
             foreach (var chk in toRemove)
             {
@@ -119,7 +97,6 @@ namespace FE_ToDoApp.WeekList.Views
                 chk.Dispose();
             }
 
-            // Render checkboxes m?i
             int yPos = 70;
             foreach (var task in tasks)
             {
@@ -141,10 +118,6 @@ namespace FE_ToDoApp.WeekList.Views
                 yPos += 30;
             }
         }
-
-        /// <summary>
-        /// Clear t?t c? 7 ng‡y
-        /// </summary>
         private void ClearAllDays()
         {
             ClearAndRenderDay(panel5, new List<WeekTask>());
@@ -155,10 +128,6 @@ namespace FE_ToDoApp.WeekList.Views
             ClearAndRenderDay(panel17, new List<WeekTask>());
             ClearAndRenderDay(panel19, new List<WeekTask>());
         }
-
-        // =============================
-        // CHECKBOX EVENTS
-        // =============================
         private void Chk_Click(object sender, EventArgs e)
         {
             _selectedCheckBox = sender as CheckBox;
@@ -196,7 +165,7 @@ namespace FE_ToDoApp.WeekList.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"L?i c?p nh?t: {ex.Message}", "L?i", 
+                MessageBox.Show($"L·ªói c·∫≠p nh·∫≠t: {ex.Message}", "L·ªói", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 chk.Checked = !newValue;
             }
@@ -206,14 +175,11 @@ namespace FE_ToDoApp.WeekList.Views
             }
         }
 
-        // =============================
-        // PUBLIC METHODS - CRUD
-        // =============================
         public void AddTask(int dayOfWeek = 1)
         {
             if (CategoryId <= 0)
             {
-                MessageBox.Show("Vui lÚng ch?n category tr??c!", "ThÙng b·o",
+                MessageBox.Show("Vui l√≤ng ch·ªçn category tr∆∞·ªõqc!", "Th√¥ng b√°o",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
@@ -229,7 +195,7 @@ namespace FE_ToDoApp.WeekList.Views
                         dialog.DayOfWeek, 
                         dialog.TaskTitle);
 
-                    // ThÍm v‡o local list
+    
                     _allTasks.Add(new WeekTask
                     {
                         TaskId = newTaskId,
@@ -243,12 +209,12 @@ namespace FE_ToDoApp.WeekList.Views
                     RenderWeek();
                     TaskChanged?.Invoke(this, EventArgs.Empty);
 
-                    MessageBox.Show("ThÍm task th‡nh cÙng!", "ThÙng b·o",
+                    MessageBox.Show("Th√™m task th√†nh c√¥ng!", "Th√¥ng b√°o",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"L?i: {ex.Message}", "L?i",
+                    MessageBox.Show($"L·ªói: {ex.Message}", "L·ªói",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -258,7 +224,7 @@ namespace FE_ToDoApp.WeekList.Views
         {
             if (_selectedCheckBox == null || _selectedCheckBox.Tag == null)
             {
-                MessageBox.Show("Vui lÚng ch?n task c?n s?a!", "ThÙng b·o",
+                MessageBox.Show("Vui l√≤ng ch·ªçn task c·∫ßn s·ª≠a!", "Th√¥ng b√°o",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
@@ -274,20 +240,19 @@ namespace FE_ToDoApp.WeekList.Views
                 {
                     _taskController.UpdateTask(taskId, dialog.TaskTitle, dialog.DayOfWeek);
 
-                    // Update local list
                     task.Title = dialog.TaskTitle;
                     task.DayOfWeek = dialog.DayOfWeek;
 
                     RenderWeek();
                     TaskChanged?.Invoke(this, EventArgs.Empty);
 
-                    MessageBox.Show("C?p nh?t task th‡nh cÙng!", "ThÙng b·o",
+                    MessageBox.Show("C·∫≠p nh·∫≠t task th√†nh c√¥ng!", "Th√¥ng b√°o",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"L?i: {ex.Message}", "L?i",
+                MessageBox.Show($"L·ªói: {ex.Message}", "L·ªói",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -296,7 +261,7 @@ namespace FE_ToDoApp.WeekList.Views
         {
             if (_selectedCheckBox == null || _selectedCheckBox.Tag == null)
             {
-                MessageBox.Show("Vui lÚng ch?n task c?n xÛa!", "ThÙng b·o",
+                MessageBox.Show("Vui l√≤ng ch·ªçn task c·∫ßn x√≥a!", "Th√¥ng b√°o",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
@@ -308,36 +273,33 @@ namespace FE_ToDoApp.WeekList.Views
                 if (task == null) return;
 
                 var result = MessageBox.Show(
-                    $"B?n cÛ ch?c mu?n xÛa task '{task.Title}'?",
-                    "X·c nh?n xÛa",
+                    $"B·∫°n c√≥ ch·∫Øc mu·ªën x√≥a task '{task.Title}'?",
+                    "X√°c nh·∫≠n x√≥a",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question);
 
                 if (result == DialogResult.Yes)
                 {
                     _taskController.DeleteTask(taskId);
-
-                    // Remove from local list
+                    
                     _allTasks.Remove(task);
 
                     RenderWeek();
                     _selectedCheckBox = null;
                     TaskChanged?.Invoke(this, EventArgs.Empty);
 
-                    MessageBox.Show("XÛa task th‡nh cÙng!", "ThÙng b·o",
+                    MessageBox.Show("X√≥a task th√†nh c√¥ng!", "Th√¥ng b√°o",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"L?i: {ex.Message}", "L?i",
+                MessageBox.Show($"L·ªói: {ex.Message}", "L·ªói",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        // =============================
-        // HELPER
-        // =============================
+ 
         private DateTime GetMonday(DateTime date)
         {
             int daysFromMonday = ((int)date.DayOfWeek - 1 + 7) % 7;

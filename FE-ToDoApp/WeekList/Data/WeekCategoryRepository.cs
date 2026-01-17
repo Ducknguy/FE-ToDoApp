@@ -5,9 +5,7 @@ using FE_ToDoApp.WeekList.Models;
 
 namespace FE_ToDoApp.WeekList.Data
 {
-    /// <summary>
-    /// Repository pattern cho WeekCategory
-    /// </summary>
+
     public class WeekCategoryRepository
     {
         private readonly string _connectionString;
@@ -16,19 +14,15 @@ namespace FE_ToDoApp.WeekList.Data
         {
             _connectionString = connectionString;
         }
-
-        /// <summary>
-        /// L?y t?t c? categories ?ang active
-        /// </summary>
         public List<WeekCategory> GetAll()
         {
             var categories = new List<WeekCategory>();
             
             string sql = @"
-                SELECT CategoryId, CategoryName, OrderIndex, IsActive
+                SELECT CategoryId, CategoryName, WeekStartDate, WeekEndDate, OrderIndex, IsActive
                 FROM WeekCategory
                 WHERE IsActive = 1
-                ORDER BY OrderIndex, CategoryId";
+                ORDER BY WeekStartDate DESC, OrderIndex, CategoryName";
 
             using (var conn = new SqlConnection(_connectionString))
             {
@@ -40,10 +34,12 @@ namespace FE_ToDoApp.WeekList.Data
                     {
                         categories.Add(new WeekCategory
                         {
-                            CategoryId = Convert.ToInt32(reader["CategoryId"]),
-                            CategoryName = reader.GetString(reader.GetOrdinal("CategoryName")),
-                            OrderIndex = Convert.ToInt32(reader["OrderIndex"]),
-                            IsActive = reader.GetBoolean(reader.GetOrdinal("IsActive"))
+                            CategoryId = reader.GetInt32(0),
+                            CategoryName = reader.GetString(1),
+                            WeekStartDate = reader.GetDateTime(2),
+                            WeekEndDate = reader.GetDateTime(3),
+                            OrderIndex = reader.GetInt32(4),
+                            IsActive = reader.GetBoolean(5)
                         });
                     }
                 }
@@ -52,75 +48,85 @@ namespace FE_ToDoApp.WeekList.Data
             return categories;
         }
 
-        /// <summary>
-        /// L?y category theo ID
-        /// </summary>
-        public WeekCategory? GetById(int categoryId)
-        {
-            string sql = @"
-                SELECT CategoryId, CategoryName, OrderIndex, IsActive
-                FROM WeekCategory
-                WHERE CategoryId = @CategoryId";
 
-            using (var conn = new SqlConnection(_connectionString))
-            {
-                conn.Open();
-                using (var cmd = new SqlCommand(sql, conn))
-                {
-                    cmd.Parameters.AddWithValue("@CategoryId", categoryId);
+        //public WeekCategory? GetById(int categoryId)
+        //{
+        //    string sql = @"
+        //        SELECT CategoryId, CategoryName, WeekStartDate, WeekEndDate, OrderIndex, IsActive
+        //        FROM WeekCategory
+        //        WHERE CategoryId = @CategoryId AND IsActive = 1";
+
+        //    using (var conn = new SqlConnection(_connectionString))
+        //    {
+        //        conn.Open();
+        //        using (var cmd = new SqlCommand(sql, conn))
+        //        {
+        //            cmd.Parameters.AddWithValue("@CategoryId", categoryId);
                     
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            return new WeekCategory
-                            {
-                                CategoryId = Convert.ToInt32(reader["CategoryId"]),
-                                CategoryName = reader.GetString(reader.GetOrdinal("CategoryName")),
-                                OrderIndex = Convert.ToInt32(reader["OrderIndex"]),
-                                IsActive = reader.GetBoolean(reader.GetOrdinal("IsActive"))
-                            };
-                        }
-                    }
-                }
-            }
+        //            using (var reader = cmd.ExecuteReader())
+        //            {
+        //                if (reader.Read())
+        //                {
+        //                    return new WeekCategory
+        //                    {
+        //                        CategoryId = reader.GetInt32(0),
+        //                        CategoryName = reader.GetString(1),
+        //                        WeekStartDate = reader.GetDateTime(2),
+        //                        WeekEndDate = reader.GetDateTime(3),
+        //                        OrderIndex = reader.GetInt32(4),
+        //                        IsActive = reader.GetBoolean(5)
+        //                    };
+        //                }
+        //            }
+        //        }
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
-        /// <summary>
-        /// Thêm category m?i
-        /// </summary>
-        public int Insert(string categoryName)
+        public int Insert(string categoryName, DateTime weekStartDate, DateTime weekEndDate)
         {
-            string sql = @"
-                DECLARE @MaxOrder INT;
-                SELECT @MaxOrder = ISNULL(MAX(OrderIndex), -1) FROM WeekCategory;
-                
-                INSERT INTO WeekCategory (CategoryName, OrderIndex, IsActive)
-                VALUES (@CategoryName, @MaxOrder + 1, 1);
-                
-                SELECT SCOPE_IDENTITY();";
+            string getMaxIdSql = "SELECT ISNULL(MAX(CategoryId), 0) FROM WeekCategory";
+            int newCategoryId = 1;
 
             using (var conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
+                
+                using (var cmd = new SqlCommand(getMaxIdSql, conn))
+                {
+                    var maxId = cmd.ExecuteScalar();
+                    newCategoryId = (maxId == DBNull.Value ? 0 : Convert.ToInt32(maxId)) + 1;
+                }
+
+                string sql = @"
+                    INSERT INTO WeekCategory (CategoryId, CategoryName, WeekStartDate, WeekEndDate, OrderIndex, IsActive)
+                    VALUES (@CategoryId, @CategoryName, @WeekStartDate, @WeekEndDate, @OrderIndex, @IsActive)";
+
                 using (var cmd = new SqlCommand(sql, conn))
                 {
+                    cmd.Parameters.AddWithValue("@CategoryId", newCategoryId);
                     cmd.Parameters.AddWithValue("@CategoryName", categoryName);
-                    return Convert.ToInt32(cmd.ExecuteScalar());
+                    cmd.Parameters.AddWithValue("@WeekStartDate", weekStartDate);
+                    cmd.Parameters.AddWithValue("@WeekEndDate", weekEndDate);
+                    cmd.Parameters.AddWithValue("@OrderIndex", 0);
+                    cmd.Parameters.AddWithValue("@IsActive", true);
+                    
+                    cmd.ExecuteNonQuery();
                 }
             }
+
+            return newCategoryId;
         }
 
-        /// <summary>
-        /// C?p nh?t tên category
-        /// </summary>
-        public void Update(int categoryId, string categoryName)
+     
+        public void Update(int categoryId, string categoryName, DateTime weekStartDate, DateTime weekEndDate)
         {
             string sql = @"
                 UPDATE WeekCategory
-                SET CategoryName = @CategoryName
+                SET CategoryName = @CategoryName,
+                    WeekStartDate = @WeekStartDate,
+                    WeekEndDate = @WeekEndDate
                 WHERE CategoryId = @CategoryId";
 
             using (var conn = new SqlConnection(_connectionString))
@@ -130,14 +136,14 @@ namespace FE_ToDoApp.WeekList.Data
                 {
                     cmd.Parameters.AddWithValue("@CategoryId", categoryId);
                     cmd.Parameters.AddWithValue("@CategoryName", categoryName);
+                    cmd.Parameters.AddWithValue("@WeekStartDate", weekStartDate);
+                    cmd.Parameters.AddWithValue("@WeekEndDate", weekEndDate);
+                    
                     cmd.ExecuteNonQuery();
                 }
             }
         }
 
-        /// <summary>
-        /// Xóa m?m category (set IsActive = 0)
-        /// </summary>
         public void Delete(int categoryId)
         {
             string sql = @"
