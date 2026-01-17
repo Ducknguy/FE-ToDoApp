@@ -8,38 +8,17 @@ namespace FE_ToDoApp.Dashboard
 {
     public partial class DashboardControl : UserControl
     {
-        private string strConn = @"Data Source=.;Initial Catalog=user;Integrated Security=True;Encrypt=True;";
-
-        private int _currentUserId;
-        private string _currentUsername;
-
-        public DashboardControl(int userId, string username)
-        {
-            InitializeComponent();
-
-            this._currentUserId = userId;
-            this._currentUsername = username;
-
-            CleanupOldTasks();
-
-            LoadDashboardData();
-        }
+        private string strConn = @"Data Source=.;Initial Catalog=user;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
 
         public DashboardControl()
         {
             InitializeComponent();
-
-            this._currentUserId = 1;
-            this._currentUsername = "User";
+            LoadDashboardData();
         }
 
         public void LoadDashboardData()
         {
-
-            if (lblTitle != null) lblTitle.Text = $"Today {_currentUsername}";
-
             lblDate.Text = DateTime.Now.ToString("dddd, MMMM dd");
-
             flowStats.Controls.Clear();
             tblLists.Controls.Clear();
 
@@ -50,102 +29,83 @@ namespace FE_ToDoApp.Dashboard
                     conn.Open();
                     LoadStats(conn);
 
-                    Panel pnlActive = CreateListCard($"Today {_currentUsername}");
+                    Panel pnlToday = CreateListCard("Today's Work");
+                    string sqlToday = @"SELECT Id, Title, DueDate, Status FROM [Task] 
+                                        WHERE CAST(DueDate AS DATE) = CAST(GETDATE() AS DATE) 
+                                          AND DueDate >= GETDATE() 
+                                        ORDER BY DueDate ASC";
 
-                    string sqlActive = @"SELECT Title, DueDate, Category, Status 
-                                         FROM [Task] 
-                                         WHERE UserId = @UID 
-                                         AND Status != 'Done' 
-                                         AND CAST(DueDate AS DATE) >= CAST(GETDATE() AS DATE) 
-                                         ORDER BY DueDate ASC";
-
-                    LoadTasksToContainer(conn, pnlActive, sqlActive);
-                    tblLists.Controls.Add(pnlActive, 0, 0);
+                    LoadTasksToContainer(conn, pnlToday, sqlToday, true);
+                    tblLists.Controls.Add(pnlToday, 0, 0);
 
 
-                    Panel pnlHistory = CreateListCard("History & Overdue (30 Days)");
+                    Panel pnlRight = CreateListCard("Upcoming & Overdue");
+                    string sqlRight = @"SELECT Id, Title, DueDate, Status FROM [Task] 
+                                        WHERE (CAST(DueDate AS DATE) > CAST(GETDATE() AS DATE)) 
+                                           OR (DueDate < GETDATE() AND Status != 'Done') 
+                                        ORDER BY DueDate ASC";
 
-                    string sqlHistory = @"SELECT Title, DueDate, Category, Status 
-                                          FROM [Task] 
-                                          WHERE UserId = @UID 
-                                          AND (Status = 'Done' OR CAST(DueDate AS DATE) < CAST(GETDATE() AS DATE))
-                                          AND DueDate >= DATEADD(day, -30, GETDATE())
-                                          ORDER BY DueDate DESC";
-
-                    LoadTasksToContainer(conn, pnlHistory, sqlHistory);
-                    tblLists.Controls.Add(pnlHistory, 1, 0);
+                    LoadTasksToContainer(conn, pnlRight, sqlRight, false);
+                    tblLists.Controls.Add(pnlRight, 1, 0);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi tải dữ liệu: " + ex.Message);
+                MessageBox.Show("Lỗi Dashboard: " + ex.Message);
             }
         }
 
-        private void CleanupOldTasks()
-        {
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(strConn))
-                {
-                    conn.Open();
-                    string sqlDelete = "DELETE FROM [Task] WHERE DueDate < DATEADD(day, -30, GETDATE())";
-                    using (SqlCommand cmd = new SqlCommand(sqlDelete, conn))
-                    {
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-            }
-            catch { /* Im lặng bỏ qua nếu lỗi xóa, không làm crash app */ }
-        }
-
-        private void LoadTasksToContainer(SqlConnection conn, Panel card, string query)
+        private void LoadTasksToContainer(SqlConnection conn, Panel card, string query, bool showCheckbox)
         {
             FlowLayoutPanel container = (FlowLayoutPanel)card.Controls["listContainer"];
-
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
-                cmd.Parameters.AddWithValue("@UID", _currentUserId);
-
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
+                        int id = Convert.ToInt32(reader["Id"]);
                         string title = reader["Title"].ToString();
-
-                        string category = reader["Category"] != DBNull.Value ? reader["Category"].ToString() : "General";
                         DateTime dueDate = Convert.ToDateTime(reader["DueDate"]);
+                        bool isDone = reader["Status"].ToString() == "Done";
 
-                        string status = reader["Status"] != DBNull.Value ? reader["Status"].ToString() : "Pending";
-                        bool isDone = status == "Done";
+                        Color color = Color.DodgerBlue;
+                        if (!isDone && dueDate < DateTime.Now) color = Color.OrangeRed;
 
-                        Color color = GetColorByCategory(category);
-                        string timeInfo = dueDate.ToString("dd/MM HH:mm") + " • " + category;
+                        string timeInfo = dueDate.ToString("HH:mm");
 
-                        if (!isDone && dueDate < DateTime.Now)
-                        {
-                            timeInfo += " (Overdue)";
-                            color = Color.Red;
-                        }
-
-                        container.Controls.Add(CreateTaskRow(title, timeInfo, color, isDone));
+                        container.Controls.Add(CreateTaskRow(id, title, timeInfo, color, isDone, showCheckbox));
                     }
                 }
             }
         }
 
-        private Panel CreateTaskRow(string title, string info, Color tagColor, bool isDone)
+        private Panel CreateTaskRow(int taskId, string title, string info, Color tagColor, bool isDone, bool showCheckbox)
         {
             Panel row = new Panel { Size = new Size(400, 55), Margin = new Padding(0, 5, 0, 5) };
 
-            CheckBox ck = new CheckBox { Checked = isDone, Width = 25, Location = new Point(5, 15), Cursor = Cursors.Hand };
+            int textX = showCheckbox ? 35 : 15;
+
+            if (showCheckbox)
+            {
+                CheckBox ck = new CheckBox
+                {
+                    Checked = isDone,
+                    Width = 25,
+                    Location = new Point(5, 15),
+                    Cursor = Cursors.Hand
+                };
+
+                ck.Click += (s, e) => { ToggleTaskStatus(taskId, ck.Checked); };
+                row.Controls.Add(ck);
+            }
 
             Label lblT = new Label
             {
                 Text = title,
                 Font = new Font("Segoe UI", 10, isDone ? FontStyle.Strikeout : FontStyle.Bold),
                 ForeColor = isDone ? Color.Gray : Color.Black,
-                Location = new Point(35, 8),
+                Location = new Point(textX, 8),
                 AutoSize = true
             };
 
@@ -154,7 +114,7 @@ namespace FE_ToDoApp.Dashboard
                 Text = info,
                 Font = new Font("Segoe UI", 8),
                 ForeColor = Color.Gray,
-                Location = new Point(35, 28),
+                Location = new Point(textX, 28),
                 AutoSize = true
             };
 
@@ -166,50 +126,37 @@ namespace FE_ToDoApp.Dashboard
                 Anchor = AnchorStyles.Right
             };
 
-            row.Controls.AddRange(new Control[] { ck, lblT, lblI, dot });
+            row.Controls.AddRange(new Control[] { lblT, lblI, dot });
             return row;
         }
 
-        private Color GetColorByCategory(string category)
+        private void ToggleTaskStatus(int id, bool isChecked)
         {
-            switch (category.ToLower())
+            try
             {
-                case "work": return Color.DodgerBlue;
-                case "health": return Color.Orange;
-                case "personal": return Color.MediumPurple;
-                default: return Color.LightGray;
+                using (SqlConnection conn = new SqlConnection(strConn))
+                {
+                    conn.Open();
+                    string sql = "UPDATE [Task] SET Status = @Status WHERE Id = @Id";
+                    using (SqlCommand cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Status", isChecked ? "Done" : "Pending");
+                        cmd.Parameters.AddWithValue("@Id", id);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                LoadDashboardData();
             }
+            catch (Exception ex) { MessageBox.Show("Lỗi: " + ex.Message); }
         }
 
-        private Panel CreateListCard(string title)
-        {
-            Panel card = new Panel { Dock = DockStyle.Fill, BackColor = Color.White, Margin = new Padding(15), Padding = new Padding(10) };
-            card.Paint += (s, e) => ControlPaint.DrawBorder(e.Graphics, card.ClientRectangle, Color.FromArgb(230, 230, 230), ButtonBorderStyle.Solid);
-
-            Label lbl = new Label { Text = title, Font = new Font("Segoe UI", 14, FontStyle.Bold), Location = new Point(15, 15), AutoSize = true };
-
-            FlowLayoutPanel listContainer = new FlowLayoutPanel
-            {
-                Name = "listContainer",
-                FlowDirection = FlowDirection.TopDown,
-                WrapContents = false,
-                Location = new Point(15, 60),
-                Size = new Size(card.Width - 30, 350),
-                AutoScroll = true,
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom
-            };
-
-            card.Controls.Add(lbl);
-            card.Controls.Add(listContainer);
-            return card;
-        }
 
         private void LoadStats(SqlConnection conn)
         {
-            int today = GetCount(conn, "SELECT COUNT(*) FROM [Task] WHERE UserId = @UID AND CAST(DueDate AS DATE) = CAST(GETDATE() AS DATE)");
-            int upcoming = GetCount(conn, "SELECT COUNT(*) FROM [Task] WHERE UserId = @UID AND DueDate > GETDATE()");
-            int overdue = GetCount(conn, "SELECT COUNT(*) FROM [Task] WHERE UserId = @UID AND DueDate < GETDATE() AND Status != 'Done'");
-            int done = GetCount(conn, "SELECT COUNT(*) FROM [Task] WHERE UserId = @UID AND Status = 'Done'");
+            int today = GetCount(conn, "SELECT COUNT(*) FROM [Task] WHERE CAST(DueDate AS DATE) = CAST(GETDATE() AS DATE)");
+            int upcoming = GetCount(conn, "SELECT COUNT(*) FROM [Task] WHERE DueDate > GETDATE()");
+            int overdue = GetCount(conn, "SELECT COUNT(*) FROM [Task] WHERE DueDate < GETDATE() AND Status != 'Done'");
+            int done = GetCount(conn, "SELECT COUNT(*) FROM [Task] WHERE Status = 'Done'");
 
             flowStats.Controls.Add(CreateStatCard(today.ToString(), "Today Tasks", Color.AliceBlue, "📅"));
             flowStats.Controls.Add(CreateStatCard(upcoming.ToString(), "Upcoming", Color.Beige, "🕒"));
@@ -219,11 +166,7 @@ namespace FE_ToDoApp.Dashboard
 
         private int GetCount(SqlConnection conn, string query)
         {
-            using (SqlCommand cmd = new SqlCommand(query, conn))
-            {
-                cmd.Parameters.AddWithValue("@UID", _currentUserId);
-                return Convert.ToInt32(cmd.ExecuteScalar() ?? 0);
-            }
+            using (SqlCommand cmd = new SqlCommand(query, conn)) { return Convert.ToInt32(cmd.ExecuteScalar() ?? 0); }
         }
 
         private Panel CreateStatCard(string value, string title, Color bgColor, string icon)
@@ -235,6 +178,16 @@ namespace FE_ToDoApp.Dashboard
             Label lblIcon = new Label { Text = icon, Location = new Point(170, 15), Font = new Font("Segoe UI", 18), AutoSize = true };
             Panel footer = new Panel { BackColor = bgColor, Dock = DockStyle.Bottom, Height = 5 };
             card.Controls.AddRange(new Control[] { lblVal, lblTit, lblIcon, footer });
+            return card;
+        }
+
+        private Panel CreateListCard(string title)
+        {
+            Panel card = new Panel { Dock = DockStyle.Fill, BackColor = Color.White, Margin = new Padding(15), Padding = new Padding(10) };
+            card.Paint += (s, e) => ControlPaint.DrawBorder(e.Graphics, card.ClientRectangle, Color.FromArgb(230, 230, 230), ButtonBorderStyle.Solid);
+            Label lbl = new Label { Text = title, Font = new Font("Segoe UI", 14, FontStyle.Bold), Location = new Point(15, 15), AutoSize = true };
+            FlowLayoutPanel listContainer = new FlowLayoutPanel { Name = "listContainer", FlowDirection = FlowDirection.TopDown, WrapContents = false, Location = new Point(15, 60), Size = new Size(card.Width - 30, 350), AutoScroll = true, Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom };
+            card.Controls.Add(lbl); card.Controls.Add(listContainer);
             return card;
         }
     }

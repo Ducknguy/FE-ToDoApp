@@ -44,7 +44,7 @@ namespace FE_ToDoApp.Lich_Trinh
             pnlHeader.Location = new Point(12, 12);
             pnlHeader.Name = "pnlHeader";
             pnlHeader.Padding = new Padding(0, 0, 0, 12);
-            pnlHeader.Size = new Size(576, 50);
+            pnlHeader.Size = new Size(1033, 50);
             pnlHeader.TabIndex = 0;
             // 
             // lblTitle
@@ -63,12 +63,12 @@ namespace FE_ToDoApp.Lich_Trinh
             // 
             flpBody.AutoScroll = true;
             flpBody.Controls.Add(pnlFooter);
-            flpBody.Dock = DockStyle.Fill;
+            flpBody.Dock = DockStyle.Bottom;
             flpBody.FlowDirection = FlowDirection.TopDown;
-            flpBody.Location = new Point(12, 12);
+            flpBody.Location = new Point(12, 65);
             flpBody.Margin = new Padding(0);
             flpBody.Name = "flpBody";
-            flpBody.Size = new Size(576, 476);
+            flpBody.Size = new Size(1033, 587);
             flpBody.TabIndex = 1;
             flpBody.WrapContents = false;
             // 
@@ -80,7 +80,7 @@ namespace FE_ToDoApp.Lich_Trinh
             pnlFooter.Location = new Point(0, 8);
             pnlFooter.Margin = new Padding(0, 8, 0, 0);
             pnlFooter.Name = "pnlFooter";
-            pnlFooter.Size = new Size(400, 44);
+            pnlFooter.Size = new Size(1030, 44);
             pnlFooter.TabIndex = 0;
             // 
             // btnAdd
@@ -113,11 +113,11 @@ namespace FE_ToDoApp.Lich_Trinh
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             BorderStyle = BorderStyle.FixedSingle;
-            Controls.Add(pnlHeader);
             Controls.Add(flpBody);
+            Controls.Add(pnlHeader);
             Name = "TodoDetailItemControl";
             Padding = new Padding(12);
-            Size = new Size(600, 500);
+            Size = new Size(1057, 664);
             pnlHeader.ResumeLayout(false);
             pnlHeader.PerformLayout();
             flpBody.ResumeLayout(false);
