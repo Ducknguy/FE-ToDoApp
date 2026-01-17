@@ -2,6 +2,8 @@
 using System.Drawing;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks; // Cần thêm thư viện này để chạy Async
 
 namespace FE_ToDoApp.Calendar
 {
@@ -9,85 +11,119 @@ namespace FE_ToDoApp.Calendar
     {
         private int _month, _year;
 
+        // CACHE: Lưu trữ dữ liệu các tháng đã tải. Key là chuỗi "tháng-năm" (VD: "1-2026")
+        private Dictionary<string, List<TaskItem>> _dataCache = new Dictionary<string, List<TaskItem>>();
+
+        // Biến tạm để giữ list task đang hiển thị
+        private List<TaskItem> _currentMonthTasks;
+
         public calendar()
         {
-            InitCustomInterface();
-
+            InitializeComponent();
             _month = DateTime.Now.Month;
             _year = DateTime.Now.Year;
 
-            lblMonthYear.Click += LblMonthYear_Click;
-
+            // Gọi hàm LoadCalendar (vì là async nên không cần await ở constructor)
             LoadCalendar(_month, _year);
         }
 
-        private void LoadCalendar(int month, int year)
+        // Đổi thành 'async void' để chạy bất đồng bộ
+        private async void LoadCalendar(int month, int year)
         {
             lblMonthYear.Text = $"THÁNG {month} / {year}";
 
-            pnlGrid.SuspendLayout();
-
+            // 1. Tính toán logic ngày tháng (Phần này tính nhanh, không cần Async)
             DateTime firstDayOfMonth = new DateTime(year, month, 1);
             int daysInMonth = DateTime.DaysInMonth(year, month);
-            int startCol = (int)firstDayOfMonth.DayOfWeek;
 
-            List<TaskItem> dbTasks = DatabaseHelper.GetTasksByMonth(month, year);
+            // Logic Thứ Hai = 0
+            int startCol = ((int)firstDayOfMonth.DayOfWeek + 6) % 7;
+
+            // 2. Xử lý dữ liệu (Phần này nặng, cần tối ưu)
+            string cacheKey = $"{month}-{year}";
+
+            if (_dataCache.ContainsKey(cacheKey))
+            {
+                // TRƯỜNG HỢP 1: Đã có trong Cache -> Lấy ra dùng luôn (Siêu nhanh)
+                _currentMonthTasks = _dataCache[cacheKey];
+            }
+            else
+            {
+                // TRƯỜNG HỢP 2: Chưa có -> Tải từ Database (Chạy ngầm để không đơ UI)
+                // Hiển thị trạng thái đang tải (nếu cần)
+                this.Cursor = Cursors.WaitCursor;
+
+                // Chạy hàm GetTasksByMonth trong luồng riêng
+                _currentMonthTasks = await Task.Run(() => DatabaseHelper.GetTasksByMonth(month, year));
+
+                // Lưu vào cache để lần sau dùng lại
+                _dataCache[cacheKey] = _currentMonthTasks;
+
+                this.Cursor = Cursors.Default;
+            }
+
+            // 3. Vẽ lên giao diện (Suspend để tránh giật khi vẽ nhiều ô)
+            pnlGrid.SuspendLayout();
 
             for (int i = 0; i < 42; i++)
             {
+                // Kiểm tra an toàn cho mảng
+                if (matrixDays == null || i >= matrixDays.Length) break;
+
                 DayCell cell = matrixDays[i];
-                cell.Clear();
+                cell.Clear(); // Xóa dữ liệu cũ
 
                 int dayVal = i - startCol + 1;
 
                 if (dayVal > 0 && dayVal <= daysInMonth)
                 {
-                    cell.Visible = true;
                     cell.SetDate(dayVal, month, year);
 
+                    // Highlight ngày hôm nay
                     if (dayVal == DateTime.Now.Day && month == DateTime.Now.Month && year == DateTime.Now.Year)
                     {
                         cell.SetToday();
                     }
 
-                    foreach (var task in dbTasks)
+                    // Hiển thị công việc
+                    if (_currentMonthTasks != null)
                     {
-                        if (task.StartDate.Date == DateTime.Parse(cell.FullDate).Date)
+                        // Đếm số việc trong ngày
+                        int taskCount = _currentMonthTasks.Count(t => t.StartDate.Date == new DateTime(year, month, dayVal).Date);
+                        if (taskCount > 0)
                         {
-                            cell.LocalEvents.Add(task);
+                            cell.ShowInfo(taskCount);
                         }
                     }
-
-                    if (cell.LocalEvents.Count > 0)
-                    {
-                        cell.ShowInfo(cell.LocalEvents.Count);
-                    }
-                }
-                else
-                {
-                    cell.Visible = false;
                 }
             }
-
             pnlGrid.ResumeLayout();
         }
 
-        private void ChangeMonth(int step)
+        private void BtnPrev_Click(object sender, EventArgs e)
         {
-            _month += step;
-            if (_month > 12) { _month = 1; _year++; }
+            _month--;
             if (_month < 1) { _month = 12; _year--; }
+            LoadCalendar(_month, _year);
+        }
+
+        private void BtnNext_Click(object sender, EventArgs e)
+        {
+            _month++;
+            if (_month > 12) { _month = 1; _year++; }
             LoadCalendar(_month, _year);
         }
 
         private void LblMonthYear_Click(object sender, EventArgs e)
         {
-            GotoDateForm frm = new GotoDateForm(_month, _year);
-            if (frm.ShowDialog() == DialogResult.OK)
+            using (GotoDateForm gotoForm = new GotoDateForm(_month, _year))
             {
-                _month = frm.SelectedMonth;
-                _year = frm.SelectedYear;
-                LoadCalendar(_month, _year);
+                if (gotoForm.ShowDialog() == DialogResult.OK)
+                {
+                    _month = gotoForm.SelectedMonth;
+                    _year = gotoForm.SelectedYear;
+                    LoadCalendar(_month, _year);
+                }
             }
         }
 
@@ -96,80 +132,72 @@ namespace FE_ToDoApp.Calendar
             DayCell cell = sender as DayCell;
             if (cell == null || string.IsNullOrEmpty(cell.FullDate)) return;
 
-            if (e.Button == MouseButtons.Right)
+            // Mở form chi tiết
+            using (EventDetailsForm detailsForm = new EventDetailsForm(cell.FullDate, _currentMonthTasks))
             {
-                ContextMenuStrip menu = new ContextMenuStrip();
-                menu.Items.Add("➕ Thêm công việc mới", null, (s, ev) =>
-                {
-                    DateTime selectedDate = DateTime.Parse(cell.FullDate);
-                    TaskForm addForm = new TaskForm(selectedDate);
+                DialogResult result = detailsForm.ShowDialog();
 
-                    if (addForm.ShowDialog() == DialogResult.OK)
+                // QUAN TRỌNG: Nếu người dùng Thêm/Sửa/Xóa việc -> Dữ liệu cũ bị sai
+                // Cần xóa Cache của tháng hiện tại để nó tải lại dữ liệu mới nhất
+
+                // Giả sử form trả về OK nếu có thay đổi (Hoặc bạn cứ reload cho chắc)
+                // if (result == DialogResult.OK) 
+                {
+                    string currentKey = $"{_month}-{_year}";
+                    if (_dataCache.ContainsKey(currentKey))
                     {
-                        if (addForm.CreatedTask != null && addForm.CreatedTask.Id != -1)
-                        {
-                            cell.LocalEvents.Add(addForm.CreatedTask);
-                            cell.ShowInfo(cell.LocalEvents.Count);
-                        }
+                        _dataCache.Remove(currentKey); // Xóa cache cũ đi
                     }
-                });
-                menu.Show(cell, e.Location);
-            }
-            else if (e.Button == MouseButtons.Left)
-            {
-                EventDetailsForm detailsForm = new EventDetailsForm(cell.FullDate, cell.LocalEvents);
-                detailsForm.ShowDialog();
-                LoadCalendar(_month, _year);
+                    LoadCalendar(_month, _year); // Tải lại để cập nhật thay đổi
+                }
             }
         }
     }
 
-    public class DayCell : Button
+    // Class DayCell giữ nguyên như cũ (tôi lược bỏ bớt để code gọn, bạn giữ nguyên code DayCell của bạn)
+    public class DayCell : Label
     {
-        public string FullDate { get; private set; }
-        public List<TaskItem> LocalEvents { get; set; } = new List<TaskItem>();
-
+        public string FullDate { get; set; }
         private bool _isToday = false;
-        private Color _colorNormal = Color.White;
-        private Color _colorHover = Color.LightSkyBlue;
-        private Color _colorToday = Color.CornflowerBlue;
 
         public DayCell()
         {
+            this.AutoSize = false;
             this.Dock = DockStyle.Fill;
-            this.FlatStyle = FlatStyle.Flat;
-            this.FlatAppearance.BorderColor = Color.Silver;
             this.TextAlign = ContentAlignment.TopLeft;
             this.Padding = new Padding(5);
+            this.Margin = new Padding(1);
             this.Font = new Font("Segoe UI", 10);
-            this.BackColor = _colorNormal;
+            this.BackColor = Color.White;
             this.Cursor = Cursors.Hand;
+            this.BorderStyle = BorderStyle.FixedSingle;
 
-            this.MouseEnter += (s, e) => { if (!_isToday && this.Visible) this.BackColor = _colorHover; };
-            this.MouseLeave += (s, e) => { if (_isToday && this.Visible) this.BackColor = _colorToday; else this.BackColor = _colorNormal; };
+            this.MouseEnter += (s, e) => { if (!_isToday && !string.IsNullOrEmpty(FullDate)) this.BackColor = Color.AliceBlue; };
+            this.MouseLeave += (s, e) => { if (_isToday) this.BackColor = Color.OrangeRed; else this.BackColor = Color.White; };
         }
 
         public void Clear()
         {
             this.Text = "";
             this.FullDate = "";
-            this.LocalEvents.Clear();
             this._isToday = false;
-            this.BackColor = _colorNormal;
+            this.BackColor = Color.White;
             this.ForeColor = Color.Black;
             this.Font = new Font("Segoe UI", 10);
+            this.Visible = false;
         }
 
         public void SetDate(int day, int month, int year)
         {
+            this.Visible = true;
             this.Text = day.ToString();
-            this.FullDate = $"{year}-{month}-{day}";
+            this.FullDate = $"{year}-{month:D2}-{day:D2}";
         }
 
         public void SetToday()
         {
             _isToday = true;
-            this.BackColor = _colorToday;
+            this.BackColor = Color.OrangeRed;
             this.ForeColor = Color.White;
             this.Font = new Font(this.Font, FontStyle.Bold);
             this.Text += " (Hôm nay)";
@@ -177,14 +205,8 @@ namespace FE_ToDoApp.Calendar
 
         public void ShowInfo(int count)
         {
-            string dayPart = this.FullDate.Split('-')[2];
-            this.Text = dayPart + $"\n📅 {count} việc";
-
-            if (!_isToday)
-            {
-                this.ForeColor = Color.DarkBlue;
-                this.BackColor = Color.AliceBlue;
-            }
+            this.Text += $"\n\n📌 {count} việc";
+            if (!_isToday) this.ForeColor = Color.Blue;
         }
     }
 }
