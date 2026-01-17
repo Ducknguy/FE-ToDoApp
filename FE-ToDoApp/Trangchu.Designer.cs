@@ -346,7 +346,7 @@
             descSmartCalendar.Location = new Point(21, 115);
             descSmartCalendar.MaximumSize = new Size(379, 0);
             descSmartCalendar.Name = "descSmartCalendar";
-            descSmartCalendar.Size = new Size(343, 46);
+            descSmartCalendar.Size = new Size(373, 46);
             descSmartCalendar.TabIndex = 2;
             descSmartCalendar.Text = "Xem lịch theo ngày, tuần và tháng với điều hướng trực quan.";
             // 
@@ -391,7 +391,7 @@
             descTaskManagement.Location = new Point(21, 115);
             descTaskManagement.MaximumSize = new Size(379, 0);
             descTaskManagement.Name = "descTaskManagement";
-            descTaskManagement.Size = new Size(365, 46);
+            descTaskManagement.Size = new Size(373, 46);
             descTaskManagement.TabIndex = 2;
             descTaskManagement.Text = "Sắp xếp công việc theo ưu tiên, công việc con và theo dõi chi tiết để tăng hiệu suất.";
             // 

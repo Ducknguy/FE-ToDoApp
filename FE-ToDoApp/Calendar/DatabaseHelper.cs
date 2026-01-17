@@ -7,7 +7,8 @@ namespace FE_ToDoApp.Calendar
 {
     public static class DatabaseHelper
     {
-        private static string connectionString = "Data Source=LAPTOP-HJ0H2N4I;Initial Catalog=ToDoApp;Integrated Security=True;";
+        // Chỉnh lại connection string của bạn nếu cần
+        private static string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=ToDoApp;Integrated Security=True";
 
         public static List<TaskItem> GetTasksByMonth(int month, int year)
         {
@@ -17,8 +18,10 @@ namespace FE_ToDoApp.Calendar
                 try
                 {
                     conn.Open();
-                    // Lấy dữ liệu từ bảng [Task] thay vì Calendar
-                    string sql = "SELECT * FROM [Task] WHERE MONTH(DueDate) = @m AND YEAR(DueDate) = @y";
+                    // Query sử dụng tên cột chính xác từ ảnh DB bạn gửi: WeekStartDate
+                    string sql = @"SELECT CategoryId, CategoryName, WeekStartDate 
+                                   FROM WeekCategory 
+                                   WHERE MONTH(WeekStartDate) = @m AND YEAR(WeekStartDate) = @y";
 
                     using (SqlCommand cmd = new SqlCommand(sql, conn))
                     {
@@ -30,82 +33,22 @@ namespace FE_ToDoApp.Calendar
                             while (reader.Read())
                             {
                                 TaskItem item = new TaskItem();
-                                item.Id = Convert.ToInt32(reader["Id"]);
-                                item.Title = reader["Title"].ToString();
-                                // Kiểm tra null cho các cột có thể trống
-                                item.Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : "";
-                                item.DuaDate = Convert.ToDateTime(reader["DueDate"]);
-                                item.Status = reader["Status"] != DBNull.Value ? reader["Status"].ToString() : "Pending";
+                                item.Id = Convert.ToInt32(reader["CategoryId"]);
+                                item.Title = reader["CategoryName"] != DBNull.Value ? reader["CategoryName"].ToString() : "";
+                                // Map cột WeekStartDate vào thuộc tính StartDate
+                                item.StartDate = reader["WeekStartDate"] != DBNull.Value ? Convert.ToDateTime(reader["WeekStartDate"]) : DateTime.MinValue;
+
                                 list.Add(item);
                             }
                         }
                     }
                 }
-                catch (Exception ex) { MessageBox.Show("Lỗi tải lịch: " + ex.Message); }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi Database: " + ex.Message);
+                }
             }
             return list;
-        }
-
-        public static void AddTask(TaskItem task)
-        {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    conn.Open();
-                    // INSERT vào bảng [Task] và KHÔNG cần UserID nữa
-                    string sql = "INSERT INTO [Task] (Title, Description, DueDate, Status, Category) VALUES (@Title, @Desc, @Date, 'Pending', 'General')";
-                    using (SqlCommand cmd = new SqlCommand(sql, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@Title", task.Title);
-                        cmd.Parameters.AddWithValue("@Desc", task.Description ?? "");
-                        cmd.Parameters.AddWithValue("@Date", task.DuaDate);
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-                catch (Exception ex) { MessageBox.Show("Lỗi thêm việc: " + ex.Message); }
-            }
-        }
-
-        public static void UpdateTask(TaskItem task)
-        {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    conn.Open();
-                    // Update bảng [Task]
-                    string sql = "UPDATE [Task] SET Title = @Title, Description = @Desc, DueDate = @Date WHERE Id = @Id";
-                    using (SqlCommand cmd = new SqlCommand(sql, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@Id", task.Id);
-                        cmd.Parameters.AddWithValue("@Title", task.Title);
-                        cmd.Parameters.AddWithValue("@Desc", task.Description ?? "");
-                        cmd.Parameters.AddWithValue("@Date", task.DuaDate);
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-                catch (Exception ex) { MessageBox.Show("Lỗi sửa: " + ex.Message); }
-            }
-        }
-
-        public static void DeleteTask(int id)
-        {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    conn.Open();
-                    // Delete từ bảng [Task]
-                    string sql = "DELETE FROM [Task] WHERE Id = @Id";
-                    using (SqlCommand cmd = new SqlCommand(sql, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@Id", id);
-                        cmd.ExecuteNonQuery();
-                    }
-                }
-                catch (Exception ex) { MessageBox.Show("Lỗi xóa: " + ex.Message); }
-            }
         }
     }
 }
