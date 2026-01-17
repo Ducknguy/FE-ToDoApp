@@ -46,17 +46,6 @@ namespace FE_ToDoApp.ThungRac
 
         UNION ALL
 
-        -- WEEK PLAN
-        SELECT
-            id_week AS ItemId,
-            title AS Title,
-            'Week_Plan' AS SourceTable,
-            DeletedAt
-        FROM Week_Plan
-        WHERE IsDeleted = 1
-
-        UNION ALL
-
         -- CALENDAR
         SELECT
             Id AS ItemId,
@@ -80,8 +69,6 @@ namespace FE_ToDoApp.ThungRac
 
             if (sourceTable == "Todo")
                 sql = "UPDATE Todo_List_Detail SET IsDeleted = 0, DeletedAt = NULL WHERE id_todo = @id";
-            else if (sourceTable == "Week_Plan")
-                sql = "UPDATE Week_Plan SET IsDeleted = 0, DeletedAt = NULL WHERE id_week = @id";
             else if (sourceTable == "Calendar")
                 sql = "UPDATE Calendar SET IsDeleted = 0, DeletedAt = NULL WHERE Id = @id";
             else
@@ -103,10 +90,6 @@ namespace FE_ToDoApp.ThungRac
             DELETE FROM Todo_List_Detail WHERE id_todo = @id;
         ";
             }
-            else if (sourceTable == "Week_Plan")
-            {
-                sql = "DELETE FROM Week_Plan WHERE id_week = @id";
-            }
             else if (sourceTable == "Calendar")
             {
                 sql = "DELETE FROM Calendar WHERE Id = @id";
@@ -118,26 +101,19 @@ namespace FE_ToDoApp.ThungRac
         }
 
         // ✅ Xóa mềm: chuyển vào Thùng rác
-public static int XoaVaoThungRac(string sourceTable, int itemId)
-{
-    string sql = "";
+        public static int XoaVaoThungRac(string sourceTable, int itemId)
+        {
+            string sql = "";
 
-    if (sourceTable == "Todo")
-        sql = "UPDATE Todo_List_Detail SET IsDeleted = 1, DeletedAt = GETDATE() WHERE id_todo = @id";
-    else if (sourceTable == "Week_Plan")
-        sql = "UPDATE Week_Plan SET IsDeleted = 1, DeletedAt = GETDATE() WHERE id_week = @id";
-    else if (sourceTable == "Calendar")
-        sql = "UPDATE Calendar SET IsDeleted = 1, DeletedAt = GETDATE() WHERE Id = @id";
-    else
-        return 0;
+            if (sourceTable == "Todo")
+                sql = "UPDATE Todo_List_Detail SET IsDeleted = 1, DeletedAt = GETDATE() WHERE id_todo = @id";
+            else if (sourceTable == "Calendar")
+                sql = "UPDATE Calendar SET IsDeleted = 1, DeletedAt = GETDATE() WHERE Id = @id";
+            else
+                return 0;
 
-    return Execute(sql, new SqlParameter("@id", itemId));
-}
-
-            
-
-
-
+            return Execute(sql, new SqlParameter("@id", itemId));
+        }
 
     }
 }

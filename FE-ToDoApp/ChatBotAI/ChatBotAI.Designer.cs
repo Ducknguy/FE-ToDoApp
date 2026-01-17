@@ -493,7 +493,7 @@
             Controls.Add(panelFooter);
             Controls.Add(panelHeader);
             Controls.Add(panelTitleBar);
-            FormBorderStyle = FormBorderStyle.None;
+            FormBorderStyle = FormBorderStyle.SizableToolWindow;
             Name = "ChatbotAI";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "ChatbotAI";
