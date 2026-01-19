@@ -38,8 +38,9 @@
             panel1.Controls.Add(label1);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
+            panel1.Margin = new Padding(3, 2, 3, 2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(302, 37);
+            panel1.Size = new Size(264, 28);
             panel1.TabIndex = 0;
             // 
             // label1
@@ -49,17 +50,18 @@
             label1.Font = new Font("Segoe UI", 12F);
             label1.Location = new Point(0, 0);
             label1.Name = "label1";
-            label1.Size = new Size(123, 28);
+            label1.Size = new Size(98, 21);
             label1.TabIndex = 0;
             label1.Text = "Chua dat ten";
             // 
             // Private_Sidebar
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(panel1);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "Private_Sidebar";
-            Size = new Size(302, 538);
+            Size = new Size(264, 404);
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             ResumeLayout(false);

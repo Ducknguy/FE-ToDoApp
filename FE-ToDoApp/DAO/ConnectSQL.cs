@@ -6,13 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Configuration;
 
 namespace FE_ToDoApp
 {
     class ConnectSQL
     {
         // --- QUAN TRỌNG: ĐỂ public static ĐỂ CÁC DAO KHÁC DÙNG KÉ ---
-        public static string strCon = @"Data Source=Money\SQLEXPRESS;Initial Catalog=ChatBotDB;Integrated Security=True";
+        public static string strCon = @"Data Source=LAPTOP-HJ0H2N4I;Initial Catalog=ToDoApp;Integrated Security=True";
 
         // Đối tượng kết nối
         private SqlConnection conn = null;
@@ -20,6 +21,11 @@ namespace FE_ToDoApp
         public ConnectSQL()
         {
             conn = new SqlConnection(strCon);
+        }
+
+        public SqlConnection GetConnection()
+        {
+            return new SqlConnection(strCon);
         }
 
         // 2. HÀM LẤY DỮ LIỆU (SELECT)

@@ -12,7 +12,7 @@ namespace FE_ToDoApp.WeekList
 {
     public partial class WeekGroupMVC : UserControl
     {
-        private const string ConnectionString = "Data Source=duc;Initial Catalog=ToDoApp;Integrated Security=True;Encrypt=False";
+        private const string ConnectionString = "Data Source=LAPTOP-HJ0H2N4I;Initial Catalog=ToDoApp;Integrated Security=True;Encrypt=False";
 
         private WeekCategoryController _categoryController;
         private WeekTaskController _taskController;
@@ -32,9 +32,9 @@ namespace FE_ToDoApp.WeekList
             _taskController = new WeekTaskController(ConnectionString);
 
             _currentWeekStart = GetMonday(DateTime.Now);
-            button1.Click += BtnAddTask_Click;     
-            button2.Click += BtnEditTask_Click;     
-            button3.Click += BtnDeleteTask_Click;   
+            button1.Click += BtnAddTask_Click;
+            button2.Click += BtnEditTask_Click;
+            button3.Click += BtnDeleteTask_Click;
             button1.Text = "➕ Thêm";
             button2.Text = "✏️ Sửa";
             button3.Text = "🗑️ Xóa";
@@ -54,7 +54,7 @@ namespace FE_ToDoApp.WeekList
                     item.Dispose();
                 }
                 int insertIndex = flowLayoutPanel1.Controls.IndexOf(panel4) + 1;
-                
+
                 foreach (var category in _categories)
                 {
                     var item = new week_category_item
@@ -70,7 +70,7 @@ namespace FE_ToDoApp.WeekList
                     item.Clicked += CategoryItem_Clicked;
                     item.EditRequested += CategoryItem_EditRequested;
                     item.DeleteRequested += CategoryItem_DeleteRequested;
-                    
+
                     flowLayoutPanel1.Controls.Add(item);
                     flowLayoutPanel1.Controls.SetChildIndex(item, insertIndex++);
                 }
@@ -87,7 +87,7 @@ namespace FE_ToDoApp.WeekList
             catch (Exception ex)
             {
                 MessageBox.Show($"Lỗi load categories: {ex.Message}\n\n" +
-                    $"Hãy đảm bảo bạn đã chạy SQL migration script!", 
+                    $"Hãy đảm bảo bạn đã chạy SQL migration script!",
                     "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -131,8 +131,8 @@ namespace FE_ToDoApp.WeekList
             try
             {
                 var dialog = new CategoryEditDialog(
-                    category.CategoryName, 
-                    category.WeekStartDate, 
+                    category.CategoryName,
+                    category.WeekStartDate,
                     category.WeekEndDate);
 
                 if (dialog.ShowDialog() == DialogResult.OK)
@@ -155,7 +155,7 @@ namespace FE_ToDoApp.WeekList
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
+        // đây nef
         private void CategoryItem_DeleteRequested(object? sender, EventArgs e)
         {
             var item = sender as week_category_item;
@@ -477,7 +477,7 @@ namespace FE_ToDoApp.WeekList
             {
                 chk.Enabled = true;
             }
-        } 
+        }
         private void TxtSearch_TextChanged(object? sender, EventArgs e)
         {
             if (_currentCategoryId > 0)
@@ -512,8 +512,8 @@ namespace FE_ToDoApp.WeekList
                 try
                 {
                     int newCategoryId = _categoryController.AddCategory(
-                        dialog.CategoryName, 
-                        dialog.WeekStartDate, 
+                        dialog.CategoryName,
+                        dialog.WeekStartDate,
                         dialog.WeekEndDate);
 
                     LoadCategories();
@@ -535,6 +535,11 @@ namespace FE_ToDoApp.WeekList
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

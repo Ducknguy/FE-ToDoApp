@@ -8,6 +8,8 @@ namespace FE_ToDoApp.Lich_Trinh
 {
     public partial class TaskItem : UserControl
     {
+        
+
         private int _selectedTodoId = -1;
 
         private bool _deleteMode = false;
@@ -233,7 +235,7 @@ namespace FE_ToDoApp.Lich_Trinh
                 if (c is Panel container)
                 {
                     bool selected = container.Tag is int id && id == todoId;
-                    
+
                     // Tìm ToDoListItem trong container
                     foreach (Control child in container.Controls)
                     {
@@ -398,7 +400,7 @@ namespace FE_ToDoApp.Lich_Trinh
                 if (c is Panel container)
                 {
                     container.Width = w;
-                    
+
                     // Cập nhật vị trí nút khi resize
                     foreach (Control child in container.Controls)
                     {
@@ -421,6 +423,24 @@ namespace FE_ToDoApp.Lich_Trinh
         private void ResizeRightDetailToFullWidth()
         {
             _detail.Width = GetRightWidth();
+        }
+
+        private void btn_delete_Click_1(object sender, EventArgs e)
+        {
+            var ok = MessageBox.Show(
+                "Xóa Todo này và chuyển vào thùng rác?",
+                "Xác nhận",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning
+            );
+
+            if (ok != DialogResult.Yes) return;
+
+            Db_DeleteTodo(_selectedTodoId);   // xóa mềm
+
+            _selectedTodoId = -1;            // ✅ reset đã chọn
+            _detail.LoadTodo(-1);            // ✅ clear panel bên phải
+            LoadTodosToLeftList();           // ✅ reload list
         }
     }
 }

@@ -21,7 +21,7 @@ namespace FE_ToDoApp
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();          
 
-            Application.Run(new Login1());
+            Application.Run(new Trangchu());
         }
     }
 }

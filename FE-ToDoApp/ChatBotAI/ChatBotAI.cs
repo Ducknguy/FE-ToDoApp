@@ -17,7 +17,10 @@ namespace ChatbotAI_Form
     {
         public partial class ChatbotAI : Form
         {
-            private ChatDAO chatDAO = new ChatDAO();
+
+        private int currentUserId = 1; // hoặc lấy từ LoginForm    
+
+        private ChatDAO chatDAO = new ChatDAO();
             private ChatSession currentSession;
 
             private GeminiService gemini;
@@ -206,9 +209,18 @@ namespace ChatbotAI_Form
             if (currentSession == null)
             {
                 string title = string.IsNullOrEmpty(text) ? "Hình ảnh" : (text.Length > 30 ? text.Substring(0, 30) : text);
-                currentSession = new ChatSession { Title = title };
+
+                currentSession = new ChatSession
+                {
+                    UserId = currentUserId,     // ✅ THÊM
+                    Title = title,
+                    CreatedAt = DateTime.Now    // ✅ nên thêm luôn cho chắc
+                };
+
                 chatDAO.SaveSession(currentSession);
-                LoadHistory();
+
+
+                LoadHistory(); // Cập nhật lại list bên trái
             }
 
             // 4. HIỂN THỊ TIN NHẮN USER (SỬA ĐOẠN NÀY)
@@ -234,20 +246,17 @@ namespace ChatbotAI_Form
             currentAttachments.Clear();
 
 
-            // 7. LƯU TIN NHẮN USER VÀO DATABASE (SQL)
+            //// 7. LƯU TIN NHẮN USER VÀO DATABASE (SQL)
             string dbContent = text;
-            if (fileCount > 0)
-            {
-                // Ghi chú vào DB để sau này xem lại lịch sử biết là có file
-                dbContent += $"\n[Đính kèm {fileCount} file]";
-            }
+            if (fileCount > 0) dbContent += $"\n[Đính kèm {fileCount} file]";
 
             ChatMessage userMsg = new ChatMessage
             {
                 IsUser = true,
-                Content = dbContent
+                Content = dbContent,
+                Files = filesToSend // Đừng quên lưu file vào object này
             };
-
+            // TRUYỀN ID (INT) VÀO DAO
             chatDAO.SaveMessage(currentSession.Id, userMsg);
             currentSession.Messages.Add(userMsg);
 
@@ -553,7 +562,7 @@ namespace ChatbotAI_Form
         {
             flowHistory.Controls.Clear();
 
-            var sessions = chatDAO.GetSessions();
+            var sessions = chatDAO.GetSessions(currentUserId);
 
             DateTime today = DateTime.Today;
             DateTime yesterday = today.AddDays(-1);
@@ -648,9 +657,9 @@ namespace ChatbotAI_Form
                 ) == DialogResult.No)
                     return;
 
-                chatDAO.DeleteSession(session.Id); // ⚠️ cần có hàm này trong DAO
+            chatDAO.DeleteSession(session.Id, currentUserId);           //  cần có hàm này trong DAO
 
-                flowHistory.Controls.Remove(pnl);
+            flowHistory.Controls.Remove(pnl);
                 pnl.Dispose();
 
                 if (currentSession?.Id == session.Id)
