@@ -1,22 +1,29 @@
 ﻿using FE_ToDoApp.Calendar;
 using FE_ToDoApp.Lich_Trinh;
-using FE_ToDoApp.NewFolder;
 using FE_ToDoApp.Setting;
 using ChatbotAI_Form;
 using FE_ToDoApp.login;
-using System.Windows.Forms;
-using System.Collections.Generic;
-using System;
+using FE_ToDoApp.ThungRac;
+using FE_ToDoApp.WeekList;
 
 namespace FE_ToDoApp
 {
     public partial class Trangchu : Form
     {
         private List<Form> privatePages = new List<Form>();
+        private int currentUserId;
+        private string currentUserName;
 
         public Trangchu()
         {
             InitializeComponent();
+        }
+
+        public Trangchu(int userId, string userName)
+        {
+            InitializeComponent();
+            currentUserId = userId;
+            currentUserName = userName;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -26,8 +33,8 @@ namespace FE_ToDoApp
 
         private void btnTrash_Click(object sender, EventArgs e)
         {
-            ThungRac thungRacForm = new ThungRac();
-            thungRacForm.Show();
+           Thungrac thungrac = new Thungrac();
+              thungrac.ShowDialog();
         }
 
         private void btn_CaiDat(object sender, EventArgs e)
@@ -66,24 +73,7 @@ namespace FE_ToDoApp
             }
         }
 
-        private void add_private_item_click(object sender, EventArgs e)
-        {
-            ToDoList newtodo = new ToDoList();
-            newtodo.TopLevel = false;
-            newtodo.FormBorderStyle = FormBorderStyle.None;
-            newtodo.Dock = DockStyle.Left;
-
-            mainPanel.Controls.Clear();
-            mainPanel.Controls.Add(newtodo);
-            newtodo.Show();
-            privatePages.Add(newtodo);
-
-            Private_Sidebar sidebar_item = new Private_Sidebar();
-            sidebar_item.TargetForm = newtodo;
-
-            sidebar_item.Click += sidebar_item_click;
-        }
-
+    
         private void btnCalendar_Click(object sender, EventArgs e)
         {
             mainPanel.Controls.Clear();
@@ -96,6 +86,29 @@ namespace FE_ToDoApp
 
             mainPanel.Controls.Add(frmCalendar);
             frmCalendar.Show();
+        }
+
+        private void btnWeekly_Click(object sender, EventArgs e)
+        {
+            mainPanel.Controls.Clear();
+            WeekGroupMVC weekplan = new WeekGroupMVC();
+            weekplan.Dock = DockStyle.Fill;
+            mainPanel.Controls.Add(weekplan);
+            weekplan.Show();
+        }
+
+        private void btnTasks_Click(object sender, EventArgs e)
+        {
+            mainPanel.Controls.Clear();
+            FE_ToDoApp.Lich_Trinh.TaskItem _task = new FE_ToDoApp.Lich_Trinh.TaskItem();
+            _task.Dock = DockStyle.Fill;
+            mainPanel.Controls.Add(_task);
+            _task.Show();
+        }
+
+        private void btnDashboard_Click(object sender, EventArgs e)
+        {
+            
         }
 
         private void btn_logout_Click(object sender, EventArgs e)

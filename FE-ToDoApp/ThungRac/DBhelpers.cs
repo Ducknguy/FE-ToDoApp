@@ -8,7 +8,7 @@ namespace FE_ToDoApp.ThungRac
     {
         // ⚠️ Lưu ý: sửa lại đúng tên server của bạn nếu cần
         public static string ConnStr =
-            @"Data Source=LAPTOP-HJ0H2N4I;Initial Catalog=ToDoApp;Integrated Security=True;TrustServerCertificate=True";
+            @"Data Source=duc;Initial Catalog=ToDoApp;Integrated Security=True;TrustServerCertificate=True";
 
         // --- PHẦN 1: CÁC HÀM CƠ BẢN (GIỮ NGUYÊN) ---
 

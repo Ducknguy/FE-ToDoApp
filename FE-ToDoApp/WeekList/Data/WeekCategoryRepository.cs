@@ -20,8 +20,8 @@ namespace FE_ToDoApp.WeekList.Data
             
             string sql = @"
                 SELECT CategoryId, CategoryName, WeekStartDate, WeekEndDate, OrderIndex, IsActive
-                FROM WeekCategory
-                WHERE IsActive = 1
+                FROM WeekCategory_detail
+                WHERE IsDeleted = 0
                 ORDER BY WeekStartDate DESC, OrderIndex, CategoryName";
 
             using (var conn = new SqlConnection(_connectionString))
@@ -35,11 +35,11 @@ namespace FE_ToDoApp.WeekList.Data
                         categories.Add(new WeekCategory
                         {
                             CategoryId = reader.GetInt32(0),
-                            CategoryName = reader.GetString(1),
-                            WeekStartDate = reader.GetDateTime(2),
-                            WeekEndDate = reader.GetDateTime(3),
-                            OrderIndex = reader.GetInt32(4),
-                            IsActive = reader.GetBoolean(5)
+                            CategoryName = reader.IsDBNull(1) ? string.Empty : reader.GetString(1),
+                            WeekStartDate = reader.IsDBNull(2) ? DateTime.MinValue : reader.GetDateTime(2),
+                            WeekEndDate = reader.IsDBNull(3) ? DateTime.MinValue : reader.GetDateTime(3),
+                            OrderIndex = reader.IsDBNull(4) ? 0 : reader.GetInt32(4),
+                            IsActive = reader.IsDBNull(5) ? true : reader.GetBoolean(5)
                         });
                     }
                 }
@@ -53,8 +53,8 @@ namespace FE_ToDoApp.WeekList.Data
         //{
         //    string sql = @"
         //        SELECT CategoryId, CategoryName, WeekStartDate, WeekEndDate, OrderIndex, IsActive
-        //        FROM WeekCategory
-        //        WHERE CategoryId = @CategoryId AND IsActive = 1";
+        //        FROM WeekCategory_detail
+        //        WHERE CategoryId = @CategoryId AND IsDeleted = 0";
 
         //    using (var conn = new SqlConnection(_connectionString))
         //    {
@@ -86,44 +86,35 @@ namespace FE_ToDoApp.WeekList.Data
 
         public int Insert(string categoryName, DateTime weekStartDate, DateTime weekEndDate)
         {
-            string getMaxIdSql = "SELECT ISNULL(MAX(CategoryId), 0) FROM WeekCategory";
-            int newCategoryId = 1;
+            string sql = @"
+                INSERT INTO WeekCategory_detail (UserId, CategoryName, WeekStartDate, WeekEndDate, OrderIndex, IsActive, IsDeleted)
+                VALUES (@UserId, @CategoryName, @WeekStartDate, @WeekEndDate, @OrderIndex, @IsActive, 0);
+                
+                SELECT SCOPE_IDENTITY();";
 
             using (var conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
                 
-                using (var cmd = new SqlCommand(getMaxIdSql, conn))
-                {
-                    var maxId = cmd.ExecuteScalar();
-                    newCategoryId = (maxId == DBNull.Value ? 0 : Convert.ToInt32(maxId)) + 1;
-                }
-
-                string sql = @"
-                    INSERT INTO WeekCategory (CategoryId, CategoryName, WeekStartDate, WeekEndDate, OrderIndex, IsActive)
-                    VALUES (@CategoryId, @CategoryName, @WeekStartDate, @WeekEndDate, @OrderIndex, @IsActive)";
-
                 using (var cmd = new SqlCommand(sql, conn))
                 {
-                    cmd.Parameters.AddWithValue("@CategoryId", newCategoryId);
+                    cmd.Parameters.AddWithValue("@UserId", 1);
                     cmd.Parameters.AddWithValue("@CategoryName", categoryName);
                     cmd.Parameters.AddWithValue("@WeekStartDate", weekStartDate);
                     cmd.Parameters.AddWithValue("@WeekEndDate", weekEndDate);
                     cmd.Parameters.AddWithValue("@OrderIndex", 0);
                     cmd.Parameters.AddWithValue("@IsActive", true);
                     
-                    cmd.ExecuteNonQuery();
+                    return Convert.ToInt32(cmd.ExecuteScalar());
                 }
             }
-
-            return newCategoryId;
         }
 
      
         public void Update(int categoryId, string categoryName, DateTime weekStartDate, DateTime weekEndDate)
         {
             string sql = @"
-                UPDATE WeekCategory
+                UPDATE WeekCategory_detail
                 SET CategoryName = @CategoryName,
                     WeekStartDate = @WeekStartDate,
                     WeekEndDate = @WeekEndDate
@@ -147,8 +138,9 @@ namespace FE_ToDoApp.WeekList.Data
         public void Delete(int categoryId)
         {
             string sql = @"
-                UPDATE WeekCategory
-                SET IsActive = 0
+                UPDATE WeekCategory_detail
+                SET IsDeleted = 1,
+                    DeletedAt = GETDATE()
                 WHERE CategoryId = @CategoryId";
 
             using (var conn = new SqlConnection(_connectionString))

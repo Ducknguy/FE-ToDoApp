@@ -1,4 +1,4 @@
-namespace FE_ToDoApp.WeekList.Views.Dialogs
+﻿namespace FE_ToDoApp.WeekList.Views.Dialogs
 {
     partial class CategoryEditDialog
     {
@@ -15,112 +15,112 @@ namespace FE_ToDoApp.WeekList.Views.Dialogs
 
         private void InitializeComponent()
         {
-            this.lblTitle = new System.Windows.Forms.Label();
-            this.txtCategoryName = new System.Windows.Forms.TextBox();
-            this.btnOK = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.lblWeekSelection = new System.Windows.Forms.Label();
-            this.datePickerWeek = new System.Windows.Forms.DateTimePicker();
-            this.lblWeekRange = new System.Windows.Forms.Label();
-            this.SuspendLayout();
+            lblTitle = new Label();
+            txtCategoryName = new TextBox();
+            btnOK = new Button();
+            btnCancel = new Button();
+            lblWeekSelection = new Label();
+            datePickerWeek = new DateTimePicker();
+            lblWeekRange = new Label();
+            SuspendLayout();
             // 
             // lblTitle
             // 
-            this.lblTitle.AutoSize = true;
-            this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.lblTitle.Location = new System.Drawing.Point(20, 20);
-            this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(156, 23);
-            this.lblTitle.TabIndex = 0;
-            this.lblTitle.Text = "T�n nh�m c�ng vi?c:";
+            lblTitle.AutoSize = true;
+            lblTitle.Font = new Font("Segoe UI", 10F);
+            lblTitle.Location = new Point(20, 20);
+            lblTitle.Name = "lblTitle";
+            lblTitle.Size = new Size(167, 23);
+            lblTitle.TabIndex = 0;
+            lblTitle.Text = "Tên nhóm công việc:";
             // 
             // txtCategoryName
             // 
-            this.txtCategoryName.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.txtCategoryName.Location = new System.Drawing.Point(20, 50);
-            this.txtCategoryName.Name = "txtCategoryName";
-            this.txtCategoryName.Size = new System.Drawing.Size(340, 30);
-            this.txtCategoryName.TabIndex = 1;
-            // 
-            // lblWeekSelection
-            // 
-            this.lblWeekSelection.AutoSize = true;
-            this.lblWeekSelection.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.lblWeekSelection.Location = new System.Drawing.Point(20, 95);
-            this.lblWeekSelection.Name = "lblWeekSelection";
-            this.lblWeekSelection.Size = new System.Drawing.Size(100, 23);
-            this.lblWeekSelection.TabIndex = 4;
-            this.lblWeekSelection.Text = "Ch?n tu?n:";
-            // 
-            // datePickerWeek
-            // 
-            this.datePickerWeek.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.datePickerWeek.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.datePickerWeek.Location = new System.Drawing.Point(20, 125);
-            this.datePickerWeek.Name = "datePickerWeek";
-            this.datePickerWeek.Size = new System.Drawing.Size(340, 30);
-            this.datePickerWeek.TabIndex = 5;
-            this.datePickerWeek.ValueChanged += new System.EventHandler(this.datePickerWeek_ValueChanged);
-            // 
-            // lblWeekRange
-            // 
-            this.lblWeekRange.AutoSize = true;
-            this.lblWeekRange.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.lblWeekRange.ForeColor = System.Drawing.Color.Gray;
-            this.lblWeekRange.Location = new System.Drawing.Point(20, 160);
-            this.lblWeekRange.Name = "lblWeekRange";
-            this.lblWeekRange.Size = new System.Drawing.Size(200, 20);
-            this.lblWeekRange.TabIndex = 6;
-            this.lblWeekRange.Text = "Tu?n: 12/01/2026 - 18/01/2026";
+            txtCategoryName.Font = new Font("Segoe UI", 10F);
+            txtCategoryName.Location = new Point(20, 50);
+            txtCategoryName.Name = "txtCategoryName";
+            txtCategoryName.Size = new Size(340, 30);
+            txtCategoryName.TabIndex = 1;
             // 
             // btnOK
             // 
-            this.btnOK.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.btnOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnOK.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.btnOK.ForeColor = System.Drawing.Color.White;
-            this.btnOK.Location = new System.Drawing.Point(190, 195);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(80, 35);
-            this.btnOK.TabIndex = 2;
-            this.btnOK.Text = "C?p nh?t";
-            this.btnOK.UseVisualStyleBackColor = false;
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+            btnOK.BackColor = Color.FromArgb(0, 120, 215);
+            btnOK.FlatStyle = FlatStyle.Flat;
+            btnOK.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnOK.ForeColor = Color.White;
+            btnOK.Location = new Point(190, 195);
+            btnOK.Name = "btnOK";
+            btnOK.Size = new Size(80, 35);
+            btnOK.TabIndex = 2;
+            btnOK.Text = "Cập nhật";
+            btnOK.UseVisualStyleBackColor = false;
+            btnOK.Click += btnOK_Click;
             // 
             // btnCancel
             // 
-            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCancel.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.btnCancel.Location = new System.Drawing.Point(280, 195);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(80, 35);
-            this.btnCancel.TabIndex = 3;
-            this.btnCancel.Text = "H?y";
-            this.btnCancel.UseVisualStyleBackColor = true;
+            btnCancel.DialogResult = DialogResult.Cancel;
+            btnCancel.FlatStyle = FlatStyle.Flat;
+            btnCancel.Font = new Font("Segoe UI", 9F);
+            btnCancel.Location = new Point(280, 195);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new Size(80, 35);
+            btnCancel.TabIndex = 3;
+            btnCancel.Text = "Hủy";
+            btnCancel.UseVisualStyleBackColor = true;
+            // 
+            // lblWeekSelection
+            // 
+            lblWeekSelection.AutoSize = true;
+            lblWeekSelection.Font = new Font("Segoe UI", 10F);
+            lblWeekSelection.Location = new Point(20, 95);
+            lblWeekSelection.Name = "lblWeekSelection";
+            lblWeekSelection.Size = new Size(95, 23);
+            lblWeekSelection.TabIndex = 4;
+            lblWeekSelection.Text = "Chọn tuần:";
+            // 
+            // datePickerWeek
+            // 
+            datePickerWeek.Font = new Font("Segoe UI", 10F);
+            datePickerWeek.Format = DateTimePickerFormat.Short;
+            datePickerWeek.Location = new Point(20, 125);
+            datePickerWeek.Name = "datePickerWeek";
+            datePickerWeek.Size = new Size(340, 30);
+            datePickerWeek.TabIndex = 5;
+            datePickerWeek.ValueChanged += datePickerWeek_ValueChanged;
+            // 
+            // lblWeekRange
+            // 
+            lblWeekRange.AutoSize = true;
+            lblWeekRange.Font = new Font("Segoe UI", 9F);
+            lblWeekRange.ForeColor = Color.Gray;
+            lblWeekRange.Location = new Point(20, 160);
+            lblWeekRange.Name = "lblWeekRange";
+            lblWeekRange.Size = new Size(214, 20);
+            lblWeekRange.TabIndex = 6;
+            lblWeekRange.Text = "Tuần: 12/01/2026 - 18/01/2026";
             // 
             // CategoryEditDialog
             // 
-            this.AcceptButton = this.btnOK;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(384, 251);
-            this.Controls.Add(this.lblWeekRange);
-            this.Controls.Add(this.datePickerWeek);
-            this.Controls.Add(this.lblWeekSelection);
-            this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.btnOK);
-            this.Controls.Add(this.txtCategoryName);
-            this.Controls.Add(this.lblTitle);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "CategoryEditDialog";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "S?a Nh�m C�ng Vi?c";
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AcceptButton = btnOK;
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            CancelButton = btnCancel;
+            ClientSize = new Size(384, 251);
+            Controls.Add(lblWeekRange);
+            Controls.Add(datePickerWeek);
+            Controls.Add(lblWeekSelection);
+            Controls.Add(btnCancel);
+            Controls.Add(btnOK);
+            Controls.Add(txtCategoryName);
+            Controls.Add(lblTitle);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "CategoryEditDialog";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Sửa Nhóm Công Việc";
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         private System.Windows.Forms.Label lblTitle;

@@ -20,31 +20,25 @@ namespace FE_ToDoApp.WeekList.Data
             var tasks = new List<WeekTask>();
 
             DateTime weekEnd = weekStart.AddDays(6);
-            string categoryName = GetCategoryNameById(categoryId);
-            if (string.IsNullOrEmpty(categoryName))
-            {
-                return tasks;
-            }
 
             string sql = @"
                 SELECT 
-                    Id AS TaskId,
+                    Id_weekly AS TaskId,
                     Title,
-                    EndDate,
-                    ISNULL(Status, 'Pending') AS Status
-                FROM Calendar
-                WHERE ISNULL(Category, 'General') = @CategoryName
-                  AND EndDate >= @WeekStart 
-                  AND EndDate <= @WeekEnd
-                  AND (IsDeleted = 0 OR IsDeleted IS NULL)
-                ORDER BY EndDate, Id";
+                    StartDate,
+                    Status
+                FROM WeekCategory_item
+                WHERE CategoryId = @CategoryId
+                  AND StartDate >= @WeekStart 
+                  AND StartDate <= @WeekEnd
+                ORDER BY StartDate, Id_weekly";
 
             using (var conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(sql, conn))
                 {
-                    cmd.Parameters.AddWithValue("@CategoryName", categoryName);
+                    cmd.Parameters.AddWithValue("@CategoryId", categoryId);
                     cmd.Parameters.AddWithValue("@WeekStart", weekStart.Date);
                     cmd.Parameters.AddWithValue("@WeekEnd", weekEnd.Date.AddHours(23).AddMinutes(59).AddSeconds(59));
 
@@ -52,8 +46,8 @@ namespace FE_ToDoApp.WeekList.Data
                     {
                         while (reader.Read())
                         {
-                            DateTime endDate = Convert.ToDateTime(reader["EndDate"]);
-                            int dayOfWeek = GetDayOfWeekNumber(endDate);
+                            DateTime startDate = Convert.ToDateTime(reader["StartDate"]);
+                            int dayOfWeek = GetDayOfWeekNumber(startDate);
 
                             tasks.Add(new WeekTask
                             {
@@ -62,7 +56,7 @@ namespace FE_ToDoApp.WeekList.Data
                                 WeekPlanId = 0,
                                 DayOfWeek = dayOfWeek,
                                 Title = reader.GetString(reader.GetOrdinal("Title")),
-                                IsDone = reader.GetString(reader.GetOrdinal("Status")).Equals("Done", StringComparison.OrdinalIgnoreCase),
+                                IsDone = reader.GetBoolean(reader.GetOrdinal("Status")),
                                 OrderIndex = 0
                             });
                         }
@@ -75,20 +69,11 @@ namespace FE_ToDoApp.WeekList.Data
 
         public int Insert(int categoryId, DateTime weekStart, int dayOfWeek, string title)
         {
-
-            string categoryName = GetCategoryNameById(categoryId);
-            if (string.IsNullOrEmpty(categoryName))
-            {
-                categoryName = "General";
-            }
-
-            DateTime endDate = weekStart.AddDays(dayOfWeek - 1);
-
-            DateTime startDate = endDate;
+            DateTime startDate = weekStart.AddDays(dayOfWeek - 1);
 
             string sql = @"
-                INSERT INTO Calendar (UserId, Title, Description, StartDate, EndDate, Status, Category, IsDeleted, CreatedAt, UpdatedAt)
-                VALUES (1, @Title, '', @StartDate, @EndDate, 'Pending', @Category, 0, GETDATE(), GETDATE());
+                INSERT INTO WeekCategory_item (CategoryId, Title, Description, StartDate, Status, CreatedAt)
+                VALUES (@CategoryId, @Title, '', @StartDate, 0, GETDATE());
                 
                 SELECT SCOPE_IDENTITY();";
 
@@ -97,10 +82,9 @@ namespace FE_ToDoApp.WeekList.Data
                 conn.Open();
                 using (var cmd = new SqlCommand(sql, conn))
                 {
+                    cmd.Parameters.AddWithValue("@CategoryId", categoryId);
                     cmd.Parameters.AddWithValue("@Title", title);
                     cmd.Parameters.AddWithValue("@StartDate", startDate);
-                    cmd.Parameters.AddWithValue("@EndDate", endDate);
-                    cmd.Parameters.AddWithValue("@Category", categoryName);
                     
                     return Convert.ToInt32(cmd.ExecuteScalar());
                 }
@@ -109,19 +93,19 @@ namespace FE_ToDoApp.WeekList.Data
 
         public void Update(int taskId, string title, int dayOfWeek)
         {
-            DateTime currentEndDate = GetTaskEndDate(taskId);
-            if (currentEndDate == DateTime.MinValue)
+            DateTime currentStartDate = GetTaskStartDate(taskId);
+            if (currentStartDate == DateTime.MinValue)
             {
                 throw new Exception("Không tìm thấy task");
             }
 
-            DateTime weekStart = GetMonday(currentEndDate);
-            DateTime newEndDate = weekStart.AddDays(dayOfWeek - 1);
+            DateTime weekStart = GetMonday(currentStartDate);
+            DateTime newStartDate = weekStart.AddDays(dayOfWeek - 1);
 
             string sql = @"
-                UPDATE Calendar 
-                SET Title = @Title, EndDate = @EndDate, UpdatedAt = GETDATE()
-                WHERE Id = @TaskId";
+                UPDATE WeekCategory_item 
+                SET Title = @Title, StartDate = @StartDate, UpdatedAt = GETDATE()
+                WHERE Id_weekly = @TaskId";
 
             using (var conn = new SqlConnection(_connectionString))
             {
@@ -130,17 +114,18 @@ namespace FE_ToDoApp.WeekList.Data
                 {
                     cmd.Parameters.AddWithValue("@TaskId", taskId);
                     cmd.Parameters.AddWithValue("@Title", title);
-                    cmd.Parameters.AddWithValue("@EndDate", newEndDate);
+                    cmd.Parameters.AddWithValue("@StartDate", newStartDate);
                     cmd.ExecuteNonQuery();
                 }
             }
         }
+
         public void UpdateStatus(int taskId, bool isDone)
         {
             string sql = @"
-                UPDATE Calendar 
+                UPDATE WeekCategory_item 
                 SET Status = @Status 
-                WHERE Id = @TaskId";
+                WHERE Id_weekly = @TaskId";
 
             using (var conn = new SqlConnection(_connectionString))
             {
@@ -148,7 +133,7 @@ namespace FE_ToDoApp.WeekList.Data
                 using (var cmd = new SqlCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@TaskId", taskId);
-                    cmd.Parameters.AddWithValue("@Status", isDone ? "Done" : "Pending");
+                    cmd.Parameters.AddWithValue("@Status", isDone);
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -157,9 +142,8 @@ namespace FE_ToDoApp.WeekList.Data
         public void Delete(int taskId)
         {
             string sql = @"
-                UPDATE Calendar 
-                SET IsDeleted = 1, DeletedAt = GETDATE() 
-                WHERE Id = @TaskId";
+                DELETE FROM WeekCategory_item 
+                WHERE Id_weekly = @TaskId";
 
             using (var conn = new SqlConnection(_connectionString))
             {
@@ -171,33 +155,10 @@ namespace FE_ToDoApp.WeekList.Data
                 }
             }
         }
-        private string GetCategoryNameById(int categoryId)
+
+        private DateTime GetTaskStartDate(int taskId)
         {
-            string sql = @"
-                SELECT CategoryName
-                FROM WeekCategory
-                WHERE CategoryId = @CategoryId AND IsActive = 1";
-
-            using (var conn = new SqlConnection(_connectionString))
-            {
-                conn.Open();
-                using (var cmd = new SqlCommand(sql, conn))
-                {
-                    cmd.Parameters.AddWithValue("@CategoryId", categoryId);
-                    var result = cmd.ExecuteScalar();
-                    if (result != null)
-                    {
-                        return result.ToString();
-                    }
-                }
-            }
-
-            return string.Empty;
-        }
-
-        private DateTime GetTaskEndDate(int taskId)
-        {
-            string sql = "SELECT EndDate FROM Calendar WHERE Id = @TaskId";
+            string sql = "SELECT StartDate FROM WeekCategory_item WHERE Id_weekly = @TaskId";
 
             using (var conn = new SqlConnection(_connectionString))
             {
