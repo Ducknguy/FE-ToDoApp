@@ -10,7 +10,7 @@ namespace FE_ToDoApp.WeekList.Views
 {
     public partial class WeekItemsControl : UserControl
     {
-        public string ConnectionString { get; set; }
+        //public string ConnectionString { get; set; }
         public int CategoryId { get; private set; } = -1;
         public DateTime CurrentWeekStart { get; private set; }
 
@@ -23,12 +23,13 @@ namespace FE_ToDoApp.WeekList.Views
         public WeekItemsControl()
         {
             InitializeComponent();
+            _taskController = new WeekTaskController();
         }
-        public void Initialize(string connectionString)
-        {
-            ConnectionString = connectionString;
-            _taskController = new WeekTaskController(connectionString);
-        }
+        //public void Initialize(string connectionString)
+        //{
+        //    ConnectionString = connectionString;
+        //    _taskController = new WeekTaskController(connectionString);
+        //}
         public void LoadWeekItems(int categoryId, DateTime weekStart)
         {
             MessageBox.Show($"LoadWeekItems được gọi!\nCategoryId: {categoryId}\nWeekStart: {weekStart:yyyy-MM-dd}", 

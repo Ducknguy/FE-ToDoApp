@@ -5,6 +5,7 @@ using FE_ToDoApp.Calendar;
 using ChatbotAI_Form;
 using System.Globalization;
 using FE_ToDoApp.ThungRac;
+using FE_ToDoApp.Database;
 
 
 namespace FE_ToDoApp
@@ -17,6 +18,9 @@ namespace FE_ToDoApp
         [STAThread]
         static void Main()
         {
+            // Kh?i t?o SQLite database
+            SQLiteHelper.InitializeDatabase();
+
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();          

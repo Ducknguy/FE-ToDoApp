@@ -10,9 +10,9 @@ namespace FE_ToDoApp.WeekList.Controllers
     {
         private readonly WeekTaskRepository _repository;
 
-        public WeekTaskController(string connectionString)
+        public WeekTaskController()
         {
-            _repository = new WeekTaskRepository(connectionString);
+            _repository = new WeekTaskRepository();
         }
 
         public List<WeekTask> GetTasksByCategory(int categoryId, DateTime weekStart)

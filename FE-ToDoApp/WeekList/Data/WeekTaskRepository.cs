@@ -1,20 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using System.Data.SQLite;
 using FE_ToDoApp.WeekList.Models;
+using FE_ToDoApp.Database;
 
 namespace FE_ToDoApp.WeekList.Data
 {
 
     public class WeekTaskRepository
     {
-        private readonly string _connectionString;
-
-        public WeekTaskRepository(string connectionString)
-        {
-            _connectionString = connectionString;
-        }
-
         public List<WeekTask> GetByCategory(int categoryId, DateTime weekStart)
         {
             var tasks = new List<WeekTask>();
@@ -33,10 +27,10 @@ namespace FE_ToDoApp.WeekList.Data
                   AND StartDate <= @WeekEnd
                 ORDER BY StartDate, Id_weekly";
 
-            using (var conn = new SqlConnection(_connectionString))
+            using (var conn = SQLiteHelper.GetConnection())
             {
                 conn.Open();
-                using (var cmd = new SqlCommand(sql, conn))
+                using (var cmd = new SQLiteCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@CategoryId", categoryId);
                     cmd.Parameters.AddWithValue("@WeekStart", weekStart.Date);
@@ -56,7 +50,7 @@ namespace FE_ToDoApp.WeekList.Data
                                 WeekPlanId = 0,
                                 DayOfWeek = dayOfWeek,
                                 Title = reader.GetString(reader.GetOrdinal("Title")),
-                                IsDone = reader.GetBoolean(reader.GetOrdinal("Status")),
+                                IsDone = reader.GetInt32(reader.GetOrdinal("Status")) == 1,
                                 OrderIndex = 0
                             });
                         }
@@ -73,14 +67,14 @@ namespace FE_ToDoApp.WeekList.Data
 
             string sql = @"
                 INSERT INTO WeekCategory_item (CategoryId, Title, Description, StartDate, Status, CreatedAt)
-                VALUES (@CategoryId, @Title, '', @StartDate, 0, GETDATE());
+                VALUES (@CategoryId, @Title, '', @StartDate, 0, datetime('now'));
                 
-                SELECT SCOPE_IDENTITY();";
+                SELECT last_insert_rowid();";
 
-            using (var conn = new SqlConnection(_connectionString))
+            using (var conn = SQLiteHelper.GetConnection())
             {
                 conn.Open();
-                using (var cmd = new SqlCommand(sql, conn))
+                using (var cmd = new SQLiteCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@CategoryId", categoryId);
                     cmd.Parameters.AddWithValue("@Title", title);
@@ -104,13 +98,13 @@ namespace FE_ToDoApp.WeekList.Data
 
             string sql = @"
                 UPDATE WeekCategory_item 
-                SET Title = @Title, StartDate = @StartDate, UpdatedAt = GETDATE()
+                SET Title = @Title, StartDate = @StartDate, UpdatedAt = datetime('now')
                 WHERE Id_weekly = @TaskId";
 
-            using (var conn = new SqlConnection(_connectionString))
+            using (var conn = SQLiteHelper.GetConnection())
             {
                 conn.Open();
-                using (var cmd = new SqlCommand(sql, conn))
+                using (var cmd = new SQLiteCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@TaskId", taskId);
                     cmd.Parameters.AddWithValue("@Title", title);
@@ -127,13 +121,13 @@ namespace FE_ToDoApp.WeekList.Data
                 SET Status = @Status 
                 WHERE Id_weekly = @TaskId";
 
-            using (var conn = new SqlConnection(_connectionString))
+            using (var conn = SQLiteHelper.GetConnection())
             {
                 conn.Open();
-                using (var cmd = new SqlCommand(sql, conn))
+                using (var cmd = new SQLiteCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@TaskId", taskId);
-                    cmd.Parameters.AddWithValue("@Status", isDone);
+                    cmd.Parameters.AddWithValue("@Status", isDone ? 1 : 0);
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -145,10 +139,10 @@ namespace FE_ToDoApp.WeekList.Data
                 DELETE FROM WeekCategory_item 
                 WHERE Id_weekly = @TaskId";
 
-            using (var conn = new SqlConnection(_connectionString))
+            using (var conn = SQLiteHelper.GetConnection())
             {
                 conn.Open();
-                using (var cmd = new SqlCommand(sql, conn))
+                using (var cmd = new SQLiteCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@TaskId", taskId);
                     cmd.ExecuteNonQuery();
@@ -160,10 +154,10 @@ namespace FE_ToDoApp.WeekList.Data
         {
             string sql = "SELECT StartDate FROM WeekCategory_item WHERE Id_weekly = @TaskId";
 
-            using (var conn = new SqlConnection(_connectionString))
+            using (var conn = SQLiteHelper.GetConnection())
             {
                 conn.Open();
-                using (var cmd = new SqlCommand(sql, conn))
+                using (var cmd = new SQLiteCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@TaskId", taskId);
                     var result = cmd.ExecuteScalar();
