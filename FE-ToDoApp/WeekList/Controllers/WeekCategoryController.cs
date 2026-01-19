@@ -10,9 +10,9 @@ namespace FE_ToDoApp.WeekList.Controllers
     {
         private readonly WeekCategoryRepository _repository;
 
-        public WeekCategoryController(string connectionString)
+        public WeekCategoryController()
         {
-            _repository = new WeekCategoryRepository(connectionString);
+            _repository = new WeekCategoryRepository();
         }
 
   
@@ -27,18 +27,6 @@ namespace FE_ToDoApp.WeekList.Controllers
                 throw new Exception($"Lỗi khi load danh sách categories: {ex.Message}", ex);
             }
         }
-
-        //public WeekCategory? GetCategoryById(int categoryId)
-        //{
-        //    try
-        //    {
-        //        return _repository.GetById(categoryId);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception($"L?i khi load category: {ex.Message}", ex);
-        //    }
-        //}
 
   
         public int AddCategory(string categoryName, DateTime weekStartDate, DateTime weekEndDate)
@@ -68,9 +56,6 @@ namespace FE_ToDoApp.WeekList.Controllers
             }
         }
 
-        /// <summary>
-        /// Sửa category
-        /// </summary>
         public void UpdateCategory(int categoryId, string categoryName, DateTime weekStartDate, DateTime weekEndDate)
         {
             if (categoryId <= 0)
@@ -103,9 +88,6 @@ namespace FE_ToDoApp.WeekList.Controllers
             }
         }
 
-        /// <summary>
-        /// Xóa category
-        /// </summary>
         public void DeleteCategory(int categoryId)
         {
             if (categoryId <= 0)

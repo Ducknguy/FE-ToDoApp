@@ -23,6 +23,7 @@ namespace FE_ToDoApp
             conn = new SqlConnection(strCon);
         }
 
+        // HÀM LẤY KẾT NỐI
         public SqlConnection GetConnection()
         {
             return new SqlConnection(strCon);

@@ -33,8 +33,8 @@ namespace FE_ToDoApp
 
         private void btnTrash_Click(object sender, EventArgs e)
         {
-            Thungrac thungrac = new Thungrac();
-            thungrac.ShowDialog();
+           Thungrac thungrac = new Thungrac();
+              thungrac.ShowDialog();
         }
 
         private void btn_CaiDat(object sender, EventArgs e)
@@ -72,6 +72,8 @@ namespace FE_ToDoApp
                 }
             }
         }
+
+    
         private void btnCalendar_Click(object sender, EventArgs e)
         {
             mainPanel.Controls.Clear();
@@ -106,7 +108,7 @@ namespace FE_ToDoApp
 
         private void btnDashboard_Click(object sender, EventArgs e)
         {
-
+            
         }
 
         private void btn_logout_Click(object sender, EventArgs e)

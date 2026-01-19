@@ -20,11 +20,47 @@ namespace FE_ToDoApp.Calendar
         public calendar()
         {
             InitializeComponent();
+            
+            InitializeWeekHeader();
+            InitializeDayCells();
+            
             _month = DateTime.Now.Month;
             _year = DateTime.Now.Year;
 
             // Gọi hàm LoadCalendar (vì là async nên không cần await ở constructor)
             LoadCalendar(_month, _year);
+        }
+
+        private void InitializeWeekHeader()
+        {
+            string[] days = { "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy", "Chủ Nhật" };
+            for (int i = 0; i < 7; i++)
+            {
+                System.Windows.Forms.Label lbl = new System.Windows.Forms.Label();
+                lbl.Text = days[i];
+                lbl.Dock = System.Windows.Forms.DockStyle.Fill;
+                lbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                lbl.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+                lbl.ForeColor = System.Drawing.Color.DarkSlateGray;
+
+                if (i == 6) lbl.ForeColor = System.Drawing.Color.Red;
+
+                this.tlpWeekHeader.Controls.Add(lbl, i, 0);
+            }
+        }
+
+        private void InitializeDayCells()
+        {
+            this.matrixDays = new DayCell[42];
+            for (int i = 0; i < 42; i++)
+            {
+                this.matrixDays[i] = new DayCell();
+                this.matrixDays[i].MouseUp += new System.Windows.Forms.MouseEventHandler(this.DayCell_MouseUp);
+
+                int col = i % 7;
+                int row = i / 7;
+                this.pnlGrid.Controls.Add(this.matrixDays[i], col, row);
+            }
         }
 
         // Đổi thành 'async void' để chạy bất đồng bộ
@@ -89,11 +125,11 @@ namespace FE_ToDoApp.Calendar
                     if (_currentMonthTasks != null)
                     {
                         // Đếm số việc trong ngày
-                        int taskCount = _currentMonthTasks.Count(t => t.StartDate.Date == new DateTime(year, month, dayVal).Date);
-                        if (taskCount > 0)
-                        {
-                            cell.ShowInfo(taskCount);
-                        }
+                        //int taskCount = _currentMonthTasks.Count(t => t.StartDate.Date == new DateTime(year, month, dayVal).Date);
+                        //if (taskCount > 0)
+                        //{
+                        //    cell.ShowInfo(taskCount);
+                        //}
                     }
                 }
             }
@@ -148,7 +184,6 @@ namespace FE_ToDoApp.Calendar
                     {
                         _dataCache.Remove(currentKey); // Xóa cache cũ đi
                     }
-                    LoadCalendar(_month, _year); // Tải lại để cập nhật thay đổi
                 }
             }
         }

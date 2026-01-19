@@ -12,7 +12,7 @@ namespace FE_ToDoApp.WeekList
 {
     public partial class WeekGroupMVC : UserControl
     {
-        private const string ConnectionString = "Data Source=LAPTOP-HJ0H2N4I;Initial Catalog=ToDoApp;Integrated Security=True;Encrypt=False";
+        //private const string ConnectionString = "Data Source=duc;Initial Catalog=ToDoApp;Integrated Security=True;Encrypt=False";
 
         private WeekCategoryController _categoryController;
         private WeekTaskController _taskController;
@@ -28,8 +28,8 @@ namespace FE_ToDoApp.WeekList
         {
             InitializeComponent();
 
-            _categoryController = new WeekCategoryController(ConnectionString);
-            _taskController = new WeekTaskController(ConnectionString);
+            _categoryController = new WeekCategoryController();
+            _taskController = new WeekTaskController();
 
             _currentWeekStart = GetMonday(DateTime.Now);
             button1.Click += BtnAddTask_Click;
