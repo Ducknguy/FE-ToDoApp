@@ -22,7 +22,6 @@
             pnlSearch = new Panel();
             pnlFilter = new Panel();
             chkTodo = new CheckBox();
-            chkWeekly = new CheckBox();
             chkCalendar = new CheckBox();
             flpTrashList = new FlowLayoutPanel();
             pTrashItemSample = new Panel();
@@ -101,7 +100,6 @@
             // 
             pnlFilter.BackColor = Color.WhiteSmoke;
             pnlFilter.Controls.Add(chkTodo);
-            pnlFilter.Controls.Add(chkWeekly);
             pnlFilter.Controls.Add(chkCalendar);
             pnlFilter.Location = new Point(12, 64);
             pnlFilter.Name = "pnlFilter";
@@ -113,28 +111,18 @@
             chkTodo.AutoSize = true;
             chkTodo.BackColor = Color.WhiteSmoke;
             chkTodo.Cursor = Cursors.Hand;
-            chkTodo.Location = new Point(10, 7);
+            chkTodo.Location = new Point(76, 7);
             chkTodo.Name = "chkTodo";
             chkTodo.Size = new Size(53, 19);
             chkTodo.TabIndex = 0;
             chkTodo.Text = "Todo";
             chkTodo.UseVisualStyleBackColor = false;
             // 
-            // chkWeekly
-            // 
-            chkWeekly.AutoSize = true;
-            chkWeekly.Cursor = Cursors.Hand;
-            chkWeekly.Location = new Point(156, 7);
-            chkWeekly.Name = "chkWeekly";
-            chkWeekly.Size = new Size(64, 19);
-            chkWeekly.TabIndex = 1;
-            chkWeekly.Text = "Weekly";
-            // 
             // chkCalendar
             // 
             chkCalendar.AutoSize = true;
             chkCalendar.Cursor = Cursors.Hand;
-            chkCalendar.Location = new Point(313, 7);
+            chkCalendar.Location = new Point(241, 7);
             chkCalendar.Name = "chkCalendar";
             chkCalendar.Size = new Size(73, 19);
             chkCalendar.TabIndex = 2;
@@ -252,10 +240,11 @@
             Controls.Add(lblEmptyText);
             Controls.Add(lblEmptyIcon);
             Controls.Add(lblFooter);
-            FormBorderStyle = FormBorderStyle.None;
+            FormBorderStyle = FormBorderStyle.SizableToolWindow;
             Name = "Thungrac";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Thungrac";
+            Load += Thungrac_Load;
             pnlSearch.ResumeLayout(false);
             pnlSearch.PerformLayout();
             pnlFilter.ResumeLayout(false);
@@ -274,7 +263,6 @@
         private Panel pnlSearch;
         private Panel pnlFilter;
         private CheckBox chkTodo;
-        private CheckBox chkWeekly;
         private CheckBox chkCalendar;
 
         // ✅ thay panel1

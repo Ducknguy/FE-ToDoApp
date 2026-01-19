@@ -181,7 +181,7 @@ namespace FE_ToDoApp.Lich_Trinh
             };
 
             string displayText = string.IsNullOrWhiteSpace(text) ? "[EMPTY TEXT]" : text;
-            
+
             Label lbl = new Label
             {
                 Text = displayText,
@@ -259,7 +259,7 @@ namespace FE_ToDoApp.Lich_Trinh
             row.Controls.Add(lblDoneIcon);
             row.Controls.Add(btnDelete);
             row.Controls.Add(btnEdit);
-            
+
             lbl.BringToFront();
             lblDoneIcon.BringToFront();
 
@@ -413,14 +413,14 @@ namespace FE_ToDoApp.Lich_Trinh
             {
                 // Row background - màu xanh nhạt
                 row.BackColor = Color.FromArgb(240, 255, 240); // Light green
-                
+
                 // Label - gạch ngang + màu xám + opacity effect
                 lbl.Font = new Font(lbl.Font, FontStyle.Strikeout);
                 lbl.ForeColor = Color.FromArgb(120, 120, 120); // Darker gray
-                
+
                 // Checkbox - màu xanh lá khi checked
                 chk.ForeColor = Color.Green;
-                
+
                 // Show done icon
                 doneIcon.Visible = true;
             }
@@ -428,14 +428,14 @@ namespace FE_ToDoApp.Lich_Trinh
             {
                 // Row background - trắng
                 row.BackColor = Color.White;
-                
+
                 // Label - bình thường
                 lbl.Font = new Font(lbl.Font, FontStyle.Regular);
                 lbl.ForeColor = Color.Black;
-                
+
                 // Checkbox - màu mặc định
                 chk.ForeColor = Color.Black;
-                
+
                 // Hide done icon
                 doneIcon.Visible = false;
             }
@@ -544,6 +544,11 @@ namespace FE_ToDoApp.Lich_Trinh
             conn.Open();
             var obj = cmd.ExecuteScalar();
             return obj == null ? "" : Convert.ToString(obj);
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
