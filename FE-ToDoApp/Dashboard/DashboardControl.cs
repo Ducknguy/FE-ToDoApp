@@ -3,22 +3,27 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Globalization;
 
 namespace FE_ToDoApp.Dashboard
 {
     public partial class DashboardControl : UserControl
     {
-        private string strConn = @"Data Source=LAPTOP-HJ0H2N4I;Initial Catalog=user;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
+        // Chuỗi kết nối (bạn chỉnh lại tên server nếu cần)
+        private string strConn = @"Data Source=.;Initial Catalog=user;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
 
         public DashboardControl()
         {
-            InitializeComponent();
-            LoadDashboardData();
+            InitializeComponent(); // Gọi hàm bên file Designer
+            LoadDashboardData();   // Gọi hàm tải dữ liệu
         }
 
         public void LoadDashboardData()
         {
-            lblDate.Text = DateTime.Now.ToString("dddd, MMMM dd");
+            // Hiển thị ngày tháng Tiếng Việt
+            lblDate.Text = DateTime.Now.ToString("dddd, dd/MM/yyyy", new CultureInfo("vi-VN"));
+
+            // Xóa dữ liệu cũ để nạp mới
             flowStats.Controls.Clear();
             tblLists.Controls.Clear();
 
@@ -27,25 +32,25 @@ namespace FE_ToDoApp.Dashboard
                 using (SqlConnection conn = new SqlConnection(strConn))
                 {
                     conn.Open();
-                    LoadStats(conn);
+                    LoadStats(conn); // Tải 4 thẻ thống kê
 
-                    Panel pnlToday = CreateListCard("Today's Work");
+                    // --- 1. CỘT TRÁI: CÔNG VIỆC HIỆN TẠI (Hôm nay & Chưa qua giờ) ---
+                    Panel pnlToday = CreateListCard("Các công việc hiện tại");
                     string sqlToday = @"SELECT Id, Title, DueDate, Status FROM [Task] 
                                         WHERE CAST(DueDate AS DATE) = CAST(GETDATE() AS DATE) 
                                           AND DueDate >= GETDATE() 
                                         ORDER BY DueDate ASC";
 
-                    LoadTasksToContainer(conn, pnlToday, sqlToday, true);
+                    LoadTasksToContainer(conn, pnlToday, sqlToday, true); // true = Hiện checkbox
                     tblLists.Controls.Add(pnlToday, 0, 0);
 
-
-                    Panel pnlRight = CreateListCard("Upcoming & Overdue");
+                    // --- 2. CỘT PHẢI: CÔNG VIỆC QUÁ HẠN (Tất cả việc cũ chưa xong) ---
+                    Panel pnlRight = CreateListCard("Các công việc quá hạn");
                     string sqlRight = @"SELECT Id, Title, DueDate, Status FROM [Task] 
-                                        WHERE (CAST(DueDate AS DATE) > CAST(GETDATE() AS DATE)) 
-                                           OR (DueDate < GETDATE() AND Status != 'Done') 
+                                        WHERE DueDate < GETDATE() AND Status != 'Done'
                                         ORDER BY DueDate ASC";
 
-                    LoadTasksToContainer(conn, pnlRight, sqlRight, false);
+                    LoadTasksToContainer(conn, pnlRight, sqlRight, false); // false = Chỉ hiện nút xóa
                     tblLists.Controls.Add(pnlRight, 1, 0);
                 }
             }
@@ -71,8 +76,10 @@ namespace FE_ToDoApp.Dashboard
 
                         Color color = Color.DodgerBlue;
                         if (!isDone && dueDate < DateTime.Now) color = Color.OrangeRed;
+                        if (isDone) color = Color.SeaGreen;
 
-                        string timeInfo = dueDate.ToString("HH:mm");
+                        // Hiển thị: Ngày/Tháng - Giờ:Phút
+                        string timeInfo = dueDate.ToString("dd/MM - HH:mm");
 
                         container.Controls.Add(CreateTaskRow(id, title, timeInfo, color, isDone, showCheckbox));
                     }
@@ -80,26 +87,21 @@ namespace FE_ToDoApp.Dashboard
             }
         }
 
+        // Tạo giao diện cho 1 dòng công việc
         private Panel CreateTaskRow(int taskId, string title, string info, Color tagColor, bool isDone, bool showCheckbox)
         {
-            Panel row = new Panel { Size = new Size(400, 55), Margin = new Padding(0, 5, 0, 5) };
-
+            Panel row = new Panel { Size = new Size(400, 60), Margin = new Padding(0, 5, 0, 5) };
             int textX = showCheckbox ? 35 : 15;
 
+            // 1. Checkbox
             if (showCheckbox)
             {
-                CheckBox ck = new CheckBox
-                {
-                    Checked = isDone,
-                    Width = 25,
-                    Location = new Point(5, 15),
-                    Cursor = Cursors.Hand
-                };
-
+                CheckBox ck = new CheckBox { Checked = isDone, Width = 25, Location = new Point(5, 18), Cursor = Cursors.Hand };
                 ck.Click += (s, e) => { ToggleTaskStatus(taskId, ck.Checked); };
                 row.Controls.Add(ck);
             }
 
+            // 2. Tiêu đề
             Label lblT = new Label
             {
                 Text = title,
@@ -109,48 +111,74 @@ namespace FE_ToDoApp.Dashboard
                 AutoSize = true
             };
 
+            // 3. Thông tin thời gian
             Label lblI = new Label
             {
-                Text = info,
-                Font = new Font("Segoe UI", 8),
-                ForeColor = Color.Gray,
-                Location = new Point(textX, 28),
+                Text = isDone ? "✓ Đã hoàn thành" : info,
+                Font = new Font("Segoe UI", 8, isDone ? FontStyle.Bold : FontStyle.Regular),
+                ForeColor = isDone ? Color.SeaGreen : Color.Gray,
+                Location = new Point(textX, 30),
                 AutoSize = true
             };
 
-            Panel dot = new Panel
+            // 4. Nút Xóa
+            Button btnDel = new Button
             {
-                BackColor = tagColor,
-                Size = new Size(8, 8),
-                Location = new Point(370, 20),
-                Anchor = AnchorStyles.Right
+                Text = "🗑️",
+                Size = new Size(30, 30),
+                Location = new Point(330, 15),
+                Anchor = AnchorStyles.Right,
+                FlatStyle = FlatStyle.Flat,
+                BackColor = Color.Transparent,
+                ForeColor = Color.Red,
+                Cursor = Cursors.Hand
+            };
+            btnDel.FlatAppearance.BorderSize = 0;
+            btnDel.Click += (s, e) => {
+                if (MessageBox.Show("Xóa công việc này?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes) DeleteTask(taskId);
             };
 
-            row.Controls.AddRange(new Control[] { lblT, lblI, dot });
+            // 5. Vạch màu
+            Panel dot = new Panel { BackColor = tagColor, Size = new Size(5, 40), Location = new Point(370, 10), Anchor = AnchorStyles.Right };
+
+            row.Controls.AddRange(new Control[] { lblT, lblI, btnDel, dot });
             return row;
         }
 
         private void ToggleTaskStatus(int id, bool isChecked)
+        {
+            ExecuteSql("UPDATE [Task] SET Status = @Status WHERE Id = @Id", cmd => {
+                cmd.Parameters.AddWithValue("@Status", isChecked ? "Done" : "Pending");
+                cmd.Parameters.AddWithValue("@Id", id);
+            });
+            LoadDashboardData();
+        }
+
+        private void DeleteTask(int id)
+        {
+            ExecuteSql("DELETE FROM [Task] WHERE Id = @Id", cmd => cmd.Parameters.AddWithValue("@Id", id));
+            LoadDashboardData();
+        }
+
+        // Hàm hỗ trợ chạy SQL nhanh gọn
+        private void ExecuteSql(string query, Action<SqlCommand> paramBuilder)
         {
             try
             {
                 using (SqlConnection conn = new SqlConnection(strConn))
                 {
                     conn.Open();
-                    string sql = "UPDATE [Task] SET Status = @Status WHERE Id = @Id";
-                    using (SqlCommand cmd = new SqlCommand(sql, conn))
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@Status", isChecked ? "Done" : "Pending");
-                        cmd.Parameters.AddWithValue("@Id", id);
+                        paramBuilder(cmd);
                         cmd.ExecuteNonQuery();
                     }
                 }
-                LoadDashboardData();
             }
             catch (Exception ex) { MessageBox.Show("Lỗi: " + ex.Message); }
         }
 
-
+        // --- CÁC HÀM TẠO UI THỐNG KÊ & DANH SÁCH ---
         private void LoadStats(SqlConnection conn)
         {
             int today = GetCount(conn, "SELECT COUNT(*) FROM [Task] WHERE CAST(DueDate AS DATE) = CAST(GETDATE() AS DATE)");
@@ -158,10 +186,10 @@ namespace FE_ToDoApp.Dashboard
             int overdue = GetCount(conn, "SELECT COUNT(*) FROM [Task] WHERE DueDate < GETDATE() AND Status != 'Done'");
             int done = GetCount(conn, "SELECT COUNT(*) FROM [Task] WHERE Status = 'Done'");
 
-            flowStats.Controls.Add(CreateStatCard(today.ToString(), "Today Tasks", Color.AliceBlue, "📅"));
-            flowStats.Controls.Add(CreateStatCard(upcoming.ToString(), "Upcoming", Color.Beige, "🕒"));
-            flowStats.Controls.Add(CreateStatCard(overdue.ToString(), "Overdue", Color.MistyRose, "⚠️"));
-            flowStats.Controls.Add(CreateStatCard(done.ToString(), "Completed", Color.Honeydew, "✅"));
+            flowStats.Controls.Add(CreateStatCard(today.ToString(), "Hôm nay", Color.AliceBlue, "📅"));
+            flowStats.Controls.Add(CreateStatCard(upcoming.ToString(), "Sắp tới", Color.Beige, "🕒"));
+            flowStats.Controls.Add(CreateStatCard(overdue.ToString(), "Quá hạn", Color.MistyRose, "⚠️"));
+            flowStats.Controls.Add(CreateStatCard(done.ToString(), "Hoàn thành", Color.Honeydew, "✅"));
         }
 
         private int GetCount(SqlConnection conn, string query)

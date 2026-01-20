@@ -73,6 +73,8 @@
             sidebarPanel.Name = "sidebarPanel";
             sidebarPanel.Padding = new Padding(0, 15, 0, 15);
             sidebarPanel.Size = new Size(290, 908);
+            sidebarPanel.Padding = new Padding(0, 15, 0, 15);
+            sidebarPanel.Size = new Size(290, 908);
             sidebarPanel.TabIndex = 0;
             // 
             // panelNavigation
@@ -87,7 +89,9 @@
             panelNavigation.Controls.Add(btnHome);
             panelNavigation.Dock = DockStyle.Top;
             panelNavigation.Location = new Point(0, 108);
+            panelNavigation.Location = new Point(0, 108);
             panelNavigation.Name = "panelNavigation";
+            panelNavigation.Size = new Size(290, 361);
             panelNavigation.Size = new Size(290, 361);
             panelNavigation.TabIndex = 3;
             // 
@@ -99,7 +103,10 @@
             btnSettings.Font = new Font("Segoe UI", 11F);
             btnSettings.ForeColor = Color.FromArgb(89, 89, 89);
             btnSettings.Location = new Point(0, 315);
+            btnSettings.Location = new Point(0, 315);
             btnSettings.Name = "btnSettings";
+            btnSettings.Padding = new Padding(21, 0, 0, 0);
+            btnSettings.Size = new Size(290, 45);
             btnSettings.Padding = new Padding(21, 0, 0, 0);
             btnSettings.Size = new Size(290, 45);
             btnSettings.TabIndex = 9;
@@ -116,7 +123,10 @@
             btnChatbotAI.Font = new Font("Segoe UI", 11F);
             btnChatbotAI.ForeColor = Color.FromArgb(89, 89, 89);
             btnChatbotAI.Location = new Point(0, 270);
+            btnChatbotAI.Location = new Point(0, 270);
             btnChatbotAI.Name = "btnChatbotAI";
+            btnChatbotAI.Padding = new Padding(21, 0, 0, 0);
+            btnChatbotAI.Size = new Size(290, 45);
             btnChatbotAI.Padding = new Padding(21, 0, 0, 0);
             btnChatbotAI.Size = new Size(290, 45);
             btnChatbotAI.TabIndex = 10;
@@ -133,10 +143,14 @@
             btnCalendar.Font = new Font("Segoe UI", 11F);
             btnCalendar.ForeColor = Color.FromArgb(89, 89, 89);
             btnCalendar.Location = new Point(0, 225);
+            btnCalendar.Location = new Point(0, 225);
             btnCalendar.Name = "btnCalendar";
             btnCalendar.Padding = new Padding(21, 0, 0, 0);
             btnCalendar.Size = new Size(290, 45);
+            btnCalendar.Padding = new Padding(21, 0, 0, 0);
+            btnCalendar.Size = new Size(290, 45);
             btnCalendar.TabIndex = 7;
+            btnCalendar.Text = "📆 Lịch tháng";
             btnCalendar.Text = "📆 Lịch tháng";
             btnCalendar.TextAlign = ContentAlignment.MiddleLeft;
             btnCalendar.UseVisualStyleBackColor = true;
@@ -150,10 +164,14 @@
             btnWeekly.Font = new Font("Segoe UI", 11F);
             btnWeekly.ForeColor = Color.FromArgb(89, 89, 89);
             btnWeekly.Location = new Point(0, 180);
+            btnWeekly.Location = new Point(0, 180);
             btnWeekly.Name = "btnWeekly";
             btnWeekly.Padding = new Padding(21, 0, 0, 0);
             btnWeekly.Size = new Size(290, 45);
+            btnWeekly.Padding = new Padding(21, 0, 0, 0);
+            btnWeekly.Size = new Size(290, 45);
             btnWeekly.TabIndex = 6;
+            btnWeekly.Text = "📅 Lịch tuần";
             btnWeekly.Text = "📅 Lịch tuần";
             btnWeekly.TextAlign = ContentAlignment.MiddleLeft;
             btnWeekly.UseVisualStyleBackColor = true;
@@ -167,10 +185,14 @@
             btnTasks.Font = new Font("Segoe UI", 11F);
             btnTasks.ForeColor = Color.FromArgb(89, 89, 89);
             btnTasks.Location = new Point(0, 135);
+            btnTasks.Location = new Point(0, 135);
             btnTasks.Name = "btnTasks";
             btnTasks.Padding = new Padding(21, 0, 0, 0);
             btnTasks.Size = new Size(290, 45);
+            btnTasks.Padding = new Padding(21, 0, 0, 0);
+            btnTasks.Size = new Size(290, 45);
             btnTasks.TabIndex = 5;
+            btnTasks.Text = "☑️ Công việc";
             btnTasks.Text = "☑️ Công việc";
             btnTasks.TextAlign = ContentAlignment.MiddleLeft;
             btnTasks.UseVisualStyleBackColor = true;
@@ -184,7 +206,10 @@
             btnInbox.Font = new Font("Segoe UI", 11F);
             btnInbox.ForeColor = Color.FromArgb(89, 89, 89);
             btnInbox.Location = new Point(0, 90);
+            btnInbox.Location = new Point(0, 90);
             btnInbox.Name = "btnInbox";
+            btnInbox.Padding = new Padding(21, 0, 0, 0);
+            btnInbox.Size = new Size(290, 45);
             btnInbox.Padding = new Padding(21, 0, 0, 0);
             btnInbox.Size = new Size(290, 45);
             btnInbox.TabIndex = 4;
@@ -200,10 +225,14 @@
             btnDashboard.Font = new Font("Segoe UI", 11F);
             btnDashboard.ForeColor = Color.FromArgb(89, 89, 89);
             btnDashboard.Location = new Point(0, 45);
+            btnDashboard.Location = new Point(0, 45);
             btnDashboard.Name = "btnDashboard";
             btnDashboard.Padding = new Padding(21, 0, 0, 0);
             btnDashboard.Size = new Size(290, 45);
+            btnDashboard.Padding = new Padding(21, 0, 0, 0);
+            btnDashboard.Size = new Size(290, 45);
             btnDashboard.TabIndex = 3;
+            btnDashboard.Text = "📊 Thống kê";
             btnDashboard.Text = "📊 Thống kê";
             btnDashboard.TextAlign = ContentAlignment.MiddleLeft;
             btnDashboard.UseVisualStyleBackColor = true;
@@ -221,6 +250,8 @@
             btnHome.Name = "btnHome";
             btnHome.Padding = new Padding(21, 0, 0, 0);
             btnHome.Size = new Size(290, 45);
+            btnHome.Padding = new Padding(21, 0, 0, 0);
+            btnHome.Size = new Size(290, 45);
             btnHome.TabIndex = 2;
             btnHome.Text = "🏠 Trang chủ";
             btnHome.TextAlign = ContentAlignment.MiddleLeft;
@@ -232,7 +263,9 @@
             panelFooter.Controls.Add(btnTrash);
             panelFooter.Dock = DockStyle.Bottom;
             panelFooter.Location = new Point(0, 820);
+            panelFooter.Location = new Point(0, 820);
             panelFooter.Name = "panelFooter";
+            panelFooter.Size = new Size(290, 73);
             panelFooter.Size = new Size(290, 73);
             panelFooter.TabIndex = 12;
             // 
@@ -244,7 +277,10 @@
             btn_logout.Font = new Font("Segoe UI", 11F);
             btn_logout.ForeColor = Color.FromArgb(89, 89, 89);
             btn_logout.Location = new Point(0, 35);
+            btn_logout.Location = new Point(0, 35);
             btn_logout.Name = "btn_logout";
+            btn_logout.Padding = new Padding(21, 0, 0, 0);
+            btn_logout.Size = new Size(290, 35);
             btn_logout.Padding = new Padding(21, 0, 0, 0);
             btn_logout.Size = new Size(290, 35);
             btn_logout.TabIndex = 11;
@@ -261,6 +297,8 @@
             btnTrash.ForeColor = Color.FromArgb(89, 89, 89);
             btnTrash.Location = new Point(0, 0);
             btnTrash.Name = "btnTrash";
+            btnTrash.Padding = new Padding(21, 0, 0, 0);
+            btnTrash.Size = new Size(290, 35);
             btnTrash.Padding = new Padding(21, 0, 0, 0);
             btnTrash.Size = new Size(290, 35);
             btnTrash.TabIndex = 10;
@@ -280,10 +318,15 @@
             btnQuickAdd.ForeColor = Color.White;
             btnQuickAdd.Location = new Point(0, 63);
             btnQuickAdd.Margin = new Padding(21, 0, 21, 0);
+            btnQuickAdd.Location = new Point(0, 63);
+            btnQuickAdd.Margin = new Padding(21, 0, 21, 0);
             btnQuickAdd.Name = "btnQuickAdd";
             btnQuickAdd.Padding = new Padding(21, 0, 21, 0);
             btnQuickAdd.Size = new Size(290, 45);
+            btnQuickAdd.Padding = new Padding(21, 0, 21, 0);
+            btnQuickAdd.Size = new Size(290, 45);
             btnQuickAdd.TabIndex = 1;
+            btnQuickAdd.Text = "+ Thêm nhanh";
             btnQuickAdd.Text = "+ Thêm nhanh";
             btnQuickAdd.UseVisualStyleBackColor = false;
             // 
@@ -294,7 +337,10 @@
             lblSchedule.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
             lblSchedule.ForeColor = Color.FromArgb(55, 53, 47);
             lblSchedule.Location = new Point(0, 15);
+            lblSchedule.Location = new Point(0, 15);
             lblSchedule.Name = "lblSchedule";
+            lblSchedule.Padding = new Padding(21, 0, 0, 11);
+            lblSchedule.Size = new Size(198, 48);
             lblSchedule.Padding = new Padding(21, 0, 0, 11);
             lblSchedule.Size = new Size(198, 48);
             lblSchedule.TabIndex = 0;
@@ -308,7 +354,10 @@
             mainPanel.Controls.Add(lblMainTitle);
             mainPanel.Dock = DockStyle.Fill;
             mainPanel.Location = new Point(290, 0);
+            mainPanel.Location = new Point(290, 0);
             mainPanel.Name = "mainPanel";
+            mainPanel.Padding = new Padding(40);
+            mainPanel.Size = new Size(949, 908);
             mainPanel.Padding = new Padding(40);
             mainPanel.Size = new Size(949, 908);
             mainPanel.TabIndex = 1;
@@ -324,6 +373,7 @@
             panelFeatureCards.Location = new Point(40, 243);
             panelFeatureCards.Name = "panelFeatureCards";
             panelFeatureCards.Size = new Size(869, 395);
+            panelFeatureCards.Size = new Size(869, 395);
             panelFeatureCards.TabIndex = 3;
             // 
             // cardSmartCalendar
@@ -334,7 +384,9 @@
             cardSmartCalendar.Controls.Add(titleSmartCalendar);
             cardSmartCalendar.Controls.Add(iconSmartCalendar);
             cardSmartCalendar.Location = new Point(3, 3);
+            cardSmartCalendar.Location = new Point(3, 3);
             cardSmartCalendar.Name = "cardSmartCalendar";
+            cardSmartCalendar.Size = new Size(410, 205);
             cardSmartCalendar.Size = new Size(410, 205);
             cardSmartCalendar.TabIndex = 0;
             // 
@@ -345,7 +397,10 @@
             descSmartCalendar.ForeColor = Color.FromArgb(100, 100, 100);
             descSmartCalendar.Location = new Point(21, 115);
             descSmartCalendar.MaximumSize = new Size(379, 0);
+            descSmartCalendar.Location = new Point(21, 115);
+            descSmartCalendar.MaximumSize = new Size(379, 0);
             descSmartCalendar.Name = "descSmartCalendar";
+            descSmartCalendar.Size = new Size(343, 46);
             descSmartCalendar.Size = new Size(343, 46);
             descSmartCalendar.TabIndex = 2;
             descSmartCalendar.Text = "Xem lịch theo ngày, tuần và tháng với điều hướng trực quan.";
@@ -356,7 +411,9 @@
             titleSmartCalendar.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
             titleSmartCalendar.ForeColor = Color.FromArgb(55, 53, 47);
             titleSmartCalendar.Location = new Point(21, 80);
+            titleSmartCalendar.Location = new Point(21, 80);
             titleSmartCalendar.Name = "titleSmartCalendar";
+            titleSmartCalendar.Size = new Size(190, 32);
             titleSmartCalendar.Size = new Size(190, 32);
             titleSmartCalendar.TabIndex = 1;
             titleSmartCalendar.Text = "Smart Calendar";
@@ -366,7 +423,9 @@
             iconSmartCalendar.AutoSize = true;
             iconSmartCalendar.Font = new Font("Segoe UI Emoji", 32F);
             iconSmartCalendar.Location = new Point(21, 15);
+            iconSmartCalendar.Location = new Point(21, 15);
             iconSmartCalendar.Name = "iconSmartCalendar";
+            iconSmartCalendar.Size = new Size(104, 72);
             iconSmartCalendar.Size = new Size(104, 72);
             iconSmartCalendar.TabIndex = 0;
             iconSmartCalendar.Text = "📅";
@@ -379,7 +438,9 @@
             cardTaskManagement.Controls.Add(titleTaskManagement);
             cardTaskManagement.Controls.Add(iconTaskManagement);
             cardTaskManagement.Location = new Point(419, 3);
+            cardTaskManagement.Location = new Point(419, 3);
             cardTaskManagement.Name = "cardTaskManagement";
+            cardTaskManagement.Size = new Size(410, 205);
             cardTaskManagement.Size = new Size(410, 205);
             cardTaskManagement.TabIndex = 1;
             // 
@@ -390,7 +451,10 @@
             descTaskManagement.ForeColor = Color.FromArgb(100, 100, 100);
             descTaskManagement.Location = new Point(21, 115);
             descTaskManagement.MaximumSize = new Size(379, 0);
+            descTaskManagement.Location = new Point(21, 115);
+            descTaskManagement.MaximumSize = new Size(379, 0);
             descTaskManagement.Name = "descTaskManagement";
+            descTaskManagement.Size = new Size(365, 46);
             descTaskManagement.Size = new Size(365, 46);
             descTaskManagement.TabIndex = 2;
             descTaskManagement.Text = "Sắp xếp công việc theo ưu tiên, công việc con và theo dõi chi tiết để tăng hiệu suất.";
@@ -401,7 +465,9 @@
             titleTaskManagement.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
             titleTaskManagement.ForeColor = Color.FromArgb(55, 53, 47);
             titleTaskManagement.Location = new Point(21, 80);
+            titleTaskManagement.Location = new Point(21, 80);
             titleTaskManagement.Name = "titleTaskManagement";
+            titleTaskManagement.Size = new Size(221, 32);
             titleTaskManagement.Size = new Size(221, 32);
             titleTaskManagement.TabIndex = 1;
             titleTaskManagement.Text = "Task Management";
@@ -411,7 +477,9 @@
             iconTaskManagement.AutoSize = true;
             iconTaskManagement.Font = new Font("Segoe UI Emoji", 32F);
             iconTaskManagement.Location = new Point(21, 15);
+            iconTaskManagement.Location = new Point(21, 15);
             iconTaskManagement.Name = "iconTaskManagement";
+            iconTaskManagement.Size = new Size(104, 72);
             iconTaskManagement.Size = new Size(104, 72);
             iconTaskManagement.TabIndex = 0;
             iconTaskManagement.Text = "✅";
@@ -423,7 +491,9 @@
             cardTimePlanning.Controls.Add(descTimePlanning);
             cardTimePlanning.Controls.Add(titleTimePlanning);
             cardTimePlanning.Location = new Point(3, 214);
+            cardTimePlanning.Location = new Point(3, 214);
             cardTimePlanning.Name = "cardTimePlanning";
+            cardTimePlanning.Size = new Size(410, 175);
             cardTimePlanning.Size = new Size(410, 175);
             cardTimePlanning.TabIndex = 2;
             // 
@@ -434,7 +504,10 @@
             descTimePlanning.ForeColor = Color.FromArgb(100, 100, 100);
             descTimePlanning.Location = new Point(21, 55);
             descTimePlanning.MaximumSize = new Size(379, 0);
+            descTimePlanning.Location = new Point(21, 55);
+            descTimePlanning.MaximumSize = new Size(379, 0);
             descTimePlanning.Name = "descTimePlanning";
+            descTimePlanning.Size = new Size(377, 46);
             descTimePlanning.Size = new Size(377, 46);
             descTimePlanning.TabIndex = 2;
             descTimePlanning.Text = "Lên lịch với thời gian chính xác, lặp lại linh hoạt và nhắc nhở thông minh.";
@@ -445,7 +518,9 @@
             titleTimePlanning.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
             titleTimePlanning.ForeColor = Color.FromArgb(55, 53, 47);
             titleTimePlanning.Location = new Point(21, 20);
+            titleTimePlanning.Location = new Point(21, 20);
             titleTimePlanning.Name = "titleTimePlanning";
+            titleTimePlanning.Size = new Size(271, 32);
             titleTimePlanning.Size = new Size(271, 32);
             titleTimePlanning.TabIndex = 1;
             titleTimePlanning.Text = "Lập kế hoạch thời gian";
@@ -457,7 +532,9 @@
             cardGroupOrganization.Controls.Add(descGroupOrganization);
             cardGroupOrganization.Controls.Add(titleGroupOrganization);
             cardGroupOrganization.Location = new Point(419, 214);
+            cardGroupOrganization.Location = new Point(419, 214);
             cardGroupOrganization.Name = "cardGroupOrganization";
+            cardGroupOrganization.Size = new Size(410, 175);
             cardGroupOrganization.Size = new Size(410, 175);
             cardGroupOrganization.TabIndex = 3;
             // 
@@ -468,7 +545,10 @@
             descGroupOrganization.ForeColor = Color.FromArgb(100, 100, 100);
             descGroupOrganization.Location = new Point(21, 55);
             descGroupOrganization.MaximumSize = new Size(379, 0);
+            descGroupOrganization.Location = new Point(21, 55);
+            descGroupOrganization.MaximumSize = new Size(379, 0);
             descGroupOrganization.Name = "descGroupOrganization";
+            descGroupOrganization.Size = new Size(379, 46);
             descGroupOrganization.Size = new Size(379, 46);
             descGroupOrganization.TabIndex = 2;
             descGroupOrganization.Text = "Phân loại lịch theo Công việc, Cá nhân, Học tập và Sức khỏe với màu tùy chỉnh.";
@@ -479,7 +559,9 @@
             titleGroupOrganization.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
             titleGroupOrganization.ForeColor = Color.FromArgb(55, 53, 47);
             titleGroupOrganization.Location = new Point(21, 20);
+            titleGroupOrganization.Location = new Point(21, 20);
             titleGroupOrganization.Name = "titleGroupOrganization";
+            titleGroupOrganization.Size = new Size(224, 32);
             titleGroupOrganization.Size = new Size(224, 32);
             titleGroupOrganization.TabIndex = 1;
             titleGroupOrganization.Text = "Tổ chức nhóm lịch";
@@ -491,6 +573,8 @@
             lblMainTitle.ForeColor = Color.FromArgb(55, 53, 47);
             lblMainTitle.Location = new Point(40, 40);
             lblMainTitle.Name = "lblMainTitle";
+            lblMainTitle.Padding = new Padding(0, 20, 0, 20);
+            lblMainTitle.Size = new Size(869, 203);
             lblMainTitle.Padding = new Padding(0, 20, 0, 20);
             lblMainTitle.Size = new Size(869, 203);
             lblMainTitle.TabIndex = 1;
@@ -520,11 +604,14 @@
             // Trangchu
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(1239, 908);
             ClientSize = new Size(1239, 908);
             Controls.Add(mainPanel);
             Controls.Add(sidebarPanel);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            MinimumSize = new Size(1000, 698);
             MinimumSize = new Size(1000, 698);
             Name = "Trangchu";
             Text = "Schedule - Home";

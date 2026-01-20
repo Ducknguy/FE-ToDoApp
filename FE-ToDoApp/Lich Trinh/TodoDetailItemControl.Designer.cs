@@ -109,9 +109,7 @@ namespace FE_ToDoApp.Lich_Trinh
             btnDelete.Name = "btnDelete";
             btnDelete.Size = new Size(70, 22);
             btnDelete.TabIndex = 2;
-            btnDelete.Text = "Xóa";
-            btnDelete.Click += btnDelete_Click;
-            // 
+            btnDelete.Text = "Xóa";            // 
             // TodoDetailItemControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
