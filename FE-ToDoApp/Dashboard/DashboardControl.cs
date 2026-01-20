@@ -29,7 +29,7 @@ namespace FE_ToDoApp.Dashboard
                     conn.Open();
                     LoadStats(conn);
 
-                    Panel pnlToday = CreateListCard("Today's Work");
+                    Panel pnlToday = CreateListCard("Các công việc hiện tại");
                     string sqlToday = @"SELECT Id, Title, DueDate, Status FROM [Task] 
                                         WHERE CAST(DueDate AS DATE) = CAST(GETDATE() AS DATE) 
                                           AND DueDate >= GETDATE() 
@@ -39,7 +39,7 @@ namespace FE_ToDoApp.Dashboard
                     tblLists.Controls.Add(pnlToday, 0, 0);
 
 
-                    Panel pnlRight = CreateListCard("Upcoming & Overdue");
+                    Panel pnlRight = CreateListCard("Các công việc quá hạn");
                     string sqlRight = @"SELECT Id, Title, DueDate, Status FROM [Task] 
                                         WHERE (CAST(DueDate AS DATE) > CAST(GETDATE() AS DATE)) 
                                            OR (DueDate < GETDATE() AND Status != 'Done') 
@@ -158,10 +158,10 @@ namespace FE_ToDoApp.Dashboard
             int overdue = GetCount(conn, "SELECT COUNT(*) FROM [Task] WHERE DueDate < GETDATE() AND Status != 'Done'");
             int done = GetCount(conn, "SELECT COUNT(*) FROM [Task] WHERE Status = 'Done'");
 
-            flowStats.Controls.Add(CreateStatCard(today.ToString(), "Today Tasks", Color.AliceBlue, "📅"));
-            flowStats.Controls.Add(CreateStatCard(upcoming.ToString(), "Upcoming", Color.Beige, "🕒"));
-            flowStats.Controls.Add(CreateStatCard(overdue.ToString(), "Overdue", Color.MistyRose, "⚠️"));
-            flowStats.Controls.Add(CreateStatCard(done.ToString(), "Completed", Color.Honeydew, "✅"));
+            flowStats.Controls.Add(CreateStatCard(today.ToString(), "Công việc hôm nay", Color.AliceBlue, "📅"));
+            flowStats.Controls.Add(CreateStatCard(upcoming.ToString(), "Chưa hoàn thành", Color.Beige, "🕒"));
+            flowStats.Controls.Add(CreateStatCard(overdue.ToString(), "Quá hạn", Color.MistyRose, "⚠️"));
+            flowStats.Controls.Add(CreateStatCard(done.ToString(), "Đã hoàn thành", Color.Honeydew, "✅"));
         }
 
         private int GetCount(SqlConnection conn, string query)
