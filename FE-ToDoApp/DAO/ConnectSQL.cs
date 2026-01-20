@@ -21,7 +21,9 @@ namespace FE_ToDoApp
         {
             conn = new SqlConnection(strCon);
         }
-
+        public SqlConnection GetConnection() {
+            return new SqlConnection (strCon);    
+        }
         // 2. HÀM LẤY DỮ LIỆU (SELECT)
         public DataTable LayDuLieu(string sql)
         {

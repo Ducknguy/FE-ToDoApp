@@ -5,7 +5,7 @@ namespace FE_ToDoApp.Lich_Trinh
     public static class DatabaseHelper
     {
         public static string ConnectionString { get; set; } =
-            @"Data Source=duc;Initial Catalog=ToDoApp;Integrated Security=True;TrustServerCertificate=True";
+            @"Data Source=Money\SQLEXPRESS;Initial Catalog=ToDoApp;Integrated Security=True;TrustServerCertificate=True";
 
         public static SqlConnection GetConnection()
         {

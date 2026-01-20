@@ -7,8 +7,7 @@ namespace FE_ToDoApp.Calendar
 {
     public static class DatabaseHelper
     {
-        // Chỉnh lại connection string của bạn nếu cần
-        private static string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=ToDoApp;Integrated Security=True";
+        private static string connectionString = @"Data Source=Money\SQLEXPRESS;Initial Catalog=ToDoApp;Integrated Security=True;Encrypt=False";
 
         public static List<TaskItem> GetTasksByMonth(int month, int year)
         {
@@ -18,10 +17,7 @@ namespace FE_ToDoApp.Calendar
                 try
                 {
                     conn.Open();
-                    // Query sử dụng tên cột chính xác từ ảnh DB bạn gửi: WeekStartDate
-                    string sql = @"SELECT CategoryId, CategoryName, WeekStartDate 
-                                   FROM WeekCategory 
-                                   WHERE MONTH(WeekStartDate) = @m AND YEAR(WeekStartDate) = @y";
+                    string sql = "SELECT Id, Title, Description, StartDate, Status FROM dbo.Calendar WHERE MONTH(StartDate) = @m AND YEAR(StartDate) = @y";
 
                     using (SqlCommand cmd = new SqlCommand(sql, conn))
                     {
@@ -33,10 +29,11 @@ namespace FE_ToDoApp.Calendar
                             while (reader.Read())
                             {
                                 TaskItem item = new TaskItem();
-                                item.Id = Convert.ToInt32(reader["CategoryId"]);
-                                item.Title = reader["CategoryName"] != DBNull.Value ? reader["CategoryName"].ToString() : "";
-                                // Map cột WeekStartDate vào thuộc tính StartDate
-                                item.StartDate = reader["WeekStartDate"] != DBNull.Value ? Convert.ToDateTime(reader["WeekStartDate"]) : DateTime.MinValue;
+                                item.Id = Convert.ToInt32(reader["Id"]);
+                                item.Title = reader["Title"] != DBNull.Value ? reader["Title"].ToString() : "";
+                                item.Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : "";
+                                item.StartDate = reader["StartDate"] != DBNull.Value ? Convert.ToDateTime(reader["StartDate"]) : DateTime.MinValue;
+                                item.Status = reader["Status"] != DBNull.Value ? reader["Status"].ToString() : "Pending";
 
                                 list.Add(item);
                             }
@@ -45,7 +42,7 @@ namespace FE_ToDoApp.Calendar
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Lỗi Database: " + ex.Message);
+                    MessageBox.Show("Error: " + ex.Message);
                 }
             }
             return list;

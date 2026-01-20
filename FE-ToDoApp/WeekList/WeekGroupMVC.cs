@@ -12,7 +12,7 @@ namespace FE_ToDoApp.WeekList
 {
     public partial class WeekGroupMVC : UserControl
     {
-        private const string ConnectionString = "Data Source=duc;Initial Catalog=ToDoApp;Integrated Security=True;Encrypt=False";
+        private const string ConnectionString = "Data Source=Money\\SQLEXPRESS;Initial Catalog=ToDoApp;Integrated Security=True;Encrypt=False";
 
         private WeekCategoryController _categoryController;
         private WeekTaskController _taskController;
