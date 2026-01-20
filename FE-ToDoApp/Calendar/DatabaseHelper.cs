@@ -7,7 +7,8 @@ namespace FE_ToDoApp.Calendar
 {
     public static class DatabaseHelper
     {
-        private static string connectionString = "Data Source=LAPTOP-HJ0H2N4I;Initial Catalog=ToDoApp;Integrated Security=True;";
+        // 1. Kết nối đúng vào database 'user' của Dashboard
+        private static string connectionString = @"Data Source=.;Initial Catalog=user;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
 
         public static List<TaskItem> GetTasksByMonth(int month, int year)
         {
@@ -17,7 +18,7 @@ namespace FE_ToDoApp.Calendar
                 try
                 {
                     conn.Open();
-                    // Lấy dữ liệu từ bảng [Task] thay vì Calendar
+                    // 2. Lấy dữ liệu từ bảng [Task], dùng DueDate
                     string sql = "SELECT * FROM [Task] WHERE MONTH(DueDate) = @m AND YEAR(DueDate) = @y";
 
                     using (SqlCommand cmd = new SqlCommand(sql, conn))
@@ -32,9 +33,8 @@ namespace FE_ToDoApp.Calendar
                                 TaskItem item = new TaskItem();
                                 item.Id = Convert.ToInt32(reader["Id"]);
                                 item.Title = reader["Title"].ToString();
-                                // Kiểm tra null cho các cột có thể trống
                                 item.Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : "";
-                                item.DuaDate = Convert.ToDateTime(reader["DueDate"]);
+                                item.DueDate = Convert.ToDateTime(reader["DueDate"]); // Đọc cột DueDate
                                 item.Status = reader["Status"] != DBNull.Value ? reader["Status"].ToString() : "Pending";
                                 list.Add(item);
                             }
@@ -53,13 +53,13 @@ namespace FE_ToDoApp.Calendar
                 try
                 {
                     conn.Open();
-                    // INSERT vào bảng [Task] và KHÔNG cần UserID nữa
-                    string sql = "INSERT INTO [Task] (Title, Description, DueDate, Status, Category) VALUES (@Title, @Desc, @Date, 'Pending', 'General')";
+                    // 3. INSERT vào bảng [Task], XÓA Category và UserId khỏi câu lệnh
+                    string sql = "INSERT INTO [Task] (Title, Description, DueDate, Status) VALUES (@Title, @Desc, @Date, 'Pending')";
                     using (SqlCommand cmd = new SqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@Title", task.Title);
                         cmd.Parameters.AddWithValue("@Desc", task.Description ?? "");
-                        cmd.Parameters.AddWithValue("@Date", task.DuaDate);
+                        cmd.Parameters.AddWithValue("@Date", task.DueDate); // Dùng DueDate
                         cmd.ExecuteNonQuery();
                     }
                 }
@@ -74,14 +74,14 @@ namespace FE_ToDoApp.Calendar
                 try
                 {
                     conn.Open();
-                    // Update bảng [Task]
+                    // 4. UPDATE bảng [Task], dùng DueDate
                     string sql = "UPDATE [Task] SET Title = @Title, Description = @Desc, DueDate = @Date WHERE Id = @Id";
                     using (SqlCommand cmd = new SqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@Id", task.Id);
                         cmd.Parameters.AddWithValue("@Title", task.Title);
                         cmd.Parameters.AddWithValue("@Desc", task.Description ?? "");
-                        cmd.Parameters.AddWithValue("@Date", task.DuaDate);
+                        cmd.Parameters.AddWithValue("@Date", task.DueDate);
                         cmd.ExecuteNonQuery();
                     }
                 }
@@ -96,7 +96,6 @@ namespace FE_ToDoApp.Calendar
                 try
                 {
                     conn.Open();
-                    // Delete từ bảng [Task]
                     string sql = "DELETE FROM [Task] WHERE Id = @Id";
                     using (SqlCommand cmd = new SqlCommand(sql, conn))
                     {

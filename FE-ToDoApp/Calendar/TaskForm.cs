@@ -31,7 +31,7 @@ namespace FE_ToDoApp.Calendar
             Label lblTime = new Label() { Text = "Thời gian:", Location = new Point(20, 85), AutoSize = true };
             dtpTime = new DateTimePicker() { Location = new Point(20, 110), Format = DateTimePickerFormat.Time, ShowUpDown = true, Width = 120 };
 
-            dtpTime.Value = isEditMode ? _currentTask.DuaDate : new DateTime(date.Year, date.Month, date.Day, DateTime.Now.Hour, DateTime.Now.Minute, 0);
+            dtpTime.Value = isEditMode ? _currentTask.DueDate : new DateTime(date.Year, date.Month, date.Day, DateTime.Now.Hour, DateTime.Now.Minute, 0);
 
             Label lblDesc = new Label() { Text = "Mô tả:", Location = new Point(20, 150), AutoSize = true };
             txtDesc = new TextBox() { Location = new Point(20, 175), Width = 340, Height = 80, Multiline = true, Text = isEditMode ? _currentTask.Description : "" };
@@ -60,14 +60,14 @@ namespace FE_ToDoApp.Calendar
 
             if (_currentTask == null)
             {
-                TaskItem newTask = new TaskItem() { Title = txtTitle.Text, Description = txtDesc.Text, DuaDate = newStart, Status = "New" };
+                TaskItem newTask = new TaskItem() { Title = txtTitle.Text, Description = txtDesc.Text, DueDate = newStart, Status = "New" };
                 DatabaseHelper.AddTask(newTask);
             }
             else
             {
                 _currentTask.Title = txtTitle.Text;
                 _currentTask.Description = txtDesc.Text;
-                _currentTask.DuaDate = newStart;
+                _currentTask.DueDate = newStart;
                 DatabaseHelper.UpdateTask(_currentTask);
             }
 

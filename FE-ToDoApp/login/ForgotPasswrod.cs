@@ -76,5 +76,10 @@ namespace FE_ToDoApp.login
             loginForm.Show();
             this.Hide();
         }
+
+        private void labelOr_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

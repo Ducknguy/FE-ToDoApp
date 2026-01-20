@@ -24,24 +24,17 @@ namespace FE_ToDoApp
         {
             InitializeComponent();
 
-            //this._currentUserId = userId;
-            //this._currentUsername = username;
-
-            ////gOpenDashboard();
         }
 
         public Trangchu()
         {
             InitializeComponent();
 
-            //this._currentUserId = 1;
-            //this._currentUsername = "Test User";
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
 
-            //this.Text = $"ToDo App - Xin chào, {_currentUsername}!";
         }
 
         private void btnDashboard_Click(object sender, EventArgs e)
@@ -51,20 +44,20 @@ namespace FE_ToDoApp
 
         private void OpenDashboard()
         {
-            //mainPanel.Controls.Clear();
+            mainPanel.Controls.Clear();
 
             DashboardControl ucDashboard = new DashboardControl();
 
-            //ucDashboard.Dock = DockStyle.Fill;
-            //mainPanel.Controls.Add(ucDashboard);
-            //ucDashboard.Show();
+            ucDashboard.Dock = DockStyle.Fill;
+            mainPanel.Controls.Add(ucDashboard);
+            ucDashboard.Show();
         }
 
-        //private void btnTrash_Click(object sender, EventArgs e)
-        //{
-        //    ThungRac thungRacForm = new ThungRac();
-        //    thungRacForm.ShowDialog();
-        //}
+        private void btnTrash_Click(object sender, EventArgs e)
+        {
+            Thungrac thungRacForm = new Thungrac();
+            thungRacForm.ShowDialog();
+        }
 
         private void btn_CaiDat(object sender, EventArgs e)
         {
