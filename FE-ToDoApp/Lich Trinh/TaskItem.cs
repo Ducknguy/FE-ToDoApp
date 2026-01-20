@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Data;
-using System.Data.SqlClient;
-using System.Drawing;
-using System.Windows.Forms;
+using System.Data.SQLite;
+using FE_ToDoApp.Database;
 
 namespace FE_ToDoApp.Lich_Trinh
 {
@@ -72,7 +71,6 @@ namespace FE_ToDoApp.Lich_Trinh
         {
             flp_task_right.Controls.Clear();
 
-            _detail.ConnectionString = DatabaseHelper.ConnectionString;
             _detail.AutoSize = false;
             _detail.Margin = new Padding(0);
             _detail.Width = GetRightWidth();
@@ -99,7 +97,6 @@ namespace FE_ToDoApp.Lich_Trinh
                 int id = Convert.ToInt32(row["id_todo"]);
                 string title = Convert.ToString(row["title"]) ?? "(no title)";
 
-                // Tạo Panel container chứa ToDoListItem + 2 nút
                 Panel container = new Panel
                 {
                     Width = GetLeftWidth(),
@@ -122,7 +119,6 @@ namespace FE_ToDoApp.Lich_Trinh
                 item.SetTitle(title);
                 item.Clicked += (s, e) => SelectTodo(id);
 
-                // Tạo nút Xóa (màu đỏ nhạt)
                 Button btnDeleteItem = new Button
                 {
                     Name = "btnDelete",
@@ -140,14 +136,13 @@ namespace FE_ToDoApp.Lich_Trinh
                 btnDeleteItem.Location = new Point(container.Width - 35, 13);
                 btnDeleteItem.Anchor = AnchorStyles.Right | AnchorStyles.Top;
 
-                // Tạo nút Sửa (màu xanh nhạt)
                 Button btnEditItem = new Button
                 {
                     Name = "btnEdit",
                     Text = "✎",
                     Width = 30,
                     Height = 30,
-                    BackColor = Color.FromArgb(173, 216, 230), // LightBlue
+                    BackColor = Color.FromArgb(173, 216, 230),
                     ForeColor = Color.DarkBlue,
                     FlatStyle = FlatStyle.Flat,
                     Cursor = Cursors.Hand,
@@ -158,7 +153,6 @@ namespace FE_ToDoApp.Lich_Trinh
                 btnEditItem.Location = new Point(container.Width - 70, 13);
                 btnEditItem.Anchor = AnchorStyles.Right | AnchorStyles.Top;
 
-                // Sự kiện Xóa
                 btnDeleteItem.Click += (s, e) =>
                 {
                     var result = MessageBox.Show(
@@ -174,7 +168,6 @@ namespace FE_ToDoApp.Lich_Trinh
                     }
                 };
 
-                // Sự kiện Sửa
                 btnEditItem.Click += (s, e) =>
                 {
                     string newTitle = Microsoft.VisualBasic.Interaction.InputBox(
@@ -187,12 +180,10 @@ namespace FE_ToDoApp.Lich_Trinh
                     SelectTodo(id);
                 };
 
-                // Thêm vào container
                 container.Controls.Add(item);
                 container.Controls.Add(btnEditItem);
                 container.Controls.Add(btnDeleteItem);
 
-                // BringToFront để nút hiển thị trên cùng
                 btnEditItem.BringToFront();
                 btnDeleteItem.BringToFront();
 
@@ -202,7 +193,6 @@ namespace FE_ToDoApp.Lich_Trinh
             flp_task_left.ResumeLayout();
             ResizeLeftListItemsToFullWidth();
 
-            // auto select first
             if (flp_task_left.Controls.Count > 0 &&
                 flp_task_left.Controls[0].Tag is int firstId)
             {
@@ -213,16 +203,12 @@ namespace FE_ToDoApp.Lich_Trinh
                 _detail.LoadTodo(-1);
             }
 
-            // Reset chế độ sau khi reload
             if (_deleteMode || _editMode)
             {
                 _deleteMode = false;
                 _editMode = false;
-                //btn_delete.Text = "Xóa";
-                //btn_edit.Text = "Sửa";
             }
 
-            // Cập nhật nút hiển thị
             UpdateItemButtons();
         }
 
@@ -235,8 +221,7 @@ namespace FE_ToDoApp.Lich_Trinh
                 if (c is Panel container)
                 {
                     bool selected = container.Tag is int id && id == todoId;
-
-                    // Tìm ToDoListItem trong container
+                    
                     foreach (Control child in container.Controls)
                     {
                         if (child is ToDoListItem t)
@@ -268,30 +253,12 @@ namespace FE_ToDoApp.Lich_Trinh
         // ===== CHỨC NĂNG SỬA TODO (GIỐNG TODODETAILITEMCONTROL) =====
         private void btn_edit_Click(object? sender, EventArgs e)
         {
-            //_editMode = !_editMode;
-            //btn_edit.Text = _editMode ? "Xong" : "Sửa";
-
-            //if (_editMode)
-            //{
-            //    _deleteMode = false;
-            //    btn_delete.Text = "Xóa";
-            //}
-
             UpdateItemButtons();
         }
 
         // ===== CHỨC NĂNG XÓA TODO (GIỐNG TODODETAILITEMCONTROL) =====
         private void btn_delete_Click(object? sender, EventArgs e)
         {
-            //_deleteMode = !_deleteMode;
-            //btn_delete.Text = _deleteMode ? "Xong" : "Xóa";
-
-            //if (_deleteMode)
-            //{
-            //    _editMode = false;
-            //    btn_edit.Text = "Sửa";
-            //}
-
             UpdateItemButtons();
         }
 
@@ -321,62 +288,45 @@ namespace FE_ToDoApp.Lich_Trinh
             }
         }
 
-        // ===== DATABASE OPERATIONS =====
+        // ===== DATABASE OPERATIONS - SQLITE =====
         private static DataTable Db_GetTodos()
         {
-            using var conn = DatabaseHelper.GetConnection();
-            using var cmd = new SqlCommand(@"
+            return SQLiteHelper.ExecuteQuery(@"
                 SELECT id_todo, title
                 FROM Todo_List_Detail
                 WHERE (IsDeleted = 0 OR IsDeleted IS NULL)
-                ORDER BY updated_at DESC, id_todo DESC;", conn);
-
-            using var da = new SqlDataAdapter(cmd);
-            var dt = new DataTable();
-            da.Fill(dt);
-            return dt;
+                ORDER BY updated_at DESC, id_todo DESC");
         }
 
         private static int Db_InsertTodo(string title)
         {
-            using var conn = DatabaseHelper.GetConnection();
-            conn.Open();
-
-            using var cmd = new SqlCommand(@"
+            var result = SQLiteHelper.ExecuteScalar(@"
                 INSERT INTO Todo_List_Detail (title, userid, created_at, updated_at)
-                OUTPUT INSERTED.id_todo
-                VALUES (@title, 1, GETDATE(), GETDATE());", conn);
+                VALUES (@title, 1, datetime('now'), datetime('now'));
+                
+                SELECT last_insert_rowid();",
+                new SQLiteParameter("@title", title));
 
-            cmd.Parameters.Add("@title", SqlDbType.NVarChar, 255).Value = title;
-            return Convert.ToInt32(cmd.ExecuteScalar());
+            return Convert.ToInt32(result);
         }
 
         private static void Db_UpdateTodoTitle(int todoId, string newTitle)
         {
-            using var conn = DatabaseHelper.GetConnection();
-            conn.Open();
-
-            using var cmd = new SqlCommand(@"
+            SQLiteHelper.ExecuteNonQuery(@"
                 UPDATE Todo_List_Detail
-                SET title = @title, updated_at = GETDATE()
-                WHERE id_todo = @id;", conn);
-
-            cmd.Parameters.AddWithValue("@title", newTitle);
-            cmd.Parameters.AddWithValue("@id", todoId);
-            cmd.ExecuteNonQuery();
+                SET title = @title, updated_at = datetime('now')
+                WHERE id_todo = @id",
+                new SQLiteParameter("@title", newTitle),
+                new SQLiteParameter("@id", todoId));
         }
 
         private static void Db_DeleteTodo(int todoId)
         {
-            using var conn = DatabaseHelper.GetConnection();
-            conn.Open();
-
-            using var cmd = new SqlCommand(@"
+            SQLiteHelper.ExecuteNonQuery(@"
                 UPDATE Todo_List_Detail 
-                SET IsDeleted = 1, DeletedAt = GETDATE() 
-                WHERE id_todo = @id;", conn);
-            cmd.Parameters.AddWithValue("@id", todoId);
-            cmd.ExecuteNonQuery();
+                SET IsDeleted = 1, DeletedAt = datetime('now') 
+                WHERE id_todo = @id",
+                new SQLiteParameter("@id", todoId));
         }
 
         // widths
@@ -400,8 +350,7 @@ namespace FE_ToDoApp.Lich_Trinh
                 if (c is Panel container)
                 {
                     container.Width = w;
-
-                    // Cập nhật vị trí nút khi resize
+                    
                     foreach (Control child in container.Controls)
                     {
                         if (child is Button btn)
