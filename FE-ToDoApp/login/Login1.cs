@@ -51,7 +51,7 @@ namespace FE_ToDoApp.login
             string Username = txtUsername.Text.Trim();
             string Password = txtPassword.Text;
 
-            string query = "SELECT Id, Username FROM [User] WHERE Username = @User AND Password = @Pass";
+            string query = "SELECT Id, Username FROM [Users] WHERE Username = @User AND Password = @Pass";
 
             using (SqlConnection connection = DatabaseHelper.GetConnection())
             {

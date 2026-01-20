@@ -8,7 +8,7 @@ namespace FE_ToDoApp.Dashboard
 {
     public partial class DashboardControl : UserControl
     {
-        private string strConn = @"Data Source=.;Initial Catalog=user;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
+        private string strConn = @"Data Source=LAPTOP-HJ0H2N4I;Initial Catalog=user;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
 
         public DashboardControl()
         {

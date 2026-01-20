@@ -1,9 +1,16 @@
-﻿public class ChatSession
+﻿using System;
+using System.Collections.Generic;
+
+public class ChatSession
 {
-    public string Id { get; set; } = Guid.NewGuid().ToString();
+    // 1. Sửa Id thành int (để khớp với SQL Identity)
+    public int Id { get; set; } = 0;
+
+    public int UserId { get; set; }              // mỗi user có ls riêng
     public string Title { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.Now;
-    public List<ChatMessage> Messages { get; set; } = new();
+
+    public List<ChatMessage> Messages { get; set; } = new List<ChatMessage>();
 }
 //public class ChatSession
 //{

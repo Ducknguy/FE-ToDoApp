@@ -30,8 +30,7 @@ namespace FE_ToDoApp.ThungRac
             return cmd.ExecuteNonQuery();
         }
 
-
-        // Lấy dữ liệu gộp từ 3 bảng (Đã sửa tên bảng chuẩn theo ảnh DB)
+        // lấy dữ liệu từ bảng trong db
         public static DataTable LayDuLieuThungRac()
         {
             string sql = @"
@@ -46,24 +45,14 @@ namespace FE_ToDoApp.ThungRac
 
         UNION ALL
 
-        -- WEEK PLAN
-        SELECT
-            id_week AS ItemId,
-            title AS Title,
-            'Week_Plan' AS SourceTable,
-            DeletedAt
-        FROM Week_Plan
-        WHERE IsDeleted = 1
 
-        UNION ALL
-
-        -- CALENDAR
+        -- WEEK CATEGORY DETAIL
         SELECT
-            Id AS ItemId,
-            Title AS Title,
-            'Calendar' AS SourceTable,
+            CategoryId AS ItemId,
+            CategoryName AS Title,
+            'WeekCategory' AS SourceTable,
             DeletedAt
-        FROM Calendar
+        FROM WeekCategory_detail
         WHERE IsDeleted = 1
 
         ORDER BY DeletedAt DESC
@@ -80,15 +69,14 @@ namespace FE_ToDoApp.ThungRac
 
             if (sourceTable == "Todo")
                 sql = "UPDATE Todo_List_Detail SET IsDeleted = 0, DeletedAt = NULL WHERE id_todo = @id";
-            else if (sourceTable == "Week_Plan")
-                sql = "UPDATE Week_Plan SET IsDeleted = 0, DeletedAt = NULL WHERE id_week = @id";
-            else if (sourceTable == "Calendar")
-                sql = "UPDATE Calendar SET IsDeleted = 0, DeletedAt = NULL WHERE Id = @id";
+            else if (sourceTable == "WeekCategory")
+                sql = "UPDATE WeekCategory_detail SET IsDeleted = 0, DeletedAt = NULL WHERE CategoryId = @id";
             else
                 return 0;
 
             return Execute(sql, new SqlParameter("@id", itemId));
         }
+
 
 
         // xoa vv
@@ -103,13 +91,12 @@ namespace FE_ToDoApp.ThungRac
             DELETE FROM Todo_List_Detail WHERE id_todo = @id;
         ";
             }
-            else if (sourceTable == "Week_Plan")
+            else if (sourceTable == "WeekCategory")
             {
-                sql = "DELETE FROM Week_Plan WHERE id_week = @id";
-            }
-            else if (sourceTable == "Calendar")
-            {
-                sql = "DELETE FROM Calendar WHERE Id = @id";
+                sql = @"
+            DELETE FROM WeekCategory_item WHERE CategoryId = @id;
+            DELETE FROM WeekCategory_detail WHERE CategoryId = @id;
+        ";
             }
             else
                 return 0;
@@ -117,26 +104,21 @@ namespace FE_ToDoApp.ThungRac
             return Execute(sql, new SqlParameter("@id", itemId));
         }
 
+
         // ✅ Xóa mềm: chuyển vào Thùng rác
-public static int XoaVaoThungRac(string sourceTable, int itemId)
-{
-    string sql = "";
+        public static int XoaVaoThungRac(string sourceTable, int itemId)
+        {
+            string sql = "";
 
-    if (sourceTable == "Todo")
-        sql = "UPDATE Todo_List_Detail SET IsDeleted = 1, DeletedAt = GETDATE() WHERE id_todo = @id";
-    else if (sourceTable == "Week_Plan")
-        sql = "UPDATE Week_Plan SET IsDeleted = 1, DeletedAt = GETDATE() WHERE id_week = @id";
-    else if (sourceTable == "Calendar")
-        sql = "UPDATE Calendar SET IsDeleted = 1, DeletedAt = GETDATE() WHERE Id = @id";
-    else
-        return 0;
+            if (sourceTable == "Todo")
+                sql = "UPDATE Todo_List_Detail SET IsDeleted = 1, DeletedAt = GETDATE() WHERE id_todo = @id";
+            else if (sourceTable == "WeekCategory")
+                sql = "UPDATE WeekCategory_detail SET IsDeleted = 1, DeletedAt = GETDATE() WHERE CategoryId = @id";
+            else
+                return 0;
 
-    return Execute(sql, new SqlParameter("@id", itemId));
-}
-
-            
-
-
+            return Execute(sql, new SqlParameter("@id", itemId));
+        }
 
 
     }
