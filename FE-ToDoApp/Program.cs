@@ -18,14 +18,12 @@ namespace FE_ToDoApp
         [STAThread]
         static void Main()
         {
-            // Kh?i t?o SQLite database
             SQLiteHelper.InitializeDatabase();
 
-            // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();          
 
-            Application.Run(new Login1());
+            Application.Run(new Trangchu());
         }
     }
 }

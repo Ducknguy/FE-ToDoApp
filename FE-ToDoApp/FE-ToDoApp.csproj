@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <Folder Include="Image\" />
+    <Folder Include="QuickAdd\" />
   </ItemGroup>
 
   <ItemGroup>

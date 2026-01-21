@@ -65,7 +65,9 @@ namespace FE_ToDoApp.Lich_Trinh
                     txt_search_place.ForeColor = Color.Gray;
                 }
             };
-        }
+
+            txt_search_place.TextChanged += Txt_Search_TextChanged;
+             }
 
         private void SetupRightDetail()
         {
@@ -80,6 +82,7 @@ namespace FE_ToDoApp.Lich_Trinh
             {
                 LoadTodosToLeftList();
             };
+            _detail.TodoItemStatusChanged += (s, e) => LoadTodosToLeftList();
 
             flp_task_right.Controls.Add(_detail);
         }
@@ -88,14 +91,25 @@ namespace FE_ToDoApp.Lich_Trinh
         private void LoadTodosToLeftList()
         {
             flp_task_left.SuspendLayout();
+            
+            // ✅ Lưu lại todo đang chọn
+            int previouslySelectedId = _selectedTodoId;
+            
             flp_task_left.Controls.Clear();
 
-            var dt = Db_GetTodos();
+            string searchKeyword = txt_search_place.Text.Trim();
+            bool isSearching = !string.IsNullOrWhiteSpace(searchKeyword) && 
+                               searchKeyword != "Search task and events ....";
 
+            var dt = isSearching ? Db_SearchTodos(searchKeyword) : Db_GetTodos();
+            
             foreach (DataRow row in dt.Rows)
             {
                 int id = Convert.ToInt32(row["id_todo"]);
                 string title = Convert.ToString(row["title"]) ?? "(no title)";
+
+                // ✅ Get completion stats for this todo
+                var (completedCount, totalCount) = Db_GetTodoCompletionStats(id);
 
                 Panel container = new Panel
                 {
@@ -117,6 +131,10 @@ namespace FE_ToDoApp.Lich_Trinh
                 };
 
                 item.SetTitle(title);
+                
+                // ✅ Set completion status
+                item.SetCompletionStatus(completedCount, totalCount);
+                
                 item.Clicked += (s, e) => SelectTodo(id);
 
                 Button btnDeleteItem = new Button
@@ -193,14 +211,34 @@ namespace FE_ToDoApp.Lich_Trinh
             flp_task_left.ResumeLayout();
             ResizeLeftListItemsToFullWidth();
 
-            if (flp_task_left.Controls.Count > 0 &&
-                flp_task_left.Controls[0].Tag is int firstId)
+            // ✅ Khôi phục lại selection
+            bool foundPrevious = false;
+            if (previouslySelectedId > 0)
             {
-                SelectTodo(firstId);
+                // Kiểm tra xem todo đã chọn trước đó còn trong danh sách không
+                foreach (Control c in flp_task_left.Controls)
+                {
+                    if (c is Panel container && container.Tag is int id && id == previouslySelectedId)
+                    {
+                        SelectTodo(previouslySelectedId);
+                        foundPrevious = true;
+                        break;
+                    }
+                }
             }
-            else
+
+            // Nếu không tìm thấy todo trước đó, chọn todo đầu tiên
+            if (!foundPrevious)
             {
-                _detail.LoadTodo(-1);
+                if (flp_task_left.Controls.Count > 0 &&
+                    flp_task_left.Controls[0].Tag is int firstId)
+                {
+                    SelectTodo(firstId);
+                }
+                else
+                {
+                    _detail.LoadTodo(-1);
+                }
             }
 
             if (_deleteMode || _editMode)
@@ -329,6 +367,38 @@ namespace FE_ToDoApp.Lich_Trinh
                 new SQLiteParameter("@id", todoId));
         }
 
+        private static DataTable Db_SearchTodos(string keyword)
+        {
+            return SQLiteHelper.ExecuteQuery(@"
+                SELECT id_todo, title
+                FROM Todo_List_Detail
+                WHERE (IsDeleted = 0 OR IsDeleted IS NULL)
+                  AND (title LIKE @keyword)
+                ORDER BY updated_at DESC, id_todo DESC",
+                new SQLiteParameter("@keyword", $"%{keyword}%"));
+        }
+
+        private static (int completedCount, int totalCount) Db_GetTodoCompletionStats(int todoId)
+        {
+            var dt = SQLiteHelper.ExecuteQuery(@"
+                SELECT 
+                    COUNT(*) as total,
+                    SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as completed
+                FROM Todo_List_Item
+                WHERE id_todo = @todoId",
+                new SQLiteParameter("@todoId", todoId));
+
+            if (dt.Rows.Count > 0)
+            {
+                var row = dt.Rows[0];
+                int total = Convert.ToInt32(row["total"]);
+                int completed = row["completed"] == DBNull.Value ? 0 : Convert.ToInt32(row["completed"]);
+                return (completed, total);
+            }
+
+            return (0, 0);
+        }
+
         // widths
         private int GetLeftWidth()
         {
@@ -390,6 +460,16 @@ namespace FE_ToDoApp.Lich_Trinh
             _selectedTodoId = -1;            // ✅ reset đã chọn
             _detail.LoadTodo(-1);            // ✅ clear panel bên phải
             LoadTodosToLeftList();           // ✅ reload list
+        }
+
+        private void Txt_Search_TextChanged(object? sender, EventArgs e)
+        {
+            LoadTodosToLeftList();
+        }
+
+        public void RefreshData()
+        {
+            LoadTodosToLeftList();
         }
     }
 }

@@ -13,6 +13,7 @@ namespace FE_ToDoApp.Lich_Trinh
 
         public event EventHandler? TodoDeleted;
         public event EventHandler? TodoHeaderChanged;
+        public event EventHandler? TodoItemStatusChanged;
 
         // ===== STATE =====
         private bool _deleteMode = false;
@@ -234,6 +235,7 @@ namespace FE_ToDoApp.Lich_Trinh
             {
                 Db_UpdateItemStatus(itemId, chk.Checked ? (byte)2 : (byte)0);
                 ApplyDoneStyle(row, lbl, chk, lblDoneIcon, chk.Checked);
+                TodoItemStatusChanged?.Invoke(this, EventArgs.Empty); // ← Thêm dòng này
             };
 
             // ===== DELETE =====
