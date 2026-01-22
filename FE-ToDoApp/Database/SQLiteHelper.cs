@@ -30,6 +30,15 @@ namespace FE_ToDoApp.Database
                 SQLiteConnection.CreateFile(_dbPath);
                 CreateTables();
             }
+            else
+            {
+                // Database ?ã t?n t?i, ch?y migration
+                using (var conn = GetConnection())
+                {
+                    conn.Open();
+                    MigrateStreakColumns(conn);
+                }
+            }
         }
 
        
@@ -78,6 +87,9 @@ namespace FE_ToDoApp.Database
                     updated_at DATETIME NULL,
                     IsDeleted INTEGER NOT NULL DEFAULT 0,
                     DeletedAt DATETIME NULL,
+                    CurrentStreak INTEGER NOT NULL DEFAULT 0,
+                    BestStreak INTEGER NOT NULL DEFAULT 0,
+                    LastCompletedDate DATETIME NULL,
                     FOREIGN KEY (UserId) REFERENCES Users(Id)
                 );
 
@@ -127,7 +139,90 @@ namespace FE_ToDoApp.Database
                 {
                     cmd.ExecuteNonQuery();
                 }
+                
+                // Thêm c?t streak cho database ?ã t?n t?i
+                MigrateStreakColumns(conn);
             }
+        }
+
+        private static void MigrateStreakColumns(SQLiteConnection conn)
+        {
+            // Ki?m tra và thêm c?t CurrentStreak
+            if (!ColumnExists(conn, "Todo_List_Detail", "CurrentStreak"))
+            {
+                try
+                {
+                    using (var cmd = new SQLiteCommand(@"
+                        ALTER TABLE Todo_List_Detail ADD COLUMN CurrentStreak INTEGER NOT NULL DEFAULT 0;
+                    ", conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error adding CurrentStreak: {ex.Message}");
+                }
+            }
+
+            // Ki?m tra và thêm c?t BestStreak
+            if (!ColumnExists(conn, "Todo_List_Detail", "BestStreak"))
+            {
+                try
+                {
+                    using (var cmd = new SQLiteCommand(@"
+                        ALTER TABLE Todo_List_Detail ADD COLUMN BestStreak INTEGER NOT NULL DEFAULT 0;
+                    ", conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error adding BestStreak: {ex.Message}");
+                }
+            }
+
+            // Ki?m tra và thêm c?t LastCompletedDate
+            if (!ColumnExists(conn, "Todo_List_Detail", "LastCompletedDate"))
+            {
+                try
+                {
+                    using (var cmd = new SQLiteCommand(@"
+                        ALTER TABLE Todo_List_Detail ADD COLUMN LastCompletedDate DATETIME NULL;
+                    ", conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error adding LastCompletedDate: {ex.Message}");
+                }
+            }
+        }
+
+        private static bool ColumnExists(SQLiteConnection conn, string tableName, string columnName)
+        {
+            try
+            {
+                using (var cmd = new SQLiteCommand($"PRAGMA table_info({tableName})", conn))
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        if (reader["name"].ToString() == columnName)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            return false;
         }
 
         /// <summary>

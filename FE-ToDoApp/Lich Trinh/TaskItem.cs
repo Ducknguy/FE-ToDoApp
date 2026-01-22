@@ -82,7 +82,15 @@ namespace FE_ToDoApp.Lich_Trinh
             {
                 LoadTodosToLeftList();
             };
-            _detail.TodoItemStatusChanged += (s, e) => LoadTodosToLeftList();
+            _detail.TodoItemStatusChanged += (s, e) => 
+            {
+                // Khi status thay đổi, cập nhật streak
+                if (_selectedTodoId > 0)
+                {
+                    Db_UpdateStreak(_selectedTodoId);
+                }
+                LoadTodosToLeftList();
+            };
 
             flp_task_right.Controls.Add(_detail);
         }
@@ -110,6 +118,9 @@ namespace FE_ToDoApp.Lich_Trinh
 
                 // ✅ Get completion stats for this todo
                 var (completedCount, totalCount) = Db_GetTodoCompletionStats(id);
+                
+                // ✅ Get streak info
+                var (currentStreak, bestStreak) = Db_GetStreakInfo(id);
 
                 Panel container = new Panel
                 {
@@ -134,6 +145,9 @@ namespace FE_ToDoApp.Lich_Trinh
                 
                 // ✅ Set completion status
                 item.SetCompletionStatus(completedCount, totalCount);
+                
+                // ✅ Set streak info
+                item.SetStreakInfo(currentStreak, bestStreak);
                 
                 item.Clicked += (s, e) => SelectTodo(id);
 
@@ -397,6 +411,106 @@ namespace FE_ToDoApp.Lich_Trinh
             }
 
             return (0, 0);
+        }
+
+        private static (int currentStreak, int bestStreak) Db_GetStreakInfo(int todoId)
+        {
+            try
+            {
+                var dt = SQLiteHelper.ExecuteQuery(@"
+                    SELECT CurrentStreak, BestStreak
+                    FROM Todo_List_Detail
+                    WHERE id_todo = @todoId",
+                    new SQLiteParameter("@todoId", todoId));
+
+                if (dt.Rows.Count > 0)
+                {
+                    var row = dt.Rows[0];
+                    int currentStreak = row["CurrentStreak"] == DBNull.Value ? 0 : Convert.ToInt32(row["CurrentStreak"]);
+                    int bestStreak = row["BestStreak"] == DBNull.Value ? 0 : Convert.ToInt32(row["BestStreak"]);
+                    return (currentStreak, bestStreak);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Nếu cột chưa tồn tại, trả về giá trị mặc định
+                System.Diagnostics.Debug.WriteLine($"Db_GetStreakInfo Error: {ex.Message}");
+            }
+
+            return (0, 0);
+        }
+
+        private static void Db_UpdateStreak(int todoId)
+        {
+            try
+            {
+                var dt = SQLiteHelper.ExecuteQuery(@"
+                    SELECT 
+                        CurrentStreak, 
+                        BestStreak, 
+                        LastCompletedDate,
+                        (SELECT COUNT(*) FROM Todo_List_Item WHERE id_todo = @todoId) as total,
+                        (SELECT COUNT(*) FROM Todo_List_Item WHERE id_todo = @todoId AND status = 2) as completed
+                    FROM Todo_List_Detail
+                    WHERE id_todo = @todoId",
+                    new SQLiteParameter("@todoId", todoId));
+
+                if (dt.Rows.Count == 0) return;
+
+                var row = dt.Rows[0];
+                int total = Convert.ToInt32(row["total"]);
+                int completed = row["completed"] == DBNull.Value ? 0 : Convert.ToInt32(row["completed"]);
+
+                // Chỉ cập nhật nếu hoàn thành HẾT tasks
+                if (total == 0 || completed < total) return;
+
+                int currentStreak = row["CurrentStreak"] == DBNull.Value ? 0 : Convert.ToInt32(row["CurrentStreak"]);
+                int bestStreak = row["BestStreak"] == DBNull.Value ? 0 : Convert.ToInt32(row["BestStreak"]);
+                DateTime? lastCompleted = row["LastCompletedDate"] == DBNull.Value ? null : Convert.ToDateTime(row["LastCompletedDate"]);
+
+                DateTime today = DateTime.Today;
+                
+                // Nếu đã hoàn thành hôm nay rồi thì không cập nhật nữa
+                if (lastCompleted.HasValue && lastCompleted.Value.Date == today)
+                    return;
+
+                int newStreak = currentStreak;
+
+                if (!lastCompleted.HasValue)
+                {
+                    // Lần đầu hoàn thành
+                    newStreak = 1;
+                }
+                else if (lastCompleted.Value.Date == today.AddDays(-1))
+                {
+                    // Hoàn thành ngày hôm qua → tăng streak
+                    newStreak = currentStreak + 1;
+                }
+                else if (lastCompleted.Value.Date < today.AddDays(-1))
+                {
+                    // Bỏ lỡ >= 1 ngày → reset streak
+                    newStreak = 1;
+                }
+
+                int newBestStreak = Math.Max(bestStreak, newStreak);
+
+                SQLiteHelper.ExecuteNonQuery(@"
+                    UPDATE Todo_List_Detail
+                    SET CurrentStreak = @currentStreak,
+                        BestStreak = @bestStreak,
+                        LastCompletedDate = @lastCompleted,
+                        updated_at = datetime('now')
+                    WHERE id_todo = @todoId",
+                    new SQLiteParameter("@currentStreak", newStreak),
+                    new SQLiteParameter("@bestStreak", newBestStreak),
+                    new SQLiteParameter("@lastCompleted", today),
+                    new SQLiteParameter("@todoId", todoId));
+            }
+            catch (Exception ex)
+            {
+                // Nếu có lỗi (ví dụ: cột chưa tồn tại), bỏ qua
+                System.Diagnostics.Debug.WriteLine($"Db_UpdateStreak Error: {ex.Message}");
+            }
         }
 
         // widths

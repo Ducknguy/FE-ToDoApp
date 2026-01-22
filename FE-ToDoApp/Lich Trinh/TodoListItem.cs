@@ -29,6 +29,49 @@ namespace FE_ToDoApp.Lich_Trinh
             BackColor = selected ? Color.FromArgb(200, 220, 255) : Color.FromArgb(230, 240, 255);
         }
 
+        public void SetStreakInfo(int currentStreak, int bestStreak)
+        {
+            if (currentStreak > 0)
+            {
+                lblStreakIcon.Visible = true;
+                lblStreakCount.Visible = true;
+                lblStreakCount.Text = currentStreak.ToString();
+
+                // Đổi màu theo mức streak - đơn giản
+                if (currentStreak >= 30)
+                {
+                    lblStreakCount.ForeColor = Color.FromArgb(220, 20, 60); // Đỏ
+                    lblStreakIcon.Text = "🔥";
+                }
+                else if (currentStreak >= 14)
+                {
+                    lblStreakCount.ForeColor = Color.FromArgb(255, 69, 0); // Đỏ cam
+                    lblStreakIcon.Text = "🔥";
+                }
+                else if (currentStreak >= 7)
+                {
+                    lblStreakCount.ForeColor = Color.FromArgb(255, 140, 0); // Cam đậm
+                    lblStreakIcon.Text = "🔥";
+                }
+                else
+                {
+                    lblStreakCount.ForeColor = Color.FromArgb(255, 165, 0); // Cam
+                    lblStreakIcon.Text = "🔥";
+                }
+
+                // Tooltip đơn giản
+                var tooltip = new ToolTip();
+                string tooltipText = $"Streak: {currentStreak} ngày\nKỷ lục: {bestStreak} ngày";
+                tooltip.SetToolTip(lblStreakIcon, tooltipText);
+                tooltip.SetToolTip(lblStreakCount, tooltipText);
+            }
+            else
+            {
+                lblStreakIcon.Visible = false;
+                lblStreakCount.Visible = false;
+            }
+        }
+
         public void SetCompletionStatus(int completedCount, int totalCount)
         {
 
