@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Data;
-using System.Data.SqlClient;
-using System.Drawing;
-using System.Windows.Forms;
+using System.Data.SQLite;
+using FE_ToDoApp.Database;
 
 namespace FE_ToDoApp.Lich_Trinh
 {
     public partial class TaskItem : UserControl
     {
+        
+
         private int _selectedTodoId = -1;
 
         private bool _deleteMode = false;
@@ -64,13 +65,14 @@ namespace FE_ToDoApp.Lich_Trinh
                     txt_search_place.ForeColor = Color.Gray;
                 }
             };
-        }
+
+            txt_search_place.TextChanged += Txt_Search_TextChanged;
+             }
 
         private void SetupRightDetail()
         {
             flp_task_right.Controls.Clear();
 
-            _detail.ConnectionString = DatabaseHelper.ConnectionString;
             _detail.AutoSize = false;
             _detail.Margin = new Padding(0);
             _detail.Width = GetRightWidth();
@@ -78,6 +80,15 @@ namespace FE_ToDoApp.Lich_Trinh
             _detail.TodoHeaderChanged += (s, e) => LoadTodosToLeftList();
             _detail.TodoDeleted += (s, e) =>
             {
+                LoadTodosToLeftList();
+            };
+            _detail.TodoItemStatusChanged += (s, e) => 
+            {
+                // Khi status thay đổi, cập nhật streak
+                if (_selectedTodoId > 0)
+                {
+                    Db_UpdateStreak(_selectedTodoId);
+                }
                 LoadTodosToLeftList();
             };
 
@@ -88,16 +99,29 @@ namespace FE_ToDoApp.Lich_Trinh
         private void LoadTodosToLeftList()
         {
             flp_task_left.SuspendLayout();
+            
+            // ✅ Lưu lại todo đang chọn
+            int previouslySelectedId = _selectedTodoId;
+            
             flp_task_left.Controls.Clear();
 
-            var dt = Db_GetTodos();
+            string searchKeyword = txt_search_place.Text.Trim();
+            bool isSearching = !string.IsNullOrWhiteSpace(searchKeyword) && 
+                               searchKeyword != "Search task and events ....";
 
+            var dt = isSearching ? Db_SearchTodos(searchKeyword) : Db_GetTodos();
+            
             foreach (DataRow row in dt.Rows)
             {
                 int id = Convert.ToInt32(row["id_todo"]);
                 string title = Convert.ToString(row["title"]) ?? "(no title)";
 
-                // Tạo Panel container chứa ToDoListItem + 2 nút
+                // ✅ Get completion stats for this todo
+                var (completedCount, totalCount) = Db_GetTodoCompletionStats(id);
+                
+                // ✅ Get streak info
+                var (currentStreak, bestStreak) = Db_GetStreakInfo(id);
+
                 Panel container = new Panel
                 {
                     Width = GetLeftWidth(),
@@ -118,9 +142,15 @@ namespace FE_ToDoApp.Lich_Trinh
                 };
 
                 item.SetTitle(title);
+                
+                // ✅ Set completion status
+                item.SetCompletionStatus(completedCount, totalCount);
+                
+                // ✅ Set streak info
+                item.SetStreakInfo(currentStreak, bestStreak);
+                
                 item.Clicked += (s, e) => SelectTodo(id);
 
-                // Tạo nút Xóa (màu đỏ nhạt)
                 Button btnDeleteItem = new Button
                 {
                     Name = "btnDelete",
@@ -138,14 +168,13 @@ namespace FE_ToDoApp.Lich_Trinh
                 btnDeleteItem.Location = new Point(container.Width - 35, 13);
                 btnDeleteItem.Anchor = AnchorStyles.Right | AnchorStyles.Top;
 
-                // Tạo nút Sửa (màu xanh nhạt)
                 Button btnEditItem = new Button
                 {
                     Name = "btnEdit",
                     Text = "✎",
                     Width = 30,
                     Height = 30,
-                    BackColor = Color.FromArgb(173, 216, 230), // LightBlue
+                    BackColor = Color.FromArgb(173, 216, 230),
                     ForeColor = Color.DarkBlue,
                     FlatStyle = FlatStyle.Flat,
                     Cursor = Cursors.Hand,
@@ -156,7 +185,6 @@ namespace FE_ToDoApp.Lich_Trinh
                 btnEditItem.Location = new Point(container.Width - 70, 13);
                 btnEditItem.Anchor = AnchorStyles.Right | AnchorStyles.Top;
 
-                // Sự kiện Xóa
                 btnDeleteItem.Click += (s, e) =>
                 {
                     var result = MessageBox.Show(
@@ -172,7 +200,6 @@ namespace FE_ToDoApp.Lich_Trinh
                     }
                 };
 
-                // Sự kiện Sửa
                 btnEditItem.Click += (s, e) =>
                 {
                     string newTitle = Microsoft.VisualBasic.Interaction.InputBox(
@@ -185,12 +212,10 @@ namespace FE_ToDoApp.Lich_Trinh
                     SelectTodo(id);
                 };
 
-                // Thêm vào container
                 container.Controls.Add(item);
                 container.Controls.Add(btnEditItem);
                 container.Controls.Add(btnDeleteItem);
 
-                // BringToFront để nút hiển thị trên cùng
                 btnEditItem.BringToFront();
                 btnDeleteItem.BringToFront();
 
@@ -200,27 +225,42 @@ namespace FE_ToDoApp.Lich_Trinh
             flp_task_left.ResumeLayout();
             ResizeLeftListItemsToFullWidth();
 
-            // auto select first
-            if (flp_task_left.Controls.Count > 0 &&
-                flp_task_left.Controls[0].Tag is int firstId)
+            // ✅ Khôi phục lại selection
+            bool foundPrevious = false;
+            if (previouslySelectedId > 0)
             {
-                SelectTodo(firstId);
-            }
-            else
-            {
-                _detail.LoadTodo(-1);
+                // Kiểm tra xem todo đã chọn trước đó còn trong danh sách không
+                foreach (Control c in flp_task_left.Controls)
+                {
+                    if (c is Panel container && container.Tag is int id && id == previouslySelectedId)
+                    {
+                        SelectTodo(previouslySelectedId);
+                        foundPrevious = true;
+                        break;
+                    }
+                }
             }
 
-            // Reset chế độ sau khi reload
+            // Nếu không tìm thấy todo trước đó, chọn todo đầu tiên
+            if (!foundPrevious)
+            {
+                if (flp_task_left.Controls.Count > 0 &&
+                    flp_task_left.Controls[0].Tag is int firstId)
+                {
+                    SelectTodo(firstId);
+                }
+                else
+                {
+                    _detail.LoadTodo(-1);
+                }
+            }
+
             if (_deleteMode || _editMode)
             {
                 _deleteMode = false;
                 _editMode = false;
-                //btn_delete.Text = "Xóa";
-                //btn_edit.Text = "Sửa";
             }
 
-            // Cập nhật nút hiển thị
             UpdateItemButtons();
         }
 
@@ -234,7 +274,6 @@ namespace FE_ToDoApp.Lich_Trinh
                 {
                     bool selected = container.Tag is int id && id == todoId;
                     
-                    // Tìm ToDoListItem trong container
                     foreach (Control child in container.Controls)
                     {
                         if (child is ToDoListItem t)
@@ -266,30 +305,12 @@ namespace FE_ToDoApp.Lich_Trinh
         // ===== CHỨC NĂNG SỬA TODO (GIỐNG TODODETAILITEMCONTROL) =====
         private void btn_edit_Click(object? sender, EventArgs e)
         {
-            //_editMode = !_editMode;
-            //btn_edit.Text = _editMode ? "Xong" : "Sửa";
-
-            //if (_editMode)
-            //{
-            //    _deleteMode = false;
-            //    btn_delete.Text = "Xóa";
-            //}
-
             UpdateItemButtons();
         }
 
         // ===== CHỨC NĂNG XÓA TODO (GIỐNG TODODETAILITEMCONTROL) =====
         private void btn_delete_Click(object? sender, EventArgs e)
         {
-            //_deleteMode = !_deleteMode;
-            //btn_delete.Text = _deleteMode ? "Xong" : "Xóa";
-
-            //if (_deleteMode)
-            //{
-            //    _editMode = false;
-            //    btn_edit.Text = "Sửa";
-            //}
-
             UpdateItemButtons();
         }
 
@@ -319,62 +340,177 @@ namespace FE_ToDoApp.Lich_Trinh
             }
         }
 
-        // ===== DATABASE OPERATIONS =====
+        // ===== DATABASE OPERATIONS - SQLITE =====
         private static DataTable Db_GetTodos()
         {
-            using var conn = DatabaseHelper.GetConnection();
-            using var cmd = new SqlCommand(@"
+            return SQLiteHelper.ExecuteQuery(@"
                 SELECT id_todo, title
                 FROM Todo_List_Detail
                 WHERE (IsDeleted = 0 OR IsDeleted IS NULL)
-                ORDER BY updated_at DESC, id_todo DESC;", conn);
-
-            using var da = new SqlDataAdapter(cmd);
-            var dt = new DataTable();
-            da.Fill(dt);
-            return dt;
+                ORDER BY updated_at DESC, id_todo DESC");
         }
 
         private static int Db_InsertTodo(string title)
         {
-            using var conn = DatabaseHelper.GetConnection();
-            conn.Open();
-
-            using var cmd = new SqlCommand(@"
+            var result = SQLiteHelper.ExecuteScalar(@"
                 INSERT INTO Todo_List_Detail (title, userid, created_at, updated_at)
-                OUTPUT INSERTED.id_todo
-                VALUES (@title, 1, GETDATE(), GETDATE());", conn);
+                VALUES (@title, 1, datetime('now'), datetime('now'));
+                
+                SELECT last_insert_rowid();",
+                new SQLiteParameter("@title", title));
 
-            cmd.Parameters.Add("@title", SqlDbType.NVarChar, 255).Value = title;
-            return Convert.ToInt32(cmd.ExecuteScalar());
+            return Convert.ToInt32(result);
         }
 
         private static void Db_UpdateTodoTitle(int todoId, string newTitle)
         {
-            using var conn = DatabaseHelper.GetConnection();
-            conn.Open();
-
-            using var cmd = new SqlCommand(@"
+            SQLiteHelper.ExecuteNonQuery(@"
                 UPDATE Todo_List_Detail
-                SET title = @title, updated_at = GETDATE()
-                WHERE id_todo = @id;", conn);
-
-            cmd.Parameters.AddWithValue("@title", newTitle);
-            cmd.Parameters.AddWithValue("@id", todoId);
-            cmd.ExecuteNonQuery();
+                SET title = @title, updated_at = datetime('now')
+                WHERE id_todo = @id",
+                new SQLiteParameter("@title", newTitle),
+                new SQLiteParameter("@id", todoId));
         }
 
         private static void Db_DeleteTodo(int todoId)
         {
-            using var conn = DatabaseHelper.GetConnection();
-            conn.Open();
-
-            using var cmd = new SqlCommand(@"
+            SQLiteHelper.ExecuteNonQuery(@"
                 UPDATE Todo_List_Detail 
-                SET IsDeleted = 1, DeletedAt = GETDATE() 
-                WHERE id_todo = @id;", conn);
-            cmd.Parameters.AddWithValue("@id", todoId);
-            cmd.ExecuteNonQuery();
+                SET IsDeleted = 1, DeletedAt = datetime('now') 
+                WHERE id_todo = @id",
+                new SQLiteParameter("@id", todoId));
+        }
+
+        private static DataTable Db_SearchTodos(string keyword)
+        {
+            return SQLiteHelper.ExecuteQuery(@"
+                SELECT id_todo, title
+                FROM Todo_List_Detail
+                WHERE (IsDeleted = 0 OR IsDeleted IS NULL)
+                  AND (title LIKE @keyword)
+                ORDER BY updated_at DESC, id_todo DESC",
+                new SQLiteParameter("@keyword", $"%{keyword}%"));
+        }
+
+        private static (int completedCount, int totalCount) Db_GetTodoCompletionStats(int todoId)
+        {
+            var dt = SQLiteHelper.ExecuteQuery(@"
+                SELECT 
+                    COUNT(*) as total,
+                    SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as completed
+                FROM Todo_List_Item
+                WHERE id_todo = @todoId",
+                new SQLiteParameter("@todoId", todoId));
+
+            if (dt.Rows.Count > 0)
+            {
+                var row = dt.Rows[0];
+                int total = Convert.ToInt32(row["total"]);
+                int completed = row["completed"] == DBNull.Value ? 0 : Convert.ToInt32(row["completed"]);
+                return (completed, total);
+            }
+
+            return (0, 0);
+        }
+
+        private static (int currentStreak, int bestStreak) Db_GetStreakInfo(int todoId)
+        {
+            try
+            {
+                var dt = SQLiteHelper.ExecuteQuery(@"
+                    SELECT CurrentStreak, BestStreak
+                    FROM Todo_List_Detail
+                    WHERE id_todo = @todoId",
+                    new SQLiteParameter("@todoId", todoId));
+
+                if (dt.Rows.Count > 0)
+                {
+                    var row = dt.Rows[0];
+                    int currentStreak = row["CurrentStreak"] == DBNull.Value ? 0 : Convert.ToInt32(row["CurrentStreak"]);
+                    int bestStreak = row["BestStreak"] == DBNull.Value ? 0 : Convert.ToInt32(row["BestStreak"]);
+                    return (currentStreak, bestStreak);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Nếu cột chưa tồn tại, trả về giá trị mặc định
+                System.Diagnostics.Debug.WriteLine($"Db_GetStreakInfo Error: {ex.Message}");
+            }
+
+            return (0, 0);
+        }
+
+        private static void Db_UpdateStreak(int todoId)
+        {
+            try
+            {
+                var dt = SQLiteHelper.ExecuteQuery(@"
+                    SELECT 
+                        CurrentStreak, 
+                        BestStreak, 
+                        LastCompletedDate,
+                        (SELECT COUNT(*) FROM Todo_List_Item WHERE id_todo = @todoId) as total,
+                        (SELECT COUNT(*) FROM Todo_List_Item WHERE id_todo = @todoId AND status = 2) as completed
+                    FROM Todo_List_Detail
+                    WHERE id_todo = @todoId",
+                    new SQLiteParameter("@todoId", todoId));
+
+                if (dt.Rows.Count == 0) return;
+
+                var row = dt.Rows[0];
+                int total = Convert.ToInt32(row["total"]);
+                int completed = row["completed"] == DBNull.Value ? 0 : Convert.ToInt32(row["completed"]);
+
+                // Chỉ cập nhật nếu hoàn thành HẾT tasks
+                if (total == 0 || completed < total) return;
+
+                int currentStreak = row["CurrentStreak"] == DBNull.Value ? 0 : Convert.ToInt32(row["CurrentStreak"]);
+                int bestStreak = row["BestStreak"] == DBNull.Value ? 0 : Convert.ToInt32(row["BestStreak"]);
+                DateTime? lastCompleted = row["LastCompletedDate"] == DBNull.Value ? null : Convert.ToDateTime(row["LastCompletedDate"]);
+
+                DateTime today = DateTime.Today;
+                
+                // Nếu đã hoàn thành hôm nay rồi thì không cập nhật nữa
+                if (lastCompleted.HasValue && lastCompleted.Value.Date == today)
+                    return;
+
+                int newStreak = currentStreak;
+
+                if (!lastCompleted.HasValue)
+                {
+                    // Lần đầu hoàn thành
+                    newStreak = 1;
+                }
+                else if (lastCompleted.Value.Date == today.AddDays(-1))
+                {
+                    // Hoàn thành ngày hôm qua → tăng streak
+                    newStreak = currentStreak + 1;
+                }
+                else if (lastCompleted.Value.Date < today.AddDays(-1))
+                {
+                    // Bỏ lỡ >= 1 ngày → reset streak
+                    newStreak = 1;
+                }
+
+                int newBestStreak = Math.Max(bestStreak, newStreak);
+
+                SQLiteHelper.ExecuteNonQuery(@"
+                    UPDATE Todo_List_Detail
+                    SET CurrentStreak = @currentStreak,
+                        BestStreak = @bestStreak,
+                        LastCompletedDate = @lastCompleted,
+                        updated_at = datetime('now')
+                    WHERE id_todo = @todoId",
+                    new SQLiteParameter("@currentStreak", newStreak),
+                    new SQLiteParameter("@bestStreak", newBestStreak),
+                    new SQLiteParameter("@lastCompleted", today),
+                    new SQLiteParameter("@todoId", todoId));
+            }
+            catch (Exception ex)
+            {
+                // Nếu có lỗi (ví dụ: cột chưa tồn tại), bỏ qua
+                System.Diagnostics.Debug.WriteLine($"Db_UpdateStreak Error: {ex.Message}");
+            }
         }
 
         // widths
@@ -399,7 +535,6 @@ namespace FE_ToDoApp.Lich_Trinh
                 {
                     container.Width = w;
                     
-                    // Cập nhật vị trí nút khi resize
                     foreach (Control child in container.Controls)
                     {
                         if (child is Button btn)
@@ -421,6 +556,34 @@ namespace FE_ToDoApp.Lich_Trinh
         private void ResizeRightDetailToFullWidth()
         {
             _detail.Width = GetRightWidth();
+        }
+
+        private void btn_delete_Click_1(object sender, EventArgs e)
+        {
+            var ok = MessageBox.Show(
+                "Xóa Todo này và chuyển vào thùng rác?",
+                "Xác nhận",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning
+            );
+
+            if (ok != DialogResult.Yes) return;
+
+            Db_DeleteTodo(_selectedTodoId);   // xóa mềm
+
+            _selectedTodoId = -1;            // ✅ reset đã chọn
+            _detail.LoadTodo(-1);            // ✅ clear panel bên phải
+            LoadTodosToLeftList();           // ✅ reload list
+        }
+
+        private void Txt_Search_TextChanged(object? sender, EventArgs e)
+        {
+            LoadTodosToLeftList();
+        }
+
+        public void RefreshData()
+        {
+            LoadTodosToLeftList();
         }
     }
 }

@@ -61,7 +61,7 @@
             labelOr.Name = "labelOr";
             labelOr.Size = new Size(100, 23);
             labelOr.TabIndex = 0;
-            labelOr.Text = "OR";
+            labelOr.Text = "Hoặc";
             // 
             // panelLine2
             // 
@@ -84,19 +84,20 @@
             labelNoAccount.ForeColor = Color.FromArgb(113, 128, 150);
             labelNoAccount.Location = new Point(71, 550);
             labelNoAccount.Name = "labelNoAccount";
-            labelNoAccount.Size = new Size(198, 23);
+            labelNoAccount.Size = new Size(215, 23);
             labelNoAccount.TabIndex = 3;
-            labelNoAccount.Text = "Don't have an account?";
+            labelNoAccount.Text = "Bạn không có tài khoản?";
             // 
             // linkRegister
             // 
             linkRegister.LinkColor = Color.FromArgb(37, 132, 235);
-            linkRegister.Location = new Point(275, 550);
+            linkRegister.Location = new Point(292, 550);
             linkRegister.Name = "linkRegister";
-            linkRegister.Size = new Size(175, 23);
+            linkRegister.Size = new Size(111, 23);
             linkRegister.TabIndex = 4;
             linkRegister.TabStop = true;
-            linkRegister.Text = "Create an account";
+            linkRegister.Text = "Đăng kí";
+            linkRegister.TextAlign = ContentAlignment.MiddleCenter;
             linkRegister.LinkClicked += linkRegister_LinkClicked_1;
             // 
             // labelPass
@@ -106,16 +107,16 @@
             labelPass.Name = "labelPass";
             labelPass.Size = new Size(100, 23);
             labelPass.TabIndex = 5;
-            labelPass.Text = "Password";
+            labelPass.Text = "Mật khẩu:";
             // 
             // labelEmailUser
             // 
             labelEmailUser.Font = new Font("Segoe UI Semibold", 10F);
             labelEmailUser.Location = new Point(50, 200);
             labelEmailUser.Name = "labelEmailUser";
-            labelEmailUser.Size = new Size(100, 23);
+            labelEmailUser.Size = new Size(128, 23);
             labelEmailUser.TabIndex = 6;
-            labelEmailUser.Text = "Username";
+            labelEmailUser.Text = "Tên đăng nhập:";
             // 
             // chkShowPassword
             // 
@@ -124,7 +125,7 @@
             chkShowPassword.Name = "chkShowPassword";
             chkShowPassword.Size = new Size(163, 24);
             chkShowPassword.TabIndex = 7;
-            chkShowPassword.Text = "Show password";
+            chkShowPassword.Text = "Hiện mật khẩu";
             chkShowPassword.CheckedChanged += chkShowPassword_CheckedChanged;
             // 
             // labelTitle
@@ -135,7 +136,7 @@
             labelTitle.Name = "labelTitle";
             labelTitle.Size = new Size(500, 50);
             labelTitle.TabIndex = 8;
-            labelTitle.Text = "Welcome back";
+            labelTitle.Text = "CHÀO MỪNG";
             labelTitle.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // pictureBoxLogo
@@ -162,7 +163,7 @@
             linkForgotPassword.Size = new Size(146, 23);
             linkForgotPassword.TabIndex = 11;
             linkForgotPassword.TabStop = true;
-            linkForgotPassword.Text = "Forgot password?";
+            linkForgotPassword.Text = "Quên mật khẩu?";
             linkForgotPassword.LinkClicked += linkForgotPassword_LinkClicked_1;
             // 
             // txtPassword
@@ -184,7 +185,7 @@
             btnLogin.Name = "btnLogin";
             btnLogin.Size = new Size(400, 50);
             btnLogin.TabIndex = 13;
-            btnLogin.Text = "Login";
+            btnLogin.Text = "Đăng nhập";
             btnLogin.UseVisualStyleBackColor = false;
             btnLogin.Click += btnLogin_Click_1;
             // 

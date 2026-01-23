@@ -10,15 +10,54 @@ namespace FE_ToDoApp.Calendar
     public partial class calendar : Form
     {
         private int _month, _year;
+
         private Dictionary<string, List<TaskItem>> _dataCache = new Dictionary<string, List<TaskItem>>();
+
         private List<TaskItem> _currentMonthTasks;
 
         public calendar()
         {
             InitializeComponent();
+
+            InitializeWeekHeader();
+            InitializeDayCells();
+
             _month = DateTime.Now.Month;
             _year = DateTime.Now.Year;
+
             LoadCalendar(_month, _year);
+        }
+
+        private void InitializeWeekHeader()
+        {
+            string[] days = { "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy", "Chủ Nhật" };
+            for (int i = 0; i < 7; i++)
+            {
+                System.Windows.Forms.Label lbl = new System.Windows.Forms.Label();
+                lbl.Text = days[i];
+                lbl.Dock = System.Windows.Forms.DockStyle.Fill;
+                lbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+                lbl.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+                lbl.ForeColor = System.Drawing.Color.DarkSlateGray;
+
+                if (i == 6) lbl.ForeColor = System.Drawing.Color.Red;
+
+                this.tlpWeekHeader.Controls.Add(lbl, i, 0);
+            }
+        }
+
+        private void InitializeDayCells()
+        {
+            this.matrixDays = new DayCell[42];
+            for (int i = 0; i < 42; i++)
+            {
+                this.matrixDays[i] = new DayCell();
+                this.matrixDays[i].MouseUp += new System.Windows.Forms.MouseEventHandler(this.DayCell_MouseUp);
+
+                int col = i % 7;
+                int row = i / 7;
+                this.pnlGrid.Controls.Add(this.matrixDays[i], col, row);
+            }
         }
 
         private async void LoadCalendar(int month, int year)
@@ -27,6 +66,7 @@ namespace FE_ToDoApp.Calendar
 
             DateTime firstDayOfMonth = new DateTime(year, month, 1);
             int daysInMonth = DateTime.DaysInMonth(year, month);
+
             int startCol = ((int)firstDayOfMonth.DayOfWeek + 6) % 7;
 
             string cacheKey = $"{month}-{year}";
@@ -37,7 +77,9 @@ namespace FE_ToDoApp.Calendar
             }
             else
             {
+              
                 this.Cursor = Cursors.WaitCursor;
+
                 _currentMonthTasks = await Task.Run(() => DatabaseHelper.GetTasksByMonth(month, year));
                 _dataCache[cacheKey] = _currentMonthTasks;
                 this.Cursor = Cursors.Default;
@@ -50,9 +92,7 @@ namespace FE_ToDoApp.Calendar
                 if (matrixDays == null || i >= matrixDays.Length) break;
 
                 DayCell cell = matrixDays[i];
-                if (cell == null) continue;
-
-                cell.Clear();
+                cell.Clear(); 
 
                 int dayVal = i - startCol + 1;
 
@@ -112,12 +152,16 @@ namespace FE_ToDoApp.Calendar
 
             using (EventDetailsForm detailsForm = new EventDetailsForm(cell.FullDate, _currentMonthTasks))
             {
-                detailsForm.ShowDialog();
+                DialogResult result = detailsForm.ShowDialog();
 
-                string currentKey = $"{_month}-{_year}";
-                if (_dataCache.ContainsKey(currentKey))
+                
+                // if (result == DialogResult.OK) 
                 {
-                    _dataCache.Remove(currentKey);
+                    string currentKey = $"{_month}-{_year}";
+                    if (_dataCache.ContainsKey(currentKey))
+                    {
+                        _dataCache.Remove(currentKey); 
+                    }
                 }
             }
         }

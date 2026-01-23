@@ -94,10 +94,11 @@
             button3.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             button3.Location = new Point(1327, 13);
             button3.Name = "button3";
-            button3.Size = new Size(60, 29);
+            button3.Size = new Size(59, 29);
             button3.TabIndex = 4;
             button3.Text = "Xóa";
             button3.UseVisualStyleBackColor = false;
+            button3.Click += button3_Click;
             // 
             // button2
             // 
@@ -107,7 +108,7 @@
             button2.Font = new Font("Segoe UI", 9F);
             button2.Location = new Point(1261, 13);
             button2.Name = "button2";
-            button2.Size = new Size(60, 29);
+            button2.Size = new Size(59, 29);
             button2.TabIndex = 3;
             button2.Text = "Sửa";
             button2.UseVisualStyleBackColor = false;
@@ -120,7 +121,7 @@
             button1.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             button1.Location = new Point(1195, 13);
             button1.Name = "button1";
-            button1.Size = new Size(60, 29);
+            button1.Size = new Size(59, 29);
             button1.TabIndex = 2;
             button1.Text = "Thêm";
             button1.UseVisualStyleBackColor = false;
@@ -157,7 +158,7 @@
             txt_search_place.Margin = new Padding(0);
             txt_search_place.Name = "txt_search_place";
             txt_search_place.PlaceholderText = "Tìm kiếm...";
-            txt_search_place.Size = new Size(308, 32);
+            txt_search_place.Size = new Size(309, 32);
             txt_search_place.TabIndex = 0;
             // 
             // panel2
@@ -240,6 +241,7 @@
             // 
             // panel5
             // 
+            panel5.AutoScroll = true;
             panel5.Controls.Add(panel6);
             panel5.Location = new Point(3, 3);
             panel5.Name = "panel5";
@@ -268,6 +270,7 @@
             // 
             // panel7
             // 
+            panel7.AutoScroll = true;
             panel7.Controls.Add(panel8);
             panel7.Location = new Point(3, 170);
             panel7.Name = "panel7";
@@ -296,6 +299,7 @@
             // 
             // panel9
             // 
+            panel9.AutoScroll = true;
             panel9.Controls.Add(panel10);
             panel9.Location = new Point(3, 337);
             panel9.Name = "panel9";
@@ -324,6 +328,7 @@
             // 
             // panel11
             // 
+            panel11.AutoScroll = true;
             panel11.Controls.Add(panel12);
             panel11.Location = new Point(3, 504);
             panel11.Name = "panel11";
@@ -352,6 +357,7 @@
             // 
             // panel15
             // 
+            panel15.AutoScroll = true;
             panel15.Controls.Add(panel16);
             panel15.Location = new Point(3, 671);
             panel15.Name = "panel15";
@@ -380,6 +386,7 @@
             // 
             // panel17
             // 
+            panel17.AutoScroll = true;
             panel17.Controls.Add(panel18);
             panel17.Location = new Point(3, 838);
             panel17.Name = "panel17";
@@ -408,6 +415,7 @@
             // 
             // panel19
             // 
+            panel19.AutoScroll = true;
             panel19.Controls.Add(panel20);
             panel19.Location = new Point(3, 1005);
             panel19.Name = "panel19";

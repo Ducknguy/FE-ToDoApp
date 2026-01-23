@@ -1,4 +1,7 @@
-﻿namespace FE_ToDoApp.Dashboard
+﻿using System.Drawing;
+using System.Windows.Forms;
+
+namespace FE_ToDoApp.Dashboard
 {
     partial class DashboardControl
     {
@@ -17,90 +20,88 @@
 
         private void InitializeComponent()
         {
-            this.pnlHeader = new System.Windows.Forms.Panel();
-            this.lblTitle = new System.Windows.Forms.Label();
-            this.lblDate = new System.Windows.Forms.Label();
-            this.flowStats = new System.Windows.Forms.FlowLayoutPanel();
-            this.tblLists = new System.Windows.Forms.TableLayoutPanel();
-            this.pnlHeader.SuspendLayout();
-            this.SuspendLayout();
+            pnlHeader = new Panel();
+            lblTitle = new Label();
+            lblDate = new Label();
+            flowStats = new FlowLayoutPanel();
+            tblLists = new TableLayoutPanel();
+            pnlHeader.SuspendLayout();
+            SuspendLayout();
 
             // 
             // pnlHeader
             // 
-            this.pnlHeader.Controls.Add(this.lblTitle);
-            this.pnlHeader.Controls.Add(this.lblDate);
-            this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlHeader.Height = 90;
-            this.pnlHeader.Location = new System.Drawing.Point(0, 0);
-            this.pnlHeader.Name = "pnlHeader";
-            this.pnlHeader.Size = new System.Drawing.Size(1000, 90);
-            this.pnlHeader.TabIndex = 0;
+            pnlHeader.Controls.Add(lblTitle);
+            pnlHeader.Controls.Add(lblDate);
+            pnlHeader.Dock = DockStyle.Top;
+            pnlHeader.Location = new Point(0, 0);
+            pnlHeader.Name = "pnlHeader";
+            pnlHeader.Size = new Size(1000, 90);
+            pnlHeader.TabIndex = 0;
 
             // 
             // lblTitle
             // 
-            this.lblTitle.AutoSize = true;
-            this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblTitle.Location = new System.Drawing.Point(20, 15);
-            this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(226, 54);
-            this.lblTitle.TabIndex = 0;
-            this.lblTitle.Text = "Dashboard";
+            lblTitle.AutoSize = true;
+            lblTitle.Font = new Font("Segoe UI", 24F, FontStyle.Bold);
+            lblTitle.Location = new Point(20, 15);
+            lblTitle.Name = "lblTitle";
+            lblTitle.Size = new Size(197, 54);
+            lblTitle.TabIndex = 0;
+            lblTitle.Text = "Thống kê";
 
             // 
             // lblDate
             // 
-            this.lblDate.AutoSize = true;
-            this.lblDate.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lblDate.ForeColor = System.Drawing.Color.Gray;
-            this.lblDate.Location = new System.Drawing.Point(28, 65);
-            this.lblDate.Name = "lblDate";
-            this.lblDate.Size = new System.Drawing.Size(153, 20);
-            this.lblDate.TabIndex = 1;
-            this.lblDate.Text = "Sunday, December 21";
+            lblDate.AutoSize = true;
+            lblDate.Font = new Font("Segoe UI", 10F);
+            lblDate.ForeColor = Color.Gray;
+            lblDate.Location = new Point(28, 65);
+            lblDate.Name = "lblDate";
+            lblDate.Size = new Size(176, 23);
+            lblDate.TabIndex = 1;
+            lblDate.Text = "Sunday, December 21";
 
             // 
             // flowStats
             // 
-            this.flowStats.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(250)))), ((int)(((byte)(250)))));
-            this.flowStats.Dock = System.Windows.Forms.DockStyle.Top;
-            this.flowStats.Location = new System.Drawing.Point(0, 90);
-            this.flowStats.Name = "flowStats";
-            this.flowStats.Padding = new System.Windows.Forms.Padding(15, 5, 0, 10);
-            this.flowStats.Size = new System.Drawing.Size(1000, 160);
-            this.flowStats.TabIndex = 1;
+            flowStats.BackColor = Color.FromArgb(250, 250, 250);
+            flowStats.Dock = DockStyle.Top;
+            flowStats.Location = new Point(0, 90);
+            flowStats.Name = "flowStats";
+            flowStats.Padding = new Padding(15, 5, 0, 10);
+            flowStats.Size = new Size(1000, 160);
+            flowStats.TabIndex = 1;
 
             // 
             // tblLists
             // 
-            this.tblLists.ColumnCount = 2;
-            this.tblLists.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tblLists.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tblLists.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tblLists.Location = new System.Drawing.Point(0, 250);
-            this.tblLists.Name = "tblLists";
-            this.tblLists.Padding = new System.Windows.Forms.Padding(10);
-            this.tblLists.RowCount = 1;
-            this.tblLists.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tblLists.Size = new System.Drawing.Size(1000, 360);
-            this.tblLists.TabIndex = 2;
+            tblLists.ColumnCount = 2;
+            tblLists.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tblLists.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tblLists.Dock = DockStyle.Fill;
+            tblLists.Location = new Point(0, 250);
+            tblLists.Name = "tblLists";
+            tblLists.Padding = new Padding(10);
+            tblLists.RowCount = 1;
+            tblLists.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tblLists.Size = new Size(1000, 360);
+            tblLists.TabIndex = 2;
 
             // 
             // DashboardControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(245)))), ((int)(((byte)(245)))));
-            this.Controls.Add(this.tblLists);
-            this.Controls.Add(this.flowStats);
-            this.Controls.Add(this.pnlHeader);
-            this.Name = "DashboardControl";
-            this.Size = new System.Drawing.Size(1000, 610);
-            this.pnlHeader.ResumeLayout(false);
-            this.pnlHeader.PerformLayout();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.FromArgb(245, 245, 245);
+            Controls.Add(tblLists);
+            Controls.Add(flowStats);
+            Controls.Add(pnlHeader);
+            Name = "DashboardControl";
+            Size = new Size(1000, 610);
+            pnlHeader.ResumeLayout(false);
+            pnlHeader.PerformLayout();
+            ResumeLayout(false);
         }
 
         #endregion

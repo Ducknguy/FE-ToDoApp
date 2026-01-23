@@ -41,10 +41,10 @@ namespace FE_ToDoApp.Lich_Trinh
             pnlHeader.BackColor = Color.White;
             pnlHeader.Controls.Add(lblTitle);
             pnlHeader.Dock = DockStyle.Top;
-            pnlHeader.Location = new Point(12, 12);
+            pnlHeader.Location = new Point(11, 12);
             pnlHeader.Name = "pnlHeader";
             pnlHeader.Padding = new Padding(0, 0, 0, 12);
-            pnlHeader.Size = new Size(1033, 50);
+            pnlHeader.Size = new Size(1035, 51);
             pnlHeader.TabIndex = 0;
             // 
             // lblTitle
@@ -65,10 +65,10 @@ namespace FE_ToDoApp.Lich_Trinh
             flpBody.Controls.Add(pnlFooter);
             flpBody.Dock = DockStyle.Bottom;
             flpBody.FlowDirection = FlowDirection.TopDown;
-            flpBody.Location = new Point(12, 65);
+            flpBody.Location = new Point(11, 65);
             flpBody.Margin = new Padding(0);
             flpBody.Name = "flpBody";
-            flpBody.Size = new Size(1033, 587);
+            flpBody.Size = new Size(1035, 587);
             flpBody.TabIndex = 1;
             flpBody.WrapContents = false;
             // 
@@ -87,7 +87,7 @@ namespace FE_ToDoApp.Lich_Trinh
             // 
             btnAdd.Location = new Point(0, 7);
             btnAdd.Name = "btnAdd";
-            btnAdd.Size = new Size(80, 30);
+            btnAdd.Size = new Size(80, 29);
             btnAdd.TabIndex = 0;
             btnAdd.Text = "Thêm";
             // 
@@ -95,15 +95,15 @@ namespace FE_ToDoApp.Lich_Trinh
             // 
             btnEdit.Location = new Point(90, 7);
             btnEdit.Name = "btnEdit";
-            btnEdit.Size = new Size(80, 30);
+            btnEdit.Size = new Size(80, 29);
             btnEdit.TabIndex = 1;
             btnEdit.Text = "Sửa";
             // 
             // btnDelete
             // 
-            btnDelete.Location = new Point(180, 7);
+            btnDelete.Location = new Point(181, 7);
             btnDelete.Name = "btnDelete";
-            btnDelete.Size = new Size(80, 30);
+            btnDelete.Size = new Size(80, 29);
             btnDelete.TabIndex = 2;
             btnDelete.Text = "Xóa";
             // 
@@ -116,7 +116,7 @@ namespace FE_ToDoApp.Lich_Trinh
             Controls.Add(flpBody);
             Controls.Add(pnlHeader);
             Name = "TodoDetailItemControl";
-            Padding = new Padding(12);
+            Padding = new Padding(11, 12, 11, 12);
             Size = new Size(1057, 664);
             pnlHeader.ResumeLayout(false);
             pnlHeader.PerformLayout();

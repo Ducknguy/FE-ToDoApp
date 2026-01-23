@@ -36,6 +36,7 @@
             // 
             // panelCard
             // 
+            panelCard.Anchor = AnchorStyles.None;
             panelCard.BackColor = Color.White;
             panelCard.Controls.Add(labelBackToLogin);
             panelCard.Controls.Add(linkLogin);
@@ -67,23 +68,24 @@
             // linkLogin
             // 
             linkLogin.LinkColor = Color.FromArgb(37, 132, 235);
-            linkLogin.Location = new Point(195, 626);
+            linkLogin.Location = new Point(136, 624);
             linkLogin.Name = "linkLogin";
-            linkLogin.Size = new Size(120, 25);
+            linkLogin.Size = new Size(208, 25);
             linkLogin.TabIndex = 1;
             linkLogin.TabStop = true;
-            linkLogin.Text = "Back to Login";
+            linkLogin.Text = "Trở về trang đăng nhập";
             linkLogin.TextAlign = ContentAlignment.MiddleCenter;
             linkLogin.LinkClicked += linkLogin_LinkClicked;
             // 
             // labelOr
             // 
             labelOr.ForeColor = Color.FromArgb(160, 174, 192);
-            labelOr.Location = new Point(235, 580);
+            labelOr.Location = new Point(215, 578);
             labelOr.Name = "labelOr";
             labelOr.Size = new Size(100, 23);
             labelOr.TabIndex = 2;
-            labelOr.Text = "OR";
+            labelOr.Text = "Hoặc";
+            labelOr.Click += labelOr_Click;
             // 
             // panelLine1
             // 
@@ -112,7 +114,7 @@
             btnResetPassword.Name = "btnResetPassword";
             btnResetPassword.Size = new Size(400, 50);
             btnResetPassword.TabIndex = 5;
-            btnResetPassword.Text = "Reset Password";
+            btnResetPassword.Text = "Đổi mật khẩu";
             btnResetPassword.UseVisualStyleBackColor = false;
             btnResetPassword.Click += btnResetPassword_Click;
             // 
@@ -124,7 +126,7 @@
             chkShowPassword.Name = "chkShowPassword";
             chkShowPassword.Size = new Size(150, 25);
             chkShowPassword.TabIndex = 6;
-            chkShowPassword.Text = "Show password";
+            chkShowPassword.Text = "Hiện mật khẩu";
             chkShowPassword.CheckedChanged += chkShowPassword_CheckedChanged;
             // 
             // labelNewPass
@@ -132,9 +134,9 @@
             labelNewPass.Font = new Font("Segoe UI Semibold", 10F);
             labelNewPass.Location = new Point(50, 380);
             labelNewPass.Name = "labelNewPass";
-            labelNewPass.Size = new Size(100, 23);
+            labelNewPass.Size = new Size(126, 23);
             labelNewPass.TabIndex = 7;
-            labelNewPass.Text = "New Password";
+            labelNewPass.Text = "Mật khẩu mới:";
             // 
             // txtNewPassword
             // 
@@ -152,7 +154,7 @@
             labelEmail.Name = "labelEmail";
             labelEmail.Size = new Size(100, 23);
             labelEmail.TabIndex = 9;
-            labelEmail.Text = "Email Address";
+            labelEmail.Text = " Email: ";
             // 
             // txtEmail
             // 
@@ -167,9 +169,9 @@
             labelUser.Font = new Font("Segoe UI Semibold", 10F);
             labelUser.Location = new Point(50, 200);
             labelUser.Name = "labelUser";
-            labelUser.Size = new Size(100, 23);
+            labelUser.Size = new Size(134, 23);
             labelUser.TabIndex = 11;
-            labelUser.Text = "Username";
+            labelUser.Text = "Tên đăng nhập:";
             // 
             // txtUsername
             // 
@@ -187,7 +189,7 @@
             labelTitle.Name = "labelTitle";
             labelTitle.Size = new Size(500, 50);
             labelTitle.TabIndex = 13;
-            labelTitle.Text = "Forgot Password?";
+            labelTitle.Text = "Lấy lại mật khẩu";
             labelTitle.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // pictureBoxLogo

@@ -57,21 +57,22 @@
             // labelLoginLink
             // 
             labelLoginLink.ForeColor = Color.FromArgb(113, 128, 150);
-            labelLoginLink.Location = new Point(60, 630);
+            labelLoginLink.Location = new Point(77, 630);
             labelLoginLink.Name = "labelLoginLink";
             labelLoginLink.Size = new Size(213, 25);
             labelLoginLink.TabIndex = 0;
-            labelLoginLink.Text = "Already have an account?";
+            labelLoginLink.Text = "Bạn đã có tài khoản?";
             // 
             // linkLogin
             // 
             linkLogin.LinkColor = Color.FromArgb(37, 132, 235);
-            linkLogin.Location = new Point(300, 630);
+            linkLogin.Location = new Point(282, 630);
             linkLogin.Name = "linkLogin";
-            linkLogin.Size = new Size(60, 25);
+            linkLogin.Size = new Size(113, 25);
             linkLogin.TabIndex = 1;
             linkLogin.TabStop = true;
-            linkLogin.Text = "Log in";
+            linkLogin.Text = "Đăng nhập";
+            linkLogin.TextAlign = ContentAlignment.MiddleCenter;
             linkLogin.LinkClicked += linkLogin_LinkClicked;
             // 
             // btnRegister
@@ -85,7 +86,7 @@
             btnRegister.Name = "btnRegister";
             btnRegister.Size = new Size(400, 55);
             btnRegister.TabIndex = 2;
-            btnRegister.Text = "Sign Up →";
+            btnRegister.Text = "Đăng kí";
             btnRegister.UseVisualStyleBackColor = false;
             btnRegister.Click += btnRegister_Click_1;
             // 
@@ -97,7 +98,7 @@
             chkShowPassword.Name = "chkShowPassword";
             chkShowPassword.Size = new Size(200, 25);
             chkShowPassword.TabIndex = 3;
-            chkShowPassword.Text = "Show password";
+            chkShowPassword.Text = "Hiện mật khẩu";
             chkShowPassword.CheckedChanged += chkShowPassword_CheckedChanged;
             // 
             // labelConfirm
@@ -105,9 +106,9 @@
             labelConfirm.Font = new Font("Segoe UI Semibold", 10F);
             labelConfirm.Location = new Point(260, 390);
             labelConfirm.Name = "labelConfirm";
-            labelConfirm.Size = new Size(100, 23);
+            labelConfirm.Size = new Size(190, 23);
             labelConfirm.TabIndex = 4;
-            labelConfirm.Text = "Confirm";
+            labelConfirm.Text = "Xác nhận mật khẩu: ";
             // 
             // txtConfirmPassword
             // 
@@ -124,7 +125,7 @@
             labelPass.Name = "labelPass";
             labelPass.Size = new Size(100, 23);
             labelPass.TabIndex = 6;
-            labelPass.Text = "Password";
+            labelPass.Text = "Mật khẩu:";
             // 
             // txtPassword
             // 
@@ -141,7 +142,7 @@
             labelEmail.Name = "labelEmail";
             labelEmail.Size = new Size(100, 23);
             labelEmail.TabIndex = 8;
-            labelEmail.Text = "Email";
+            labelEmail.Text = "Email:";
             // 
             // txtEmail
             // 
@@ -156,9 +157,9 @@
             labelUser.Font = new Font("Segoe UI Semibold", 10F);
             labelUser.Location = new Point(50, 210);
             labelUser.Name = "labelUser";
-            labelUser.Size = new Size(100, 23);
+            labelUser.Size = new Size(128, 23);
             labelUser.TabIndex = 10;
-            labelUser.Text = "Username";
+            labelUser.Text = "Tên đăng nhập:";
             // 
             // txtUsername
             // 
@@ -176,7 +177,7 @@
             labelTitle.Name = "labelTitle";
             labelTitle.Size = new Size(500, 50);
             labelTitle.TabIndex = 12;
-            labelTitle.Text = "Create Account";
+            labelTitle.Text = "TẠO TÀI KHOẢN";
             labelTitle.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // pictureBoxLogo

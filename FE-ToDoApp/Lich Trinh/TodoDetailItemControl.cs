@@ -1,22 +1,19 @@
 ﻿using Microsoft.VisualBasic;
-using System;
 using System.Data;
-using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
+using System.Data.SQLite;
+using FE_ToDoApp.Database;
+
 
 namespace FE_ToDoApp.Lich_Trinh
 {
     public partial class TodoDetailItemControl : UserControl
     {
         // ===== PUBLIC (TaskItem dùng) =====
-        public string ConnectionString { get; set; } = DatabaseHelper.ConnectionString;
-
         public int TodoId { get; private set; } = -1;
 
         public event EventHandler? TodoDeleted;
         public event EventHandler? TodoHeaderChanged;
+        public event EventHandler? TodoItemStatusChanged;
 
         // ===== STATE =====
         private bool _deleteMode = false;
@@ -181,7 +178,7 @@ namespace FE_ToDoApp.Lich_Trinh
             };
 
             string displayText = string.IsNullOrWhiteSpace(text) ? "[EMPTY TEXT]" : text;
-            
+
             Label lbl = new Label
             {
                 Text = displayText,
@@ -238,6 +235,7 @@ namespace FE_ToDoApp.Lich_Trinh
             {
                 Db_UpdateItemStatus(itemId, chk.Checked ? (byte)2 : (byte)0);
                 ApplyDoneStyle(row, lbl, chk, lblDoneIcon, chk.Checked);
+                TodoItemStatusChanged?.Invoke(this, EventArgs.Empty); // ← Thêm dòng này
             };
 
             // ===== DELETE =====
@@ -259,7 +257,7 @@ namespace FE_ToDoApp.Lich_Trinh
             row.Controls.Add(lblDoneIcon);
             row.Controls.Add(btnDelete);
             row.Controls.Add(btnEdit);
-            
+
             lbl.BringToFront();
             lblDoneIcon.BringToFront();
 
@@ -413,14 +411,14 @@ namespace FE_ToDoApp.Lich_Trinh
             {
                 // Row background - màu xanh nhạt
                 row.BackColor = Color.FromArgb(240, 255, 240); // Light green
-                
+
                 // Label - gạch ngang + màu xám + opacity effect
                 lbl.Font = new Font(lbl.Font, FontStyle.Strikeout);
                 lbl.ForeColor = Color.FromArgb(120, 120, 120); // Darker gray
-                
+
                 // Checkbox - màu xanh lá khi checked
                 chk.ForeColor = Color.Green;
-                
+
                 // Show done icon
                 doneIcon.Visible = true;
             }
@@ -428,122 +426,95 @@ namespace FE_ToDoApp.Lich_Trinh
             {
                 // Row background - trắng
                 row.BackColor = Color.White;
-                
+
                 // Label - bình thường
                 lbl.Font = new Font(lbl.Font, FontStyle.Regular);
                 lbl.ForeColor = Color.Black;
-                
+
                 // Checkbox - màu mặc định
                 chk.ForeColor = Color.Black;
-                
+
                 // Hide done icon
                 doneIcon.Visible = false;
             }
         }
 
-        // =============================
-        // DB (GIỮ API CŨ)
-        // =============================
+        // ===== DATABASE - SQLITE =====
         private string GetTodoTitle(int todoId)
         {
             if (todoId <= 0) return "";
 
-            using var conn = new SqlConnection(ConnectionString);
-            using var cmd = new SqlCommand(@"
-            SELECT title
-            FROM Todo_List_Detail
-            WHERE id_todo = @id;", conn);
+            var obj = SQLiteHelper.ExecuteScalar(@"
+                SELECT title
+                FROM Todo_List_Detail
+                WHERE id_todo = @id",
+                new SQLiteParameter("@id", todoId));
 
-            cmd.Parameters.AddWithValue("@id", todoId);
-
-            conn.Open();
-            var obj = cmd.ExecuteScalar();
             return obj == null ? "" : Convert.ToString(obj);
         }
 
         private DataTable Db_GetItems(int todoId)
         {
-            using var conn = new SqlConnection(ConnectionString);
-            using var cmd = new SqlCommand(@"
-            SELECT id_item, item_detail, status
-            FROM Todo_List_Item
-            WHERE id_todo = @todoId
-            ORDER BY id_item DESC;", conn);
-
-            cmd.Parameters.AddWithValue("@todoId", todoId);
-
-            using var da = new SqlDataAdapter(cmd);
-            var dt = new DataTable();
-            da.Fill(dt);
-            return dt;
+            return SQLiteHelper.ExecuteQuery(@"
+                SELECT id_item, item_detail, status
+                FROM Todo_List_Item
+                WHERE id_todo = @todoId
+                ORDER BY id_item DESC",
+                new SQLiteParameter("@todoId", todoId));
         }
+
         private void Db_InsertItem(int todoId, string text)
         {
-            using var conn = new SqlConnection(ConnectionString);
-            conn.Open();
-
-            using var cmd = new SqlCommand(@"
+            SQLiteHelper.ExecuteNonQuery(@"
                 INSERT INTO Todo_List_Item (id_todo, item_detail, status)
-                VALUES (@todoId, @item_detail, 0);", conn);
-
-            cmd.Parameters.AddWithValue("@todoId", todoId);
-            cmd.Parameters.AddWithValue("@item_detail", text);
-
-            cmd.ExecuteNonQuery();
+                VALUES (@todoId, @item_detail, 0)",
+                new SQLiteParameter("@todoId", todoId),
+                new SQLiteParameter("@item_detail", text));
         }
+
         private void Db_UpdateItemText(int itemId, string text)
         {
-            using var conn = new SqlConnection(ConnectionString);
-            using var cmd = new SqlCommand(@"
-        UPDATE Todo_List_Item
-        SET item_detail = @item_detail
-        WHERE id_item = @id;", conn);
-
-            cmd.Parameters.AddWithValue("@item_detail", text);
-            cmd.Parameters.AddWithValue("@id", itemId);
-
-            conn.Open();
-            cmd.ExecuteNonQuery();
+            SQLiteHelper.ExecuteNonQuery(@"
+                UPDATE Todo_List_Item
+                SET item_detail = @item_detail
+                WHERE id_item = @id",
+                new SQLiteParameter("@item_detail", text),
+                new SQLiteParameter("@id", itemId));
         }
+
         private void Db_UpdateItemStatus(int itemId, byte status)
         {
-            using var conn = new SqlConnection(ConnectionString);
-            using var cmd = new SqlCommand(@"
-        UPDATE Todo_List_Item
-        SET status = @status
-        WHERE id_item = @id;", conn);
-
-            cmd.Parameters.AddWithValue("@status", status);
-            cmd.Parameters.AddWithValue("@id", itemId);
-
-            conn.Open();
-            cmd.ExecuteNonQuery();
+            SQLiteHelper.ExecuteNonQuery(@"
+                UPDATE Todo_List_Item
+                SET status = @status
+                WHERE id_item = @id",
+                new SQLiteParameter("@status", status),
+                new SQLiteParameter("@id", itemId));
         }
+
         private void Db_DeleteItem(int itemId)
         {
-            using var conn = new SqlConnection(ConnectionString);
-            using var cmd = new SqlCommand(@"
-        DELETE FROM Todo_List_Item
-        WHERE id_item = @id;", conn);
-
-            cmd.Parameters.AddWithValue("@id", itemId);
-
-            conn.Open();
-            cmd.ExecuteNonQuery();
+            SQLiteHelper.ExecuteNonQuery(@"
+                DELETE FROM Todo_List_Item
+                WHERE id_item = @id",
+                new SQLiteParameter("@id", itemId));
         }
+
         private string Db_GetItemText(int itemId)
         {
-            using var conn = new SqlConnection(ConnectionString);
-            using var cmd = new SqlCommand(@"
-        SELECT item_detail
-        FROM Todo_List_Item
-        WHERE id_item = @id;", conn);
+            var obj = SQLiteHelper.ExecuteScalar(@"
+                SELECT item_detail
+                FROM Todo_List_Item
+                WHERE id_item = @id",
+                new SQLiteParameter("@id", itemId));
 
-            cmd.Parameters.AddWithValue("@id", itemId);
-
-            conn.Open();
-            var obj = cmd.ExecuteScalar();
             return obj == null ? "" : Convert.ToString(obj);
+        }
+
+        private void ConfigureLayout()
+        {
+            // LEFT = LIST
+            //... existing code
         }
     }
 }

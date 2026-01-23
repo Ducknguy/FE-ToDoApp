@@ -129,6 +129,7 @@ namespace FE_ToDoApp.Lich_Trinh
             btn_delete.TabIndex = 2;
             btn_delete.Text = "Xóa";
             btn_delete.UseVisualStyleBackColor = true;
+            btn_delete.Click += btn_delete_Click_1;
             // 
             // head_panel
             // 
@@ -172,7 +173,7 @@ namespace FE_ToDoApp.Lich_Trinh
             txt_search_place.Margin = new Padding(0);
             txt_search_place.Name = "txt_search_place";
             txt_search_place.PlaceholderText = "Search task and events ....";
-            txt_search_place.Size = new Size(308, 32);
+            txt_search_place.Size = new Size(308, 25);
             txt_search_place.TabIndex = 0;
             // 
             // TaskItem

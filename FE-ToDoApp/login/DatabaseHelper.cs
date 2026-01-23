@@ -9,7 +9,7 @@ namespace FE_ToDoApp.login
 {
     public class DatabaseHelper
     {
-        private static string connectionString = @"Data Source=Money\SQLEXPRESS;Initial Catalog=ToDoApp;Integrated Security=True";
+        private static string connectionString = @"Data Source=GIANG;Initial Catalog=User;Integrated Security=True";
 
         public static SqlConnection GetConnection()
         {

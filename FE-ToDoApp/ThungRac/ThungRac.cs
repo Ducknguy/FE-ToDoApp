@@ -20,7 +20,6 @@ namespace FE_ToDoApp.ThungRac
 
             // ✅ gắn event qua 1 hàm chung
             chkTodo.CheckedChanged += FilterChanged;
-            chkWeekly.CheckedChanged += FilterChanged;
             chkCalendar.CheckedChanged += FilterChanged;
 
             // ✅ search: vừa bo góc vừa lọc realtime
@@ -44,7 +43,6 @@ namespace FE_ToDoApp.ThungRac
             // ✅ init checkbox an toàn (không bị gọi LoadTrash 3 lần)
             _isInit = true;
             chkTodo.Checked = true;
-            chkWeekly.Checked = true;
             chkCalendar.Checked = true;
             _isInit = false;
 
@@ -100,13 +98,8 @@ namespace FE_ToDoApp.ThungRac
                     if (row["DeletedAt"] != DBNull.Value)
                         deletedAt = Convert.ToDateTime(row["DeletedAt"]);
 
-                    string type;
-                    if (sourceTable == "Todo") type = "Todo";
-                    else if (sourceTable == "Week_Plan") type = "Weekly";
-                    else type = "Calendar";
-
+                    string type = (sourceTable == "Todo") ? "Todo" : "Calendar";
                     if (type == "Todo" && !chkTodo.Checked) continue;
-                    if (type == "Weekly" && !chkWeekly.Checked) continue;
                     if (type == "Calendar" && !chkCalendar.Checked) continue;
 
                     Panel uiItem = TaoItemThungRac(title, type, deletedAt, itemId, sourceTable);
@@ -245,12 +238,6 @@ namespace FE_ToDoApp.ThungRac
                 lblTag.BackColor = Color.LightSkyBlue;
                 lblTag.ForeColor = Color.DarkBlue;
             }
-            else if (type == "Weekly")
-            {
-                pColor.BackColor = Color.MediumSeaGreen;
-                lblTag.BackColor = Color.Honeydew;
-                lblTag.ForeColor = Color.SeaGreen;
-            }
             else if (type == "Calendar")
             {
                 pColor.BackColor = Color.MediumVioletRed;
@@ -265,6 +252,9 @@ namespace FE_ToDoApp.ThungRac
             }
         }
 
+        private void Thungrac_Load(object sender, EventArgs e)
+        {
 
+        }
     }
 }

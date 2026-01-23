@@ -72,10 +72,8 @@ namespace FE_ToDoApp.ChatBotAI.GeminiService
             try
             {
                 var res = await client.PostAsync(
-                    $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key={apiKey}",
-                    httpContent
-                );
-
+                 $"https://generativelanguage.googleapis.com/v1beta/models/gemma-3-27b-it:generateContent?key={apiKey}",httpContent
+                    );
                 var str = await res.Content.ReadAsStringAsync();
                 using var doc = JsonDocument.Parse(str);
 
