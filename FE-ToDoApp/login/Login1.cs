@@ -1,14 +1,16 @@
-﻿using System;
+﻿using FE_ToDoApp.Database;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
+using System.Data.SQLite;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Data.SqlClient;
-using System.Configuration;
 
 
 namespace FE_ToDoApp.login
@@ -29,19 +31,12 @@ namespace FE_ToDoApp.login
 
         private void chkShowPassword_CheckedChanged(object sender, EventArgs e)
         {
-            if (chkShowPassword.Checked)
-            {
-                txtPassword.PasswordChar = '\0';
-            }
-            else
-            {
-                txtPassword.PasswordChar = '*';
-            }
+            txtPassword.PasswordChar = chkShowPassword.Checked ? '\0' : '*';
         }
 
         private void linkForgotPassword_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            ForgotPasswrod forgotForm = new ForgotPasswrod();
+            ForgotPassword forgotForm = new ForgotPassword();
             forgotForm.ShowDialog();
             this.Hide();
         }
@@ -51,23 +46,22 @@ namespace FE_ToDoApp.login
             string Username = txtUsername.Text.Trim();
             string Password = txtPassword.Text;
 
-            string query = "SELECT Id, Username FROM [Users] WHERE Username = @User AND Password = @Pass";
+            string query = "SELECT Id, Username FROM Users WHERE Username = @User AND Password = @Pass";
 
-            using (SqlConnection connection = DatabaseHelper.GetConnection())
+            try
             {
-                using (SqlCommand command = new SqlCommand(query, connection))
+                using (SQLiteConnection connection = SQLiteHelper.GetConnection())
                 {
-                    try
+                    using (SQLiteCommand command = new SQLiteCommand(query, connection))
                     {
                         connection.Open();
                         command.Parameters.AddWithValue("@User", Username);
                         command.Parameters.AddWithValue("@Pass", Password);
 
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        using (SQLiteDataReader reader = command.ExecuteReader())
                         {
                             if (reader.Read())
                             {
-
                                 int userId = reader.GetInt32(0);
                                 string userName = reader.GetString(1);
 
@@ -83,11 +77,11 @@ namespace FE_ToDoApp.login
                             }
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Lỗi kết nối: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi kết nối: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

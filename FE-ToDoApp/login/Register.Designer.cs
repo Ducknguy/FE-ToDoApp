@@ -26,9 +26,7 @@
             labelUser = new Label();
             txtUsername = new TextBox();
             labelTitle = new Label();
-            pictureBoxLogo = new PictureBox();
             panelCard.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBoxLogo).BeginInit();
             SuspendLayout();
             // 
             // panelCard
@@ -48,7 +46,6 @@
             panelCard.Controls.Add(labelUser);
             panelCard.Controls.Add(txtUsername);
             panelCard.Controls.Add(labelTitle);
-            panelCard.Controls.Add(pictureBoxLogo);
             panelCard.Location = new Point(100, 40);
             panelCard.Name = "panelCard";
             panelCard.Size = new Size(500, 720);
@@ -68,10 +65,10 @@
             linkLogin.LinkColor = Color.FromArgb(37, 132, 235);
             linkLogin.Location = new Point(282, 630);
             linkLogin.Name = "linkLogin";
-            linkLogin.Size = new Size(113, 25);
+            linkLogin.Size = new Size(168, 25);
             linkLogin.TabIndex = 1;
             linkLogin.TabStop = true;
-            linkLogin.Text = "Đăng nhập";
+            linkLogin.Text = "Trở về đăng nhập";
             linkLogin.TextAlign = ContentAlignment.MiddleCenter;
             linkLogin.LinkClicked += linkLogin_LinkClicked;
             // 
@@ -173,21 +170,12 @@
             // 
             labelTitle.Font = new Font("Segoe UI", 22F, FontStyle.Bold);
             labelTitle.ForeColor = Color.FromArgb(45, 55, 72);
-            labelTitle.Location = new Point(0, 130);
+            labelTitle.Location = new Point(0, 87);
             labelTitle.Name = "labelTitle";
             labelTitle.Size = new Size(500, 50);
             labelTitle.TabIndex = 12;
             labelTitle.Text = "TẠO TÀI KHOẢN";
             labelTitle.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // pictureBoxLogo
-            // 
-            pictureBoxLogo.Location = new Point(210, 40);
-            pictureBoxLogo.Name = "pictureBoxLogo";
-            pictureBoxLogo.Size = new Size(80, 80);
-            pictureBoxLogo.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBoxLogo.TabIndex = 13;
-            pictureBoxLogo.TabStop = false;
             // 
             // Register
             // 
@@ -201,7 +189,6 @@
             Text = "Todo App - Create Account";
             panelCard.ResumeLayout(false);
             panelCard.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBoxLogo).EndInit();
             ResumeLayout(false);
         }
 
@@ -211,6 +198,5 @@
         private CheckBox chkShowPassword;
         private Button btnRegister;
         private LinkLabel linkLogin;
-        private PictureBox pictureBoxLogo;
     }
 }
