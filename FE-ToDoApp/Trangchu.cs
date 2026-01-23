@@ -29,12 +29,7 @@ namespace FE_ToDoApp
             currentUserName = userName;
         }
 
-        public Trangchu(int userId, string userName)
-        {
-            InitializeComponent();
-            currentUserId = userId;
-            currentUserName = userName;
-        }
+
 
         private void Form1_Load(object sender, EventArgs e)
         {
