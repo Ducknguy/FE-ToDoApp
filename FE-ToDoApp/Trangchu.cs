@@ -1,8 +1,9 @@
-﻿using FE_ToDoApp.Calendar;
+﻿using ChatbotAI_Form;
+using FE_ToDoApp.Calendar;
 using FE_ToDoApp.Lich_Trinh;
-using FE_ToDoApp.Setting;
-using ChatbotAI_Form;
 using FE_ToDoApp.login;
+using FE_ToDoApp.Setting;
+using FE_ToDoApp.ThemNhanh;
 using FE_ToDoApp.ThungRac;
 using FE_ToDoApp.WeekList;
 
@@ -29,8 +30,8 @@ namespace FE_ToDoApp
 
         private void btnTrash_Click(object sender, EventArgs e)
         {
-           Thungrac thungrac = new Thungrac();
-           thungrac.ShowDialog();
+            Thungrac thungrac = new Thungrac();
+            thungrac.ShowDialog();
         }
 
         private void btn_CaiDat(object sender, EventArgs e)
@@ -69,7 +70,7 @@ namespace FE_ToDoApp
             }
         }
 
-    
+
         private void btnCalendar_Click(object sender, EventArgs e)
         {
             mainPanel.Controls.Clear();
@@ -86,20 +87,46 @@ namespace FE_ToDoApp
 
         private void btnWeekly_Click(object sender, EventArgs e)
         {
-            mainPanel.Controls.Clear();
-            WeekGroupMVC weekplan = new WeekGroupMVC();
-            weekplan.Dock = DockStyle.Fill;
-            mainPanel.Controls.Add(weekplan);
-            weekplan.Show();
+            if (currentWeekControl == null || currentWeekControl.IsDisposed)
+            {
+                mainPanel.Controls.Clear();
+                currentWeekControl = new WeekGroupMVC();
+                currentWeekControl.Dock = DockStyle.Fill;
+                mainPanel.Controls.Add(currentWeekControl);
+                currentWeekControl.Show();
+            }
+            else
+            {
+                if (!mainPanel.Controls.Contains(currentWeekControl))
+                {
+                    mainPanel.Controls.Clear();
+                    mainPanel.Controls.Add(currentWeekControl);
+                }
+                currentWeekControl.RefreshData(); // ← Đã có rồi ✓
+                currentWeekControl.BringToFront();
+            }
         }
 
         private void btnTasks_Click(object sender, EventArgs e)
         {
-            mainPanel.Controls.Clear();
-            FE_ToDoApp.Lich_Trinh.TaskItem _task = new FE_ToDoApp.Lich_Trinh.TaskItem();
-            _task.Dock = DockStyle.Fill;
-            mainPanel.Controls.Add(_task);
-            _task.Show();
+            if (currentTaskControl == null || currentTaskControl.IsDisposed)
+            {
+                mainPanel.Controls.Clear();
+                currentTaskControl = new FE_ToDoApp.Lich_Trinh.TaskItem();
+                currentTaskControl.Dock = DockStyle.Fill;
+                mainPanel.Controls.Add(currentTaskControl);
+                currentTaskControl.Show();
+            }
+            else
+            {
+                if (!mainPanel.Controls.Contains(currentTaskControl))
+                {
+                    mainPanel.Controls.Clear();
+                    mainPanel.Controls.Add(currentTaskControl);
+                }
+                currentTaskControl.RefreshData(); // ← THÊM DÒNG NÀY
+                currentTaskControl.BringToFront();
+            }
         }
 
         private void btnDashboard_Click(object sender, EventArgs e)
@@ -119,6 +146,80 @@ namespace FE_ToDoApp
                 login1.Show();
                 this.Hide();
             }
+        }
+
+        private void btnQuickAdd_Click(object sender, EventArgs e)
+        {
+            QuickAdd quickadd = new QuickAdd();
+
+            if (quickadd.ShowDialog() == DialogResult.OK)
+            {
+                if (quickadd.AddedType == "Week")
+                {
+                    // Nếu Week control đã tồn tại, refresh nó
+                    if (currentWeekControl != null && !currentWeekControl.IsDisposed)
+                    {
+                        // Refresh data từ DB
+                        currentWeekControl.RefreshData();
+
+                        // Hiển thị control nếu chưa có trong mainPanel
+                        if (!mainPanel.Controls.Contains(currentWeekControl))
+                        {
+                            mainPanel.Controls.Clear();
+                            mainPanel.Controls.Add(currentWeekControl);
+                        }
+
+                        currentWeekControl.BringToFront();
+
+                        // Chọn category vừa thêm
+                        if (quickadd.AddedCategoryId > 0)
+                        {
+                            Application.DoEvents(); // Đợi UI update
+                            currentWeekControl.SelectCategory(quickadd.AddedCategoryId);
+                        }
+                    }
+                    else
+                    {
+                        // Tạo mới Week control
+                        mainPanel.Controls.Clear();
+                        currentWeekControl = new WeekGroupMVC();
+                        currentWeekControl.Dock = DockStyle.Fill;
+                        mainPanel.Controls.Add(currentWeekControl);
+                        currentWeekControl.Show();
+
+                        // Chọn category vừa thêm
+                        if (quickadd.AddedCategoryId > 0)
+                        {
+                            Application.DoEvents();
+                            currentWeekControl.SelectCategory(quickadd.AddedCategoryId);
+                        }
+                    }
+                }
+                else if (quickadd.AddedType == "Todo")
+                {
+                    // Tương tự cho Todo
+                    if (currentTaskControl != null && !currentTaskControl.IsDisposed)
+                    {
+                        if (!mainPanel.Controls.Contains(currentTaskControl))
+                        {
+                            mainPanel.Controls.Clear();
+                            mainPanel.Controls.Add(currentTaskControl);
+                        }
+                        currentTaskControl.BringToFront();
+                    }
+                    else
+                    {
+                        btnTasks_Click(sender, e);
+                    }
+                }
+            }
+        }
+
+        private void btnHome_Click(object sender, EventArgs e)
+        {
+            Trangchu trangchu = new Trangchu();
+            trangchu.ShowDialog();
+            this.Hide();
         }
     }
 }

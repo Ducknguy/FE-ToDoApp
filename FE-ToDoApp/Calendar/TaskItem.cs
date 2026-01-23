@@ -10,5 +10,6 @@ namespace FE_ToDoApp.Calendar
         public DateTime DuaDate { get; set; }
         public DateTime StartDate { get; set; }
         public string Status { get; set; }
+        public DateTime? ReminderTime { get; set; }
     }
 }

@@ -20,7 +20,8 @@ namespace FE_ToDoApp.WeekList.Data
                     Id_weekly AS TaskId,
                     Title,
                     StartDate,
-                    Status
+                    Status,
+                    ReminderTime
                 FROM WeekCategory_item
                 WHERE CategoryId = @CategoryId
                   AND StartDate >= @WeekStart 
@@ -43,6 +44,12 @@ namespace FE_ToDoApp.WeekList.Data
                             DateTime startDate = Convert.ToDateTime(reader["StartDate"]);
                             int dayOfWeek = GetDayOfWeekNumber(startDate);
 
+                            DateTime? reminderTime = null;
+                            if (!reader.IsDBNull(reader.GetOrdinal("ReminderTime")))
+                            {
+                                reminderTime = Convert.ToDateTime(reader["ReminderTime"]);
+                            }
+
                             tasks.Add(new WeekTask
                             {
                                 TaskId = Convert.ToInt32(reader["TaskId"]),
@@ -51,7 +58,9 @@ namespace FE_ToDoApp.WeekList.Data
                                 DayOfWeek = dayOfWeek,
                                 Title = reader.GetString(reader.GetOrdinal("Title")),
                                 IsDone = reader.GetInt32(reader.GetOrdinal("Status")) == 1,
-                                OrderIndex = 0
+                                OrderIndex = 0,
+                                ReminderTime = reminderTime,
+                                StartDate = startDate
                             });
                         }
                     }
@@ -59,6 +68,59 @@ namespace FE_ToDoApp.WeekList.Data
             }
 
             return tasks;
+        }
+
+        public WeekTask GetById(int taskId)
+        {
+            string sql = @"
+                SELECT 
+                    Id_weekly AS TaskId,
+                    CategoryId,
+                    Title,
+                    StartDate,
+                    Status,
+                    ReminderTime
+                FROM WeekCategory_item
+                WHERE Id_weekly = @TaskId";
+
+            using (var conn = SQLiteHelper.GetConnection())
+            {
+                conn.Open();
+                using (var cmd = new SQLiteCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@TaskId", taskId);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            DateTime startDate = Convert.ToDateTime(reader["StartDate"]);
+                            int dayOfWeek = GetDayOfWeekNumber(startDate);
+
+                            DateTime? reminderTime = null;
+                            if (!reader.IsDBNull(reader.GetOrdinal("ReminderTime")))
+                            {
+                                reminderTime = Convert.ToDateTime(reader["ReminderTime"]);
+                            }
+
+                            return new WeekTask
+                            {
+                                TaskId = Convert.ToInt32(reader["TaskId"]),
+                                CategoryId = Convert.ToInt32(reader["CategoryId"]),
+                                WeekPlanId = 0,
+                                DayOfWeek = dayOfWeek,
+                                Title = reader.GetString(reader.GetOrdinal("Title")),
+                                IsDone = reader.GetInt32(reader.GetOrdinal("Status")) == 1,
+                                OrderIndex = 0,
+                                ReminderTime = reminderTime,
+                                StartDate = startDate
+                            };
+                        }
+                    }
+                }
+            }
+
+            return null;
         }
 
         public int Insert(int categoryId, DateTime weekStart, int dayOfWeek, string title)

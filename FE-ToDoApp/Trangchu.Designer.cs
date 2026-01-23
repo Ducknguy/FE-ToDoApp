@@ -225,6 +225,7 @@
             btnHome.Text = "🏠 Trang chủ";
             btnHome.TextAlign = ContentAlignment.MiddleLeft;
             btnHome.UseVisualStyleBackColor = true;
+            btnHome.Click += btnHome_Click;
             // 
             // panelFooter
             // 
@@ -287,6 +288,7 @@
             btnQuickAdd.TabIndex = 1;
             btnQuickAdd.Text = "+ Thêm nhanh";
             btnQuickAdd.UseVisualStyleBackColor = false;
+            btnQuickAdd.Click += btnQuickAdd_Click;
             // 
             // lblSchedule
             // 
