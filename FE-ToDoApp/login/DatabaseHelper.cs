@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data.SQLite;
+using System.IO;
 
 namespace FE_ToDoApp.login
 {
     public class DatabaseHelper
     {
-        private static string connectionString = @"Data Source=GIANG;Initial Catalog=User;Integrated Security=True";
+        private static string strConn = $"Data Source={Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ToDoApp.db")};Version=3;";
 
-        public static SqlConnection GetConnection()
+        public static SQLiteConnection GetConnection()
         {
-            return new SqlConnection(connectionString);
+            return new SQLiteConnection(strConn);
         }
     }
 }

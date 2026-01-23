@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data.SQLite;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using FE_ToDoApp.Database;
 
 namespace FE_ToDoApp.login
 {
-    public partial class ForgotPasswrod : Form
+    public partial class ForgotPassword : Form
     {
-        public ForgotPasswrod()
+        public ForgotPassword()
         {
             InitializeComponent();
         }
@@ -30,13 +31,13 @@ namespace FE_ToDoApp.login
                 return;
             }
 
-            string query = "UPDATE [User] SET password = @NewPass WHERE username = @User AND email = @Email";
+            string query = "UPDATE Users SET Password = @NewPass WHERE Username = @User AND Email = @Email";
 
-            using (SqlConnection connection = DatabaseHelper.GetConnection())
+            try
             {
-                using (SqlCommand command = new SqlCommand(query, connection))
+                using (SQLiteConnection connection = SQLiteHelper.GetConnection())
                 {
-                    try
+                    using (SQLiteCommand command = new SQLiteCommand(query, connection))
                     {
                         connection.Open();
                         command.Parameters.AddWithValue("@NewPass", newPassword);
@@ -48,20 +49,21 @@ namespace FE_ToDoApp.login
                         if (rowsAffected > 0)
                         {
                             MessageBox.Show("Đặt lại mật khẩu thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
                             Login1 loginForm = new Login1();
                             loginForm.Show();
                             this.Close();
                         }
                         else
                         {
-                            MessageBox.Show("Sai Tên đăng nhập hoặc Email không đúng (email phải có định dạng @gmail.com).", "Thất bại", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Sai Tên đăng nhập hoặc Email không đúng.", "Thất bại", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Lỗi CSDL: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi hệ thống: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -75,11 +77,6 @@ namespace FE_ToDoApp.login
             Login1 loginForm = new Login1();
             loginForm.Show();
             this.Hide();
-        }
-
-        private void labelOr_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

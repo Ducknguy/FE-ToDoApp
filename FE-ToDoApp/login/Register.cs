@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data.SQLite;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using FE_ToDoApp.Database;
 
 namespace FE_ToDoApp.login
 {
@@ -16,11 +17,6 @@ namespace FE_ToDoApp.login
         public Register()
         {
             InitializeComponent();
-        }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void btnRegister_Click_1(object sender, EventArgs e)
@@ -56,57 +52,54 @@ namespace FE_ToDoApp.login
                 return;
             }
 
-            string query = "INSERT INTO [User] (Username, Password, Email) VALUES (@User, @Pass, @Email)";
-
-            using (SqlConnection connection = DatabaseHelper.GetConnection())
+            try
             {
-                using (SqlCommand command = new SqlCommand(query, connection))
+                using (SQLiteConnection connection = SQLiteHelper.GetConnection())
                 {
-                    try
+                    connection.Open();
+
+                    string checkQuery = "SELECT COUNT(1) FROM Users WHERE Username = @User";
+
+                    using (SQLiteCommand checkCommand = new SQLiteCommand(checkQuery, connection))
                     {
-                        connection.Open();
+                        checkCommand.Parameters.AddWithValue("@User", Username);
+                        int count = Convert.ToInt32(checkCommand.ExecuteScalar());
 
-                        string checkQuery = "SELECT COUNT(1) FROM [User] WHERE username = @User";
-                        using (SqlCommand checkCommand = new SqlCommand(checkQuery, connection))
+                        if (count > 0)
                         {
-                            checkCommand.Parameters.AddWithValue("@User", Username);
-                            int count = (int)checkCommand.ExecuteScalar();
-
-                            if (count > 0)
-                            {
-                                MessageBox.Show("Tên tài khoản này đã tồn tại. Vui lòng chọn tên khác!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                                txtUsername.Focus();
-                                return;
-                            }
-                        }
-
-                        string insertQuery = "INSERT INTO [User] (username, password, email) VALUES (@User, @Pass, @Email)";
-                        using (SqlCommand insertCommand = new SqlCommand(insertQuery, connection))
-                        {
-                            insertCommand.Parameters.AddWithValue("@User", Username);
-                            insertCommand.Parameters.AddWithValue("@Pass", Password);
-                            insertCommand.Parameters.AddWithValue("@Email", Email);
-
-                            int result = insertCommand.ExecuteNonQuery();
-
-                            if (result > 0)
-                            {
-                                MessageBox.Show("Đăng ký thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                Login1 loginForm = new Login1();
-                                loginForm.Show();
-                                this.Close();                            
-                            }
-                            else
-                            {
-                                MessageBox.Show("Đăng ký thất bại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            }
+                            MessageBox.Show("Tên tài khoản này đã tồn tại. Vui lòng chọn tên khác!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            txtUsername.Focus();
+                            return;
                         }
                     }
-                    catch (SqlException ex)
+
+                    string insertQuery = "INSERT INTO Users (Username, Password, Email) VALUES (@User, @Pass, @Email)";
+
+                    using (SQLiteCommand insertCommand = new SQLiteCommand(insertQuery, connection))
                     {
-                        MessageBox.Show("Lỗi CSDL: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        insertCommand.Parameters.AddWithValue("@User", Username);
+                        insertCommand.Parameters.AddWithValue("@Pass", Password);
+                        insertCommand.Parameters.AddWithValue("@Email", Email);
+
+                        int result = insertCommand.ExecuteNonQuery();
+
+                        if (result > 0)
+                        {
+                            MessageBox.Show("Đăng ký thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            Login1 loginForm = new Login1();
+                            loginForm.Show();
+                            this.Close();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Đăng ký thất bại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi hệ thống: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

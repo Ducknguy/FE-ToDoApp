@@ -10,5 +10,7 @@ namespace FE_ToDoApp.WeekList.Models
         public string Title { get; set; } = string.Empty;
         public bool IsDone { get; set; }
         public int OrderIndex { get; set; }
+        public DateTime? ReminderTime { get; set; }
+        public DateTime StartDate { get; set; }
     }
 }

@@ -20,11 +20,12 @@ namespace FE_ToDoApp.Calendar
                                     Title, 
                                     Description, 
                                     StartDate,
-                                    Status
+                                    Status,
+                                    ReminderTime
                                    FROM WeekCategory_item 
                                    WHERE CAST(strftime('%m', StartDate) AS INTEGER) = @m 
                                    AND CAST(strftime('%Y', StartDate) AS INTEGER) = @y
-                                   ORDER BY StartDate";
+                                   ORDER BY ReminderTime, StartDate";
 
                     using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
                     {
@@ -41,6 +42,7 @@ namespace FE_ToDoApp.Calendar
                                 item.Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : "";
                                 item.StartDate = reader["StartDate"] != DBNull.Value ? Convert.ToDateTime(reader["StartDate"]) : DateTime.MinValue;
                                 item.Status = reader["Status"] != DBNull.Value ? reader["Status"].ToString() : "0";
+                                item.ReminderTime = reader["ReminderTime"] != DBNull.Value ? Convert.ToDateTime(reader["ReminderTime"]) : (DateTime?)null;
 
                                 list.Add(item);
                             }

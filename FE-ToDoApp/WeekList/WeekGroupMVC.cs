@@ -7,6 +7,7 @@ using FE_ToDoApp.WeekList.Controllers;
 using FE_ToDoApp.WeekList.Models;
 using FE_ToDoApp.WeekList.Views;
 using FE_ToDoApp.WeekList.Views.Dialogs;
+using FE_ToDoApp.Services;
 
 namespace FE_ToDoApp.WeekList       
 {
@@ -248,11 +249,9 @@ namespace FE_ToDoApp.WeekList
         {
             if (dayPanel == null) return;
             
-            // Clear existing controls (except header panel)
             var toRemove = new List<Control>();
             foreach (Control c in dayPanel.Controls)
             {
-                // Giữ lại panel header (panel6, panel8, etc.)
                 if (c is Panel headerPanel && headerPanel.BackColor == SystemColors.ActiveBorder)
                     continue;
                 toRemove.Add(c);
@@ -265,13 +264,10 @@ namespace FE_ToDoApp.WeekList
             }
 
             int yPos = 70;
-            
-            // Tính width dựa vào dayPanel (ví dụ panel5 width = 1121)
-            // Trừ scrollbar nếu có
+
             int scrollbarWidth = dayPanel.VerticalScroll.Visible ? SystemInformation.VerticalScrollBarWidth : 0;
             int availableWidth = dayPanel.ClientSize.Width - scrollbarWidth;
             
-            // Width của task panel (trừ padding)
             int taskPanelWidth = Math.Max(200, availableWidth - 50); // 50 = padding left/right
 
             foreach (var task in tasks)
@@ -285,11 +281,19 @@ namespace FE_ToDoApp.WeekList
                     BackColor = Color.Transparent,
                     Tag = task.TaskId
                 };
-
-                // Checkbox - width: panel width trừ space cho icon
+                string displayText;
+                if (task.ReminderTime.HasValue)
+                {
+                    string timeStr = task.ReminderTime.Value.ToString("HH:mm");
+                    displayText = $"🔔 {timeStr} | {task.Title}";
+                }
+                else
+                {
+                    displayText = task.Title;
+                }
                 CheckBox chk = new CheckBox
                 {
-                    Text = task.Title,
+                    Text = displayText,
                     Checked = task.IsDone,
                     Location = new Point(0, 8),
                     Width = taskPanelWidth - 45, // Space for done icon
@@ -327,7 +331,7 @@ namespace FE_ToDoApp.WeekList
                 ApplyCompletionStyle(taskPanel, chk, lblDoneIcon, task.IsDone);
 
                 dayPanel.Controls.Add(taskPanel);
-                taskPanel.BringToFront(); // Đảm bảo nó nằm trên header
+                taskPanel.BringToFront();
                 
                 yPos += 35;
             }
@@ -352,6 +356,10 @@ namespace FE_ToDoApp.WeekList
                         _currentWeekStart,
                         dialog.DayOfWeek,
                         dialog.TaskTitle);
+                    if (dialog.ReminderTime.HasValue)
+                    {
+                        NotificationService.SetWeekTaskReminder(newTaskId, dialog.ReminderTime);
+                    }
 
                     _allTasks.Add(new WeekTask
                     {
@@ -400,11 +408,11 @@ namespace FE_ToDoApp.WeekList
                 var task = _allTasks.FirstOrDefault(t => t.TaskId == taskId);
                 if (task == null) return;
 
-                var dialog = new TaskEditDialog(task.Title, task.DayOfWeek);
+                var dialog = new TaskEditDialog(task.Title, task.DayOfWeek, taskId);
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     _taskController.UpdateTask(taskId, dialog.TaskTitle, dialog.DayOfWeek);
-
+                    NotificationService.SetWeekTaskReminder(taskId, dialog.ReminderTime);
                     task.Title = dialog.TaskTitle;
                     task.DayOfWeek = dialog.DayOfWeek;
 
@@ -496,8 +504,6 @@ namespace FE_ToDoApp.WeekList
                 {
                     task.IsDone = newValue;
                 }
-
-                // Find parent panel and done icon
                 Panel? taskPanel = chk.Parent as Panel;
                 if (taskPanel != null)
                 {
@@ -522,15 +528,10 @@ namespace FE_ToDoApp.WeekList
         {
             if (isDone)
             {
-                // Background xanh nhạt
                 taskPanel.BackColor = Color.FromArgb(240, 255, 240);
-                
-                // Text gạch ngang + màu xám
                 chk.Font = new Font(chk.Font, FontStyle.Strikeout);
                 chk.ForeColor = Color.FromArgb(120, 120, 120);
-                chk.BackColor = Color.Transparent;
-                
-                // Show done icon
+                chk.BackColor = Color.Transparent;              
                 if (doneIcon != null)
                 {
                     doneIcon.Visible = true;
@@ -538,15 +539,12 @@ namespace FE_ToDoApp.WeekList
             }
             else
             {
-                // Background trong suốt
                 taskPanel.BackColor = Color.Transparent;
                 
-                // Text bình thường
                 chk.Font = new Font("Segoe UI", 10F, FontStyle.Regular);
                 chk.ForeColor = Color.Black;
                 chk.BackColor = Color.Transparent;
                 
-                // Hide done icon
                 if (doneIcon != null)
                 {
                     doneIcon.Visible = false;
