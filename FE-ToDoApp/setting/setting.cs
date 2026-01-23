@@ -9,30 +9,39 @@ namespace FE_ToDoApp.Setting
     public partial class setting : Form
     {
         private UserDAO userDAO = new UserDAO();
-        private int currentUserId = 1;
+        private int currentUserId;
         private User currentUser;
 
-        public setting()
+        public setting(int idNguoiDung)
         {
             InitializeComponent();
-            SetTheme("Sáng");
-            cmbGiaoDien.SelectedItem = "Sáng";
-            ShowPanel(panelAccount);
-            LoadUserData();
+            this.currentUserId = idNguoiDung;
+
+            btnLuuMatKhau.Click -= btnLuuMatKhau_Click;
+            btnLuuMatKhau.Click += btnLuuMatKhau_Click;
+
+            btnLuuThongTin.Click -= btnLuuThongTin_Click;
+            btnLuuThongTin.Click += btnLuuThongTin_Click;
 
             btnThongTinCaNhan.Click += (s, e) => ShowPanel(panelAccount);
             btnGiaoDien.Click += (s, e) => ShowPanel(panelAppearance);
+            btnDoiAnh.Click += btnDoiAnh_Click;
+
+            SetTheme("Sáng");
+            if (cmbGiaoDien.Items.Count > 0) cmbGiaoDien.SelectedItem = "Sáng";
+            ShowPanel(panelAccount);
+
+            LoadUserData();
         }
 
         private void LoadUserData()
         {
             currentUser = userDAO.GetUserById(currentUserId);
-
             if (currentUser != null)
             {
+                lblSidebarName.Text = currentUser.Username;
                 txtTenHienThi.Text = currentUser.Username;
                 txtEmail.Text = currentUser.Email;
-                lblSidebarName.Text = currentUser.Username;
 
                 if (currentUser.Avatar != null && currentUser.Avatar.Length > 0)
                 {
@@ -47,10 +56,6 @@ namespace FE_ToDoApp.Setting
                     }
                 }
             }
-            else
-            {
-                MessageBox.Show("Không tìm thấy thông tin người dùng!");
-            }
         }
 
         private void btnLuuThongTin_Click(object sender, EventArgs e)
@@ -61,13 +66,13 @@ namespace FE_ToDoApp.Setting
             if (success)
             {
                 MessageBox.Show("Cập nhật thông tin thành công!");
-                lblSidebarName.Text = txtTenHienThi.Text;
                 currentUser.Username = txtTenHienThi.Text;
                 currentUser.Email = txtEmail.Text;
+                lblSidebarName.Text = currentUser.Username;
             }
             else
             {
-                MessageBox.Show("Có lỗi xảy ra khi lưu thông tin.");
+                MessageBox.Show("Có lỗi xảy ra (Có thể tên đăng nhập đã tồn tại).");
             }
         }
 
@@ -75,14 +80,21 @@ namespace FE_ToDoApp.Setting
         {
             if (currentUser == null) return;
 
-            if (txtPassCu.Text != currentUser.Password)
+            if (txtPassMoi.Text.Length < 8)
             {
-                MessageBox.Show("Mật khẩu cũ không chính xác!");
+                MessageBox.Show("Mật khẩu mới phải có ít nhất 8 ký tự!", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+
+            if (txtPassCu.Text != currentUser.Password)
+            {
+                MessageBox.Show("Mật khẩu cũ không chính xác!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             if (txtPassMoi.Text != txtPassXacNhan.Text)
             {
-                MessageBox.Show("Mật khẩu xác nhận không trùng khớp!");
+                MessageBox.Show("Mật khẩu xác nhận không trùng khớp!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -97,7 +109,7 @@ namespace FE_ToDoApp.Setting
             }
             else
             {
-                MessageBox.Show("Có lỗi xảy ra khi đổi mật khẩu.");
+                MessageBox.Show("Lỗi hệ thống khi đổi mật khẩu.");
             }
         }
 
@@ -110,22 +122,13 @@ namespace FE_ToDoApp.Setting
                     Image img = Image.FromFile(openFileDialogAvatar.FileName);
                     panelAvatar.BackgroundImage = img;
                     lblAvatarText.Visible = false;
-
                     byte[] imgBytes = userDAO.ImageToByteArray(img);
-                    bool success = userDAO.UpdateUserAvatar(currentUserId, imgBytes);
-
-                    if (!success)
-                    {
-                        MessageBox.Show("Lưu ảnh vào cơ sở dữ liệu thất bại.");
-                    }
-                    else
-                    {
-                        currentUser.Avatar = imgBytes;
-                    }
+                    userDAO.UpdateUserAvatar(currentUserId, imgBytes);
+                    currentUser.Avatar = imgBytes;
                 }
-                catch (Exception ex)
+                catch
                 {
-                    MessageBox.Show("Lỗi: " + ex.Message);
+                    MessageBox.Show("Lỗi định dạng ảnh.");
                 }
             }
         }
@@ -149,7 +152,6 @@ namespace FE_ToDoApp.Setting
             bool isDark = (theme == "Tối");
             Color bgColor = isDark ? Color.FromArgb(32, 32, 32) : Color.White;
             Color fgColor = isDark ? Color.White : Color.Black;
-
             this.BackColor = bgColor;
             this.ForeColor = fgColor;
             sidebarPanel.BackColor = bgColor;
@@ -170,6 +172,18 @@ namespace FE_ToDoApp.Setting
                 }
                 if (c is Button b && b.FlatStyle == FlatStyle.Flat) b.ForeColor = fg;
             }
+        }
+
+        private void chkShowPassword_CheckedChanged_1(object sender, EventArgs e)
+        {
+            txtPassXacNhan.PasswordChar = chkShowPassword.Checked ? '\0' : '*';
+            txtPassMoi.PasswordChar = chkShowPassword.Checked ? '\0' : '*';
+            txtPassCu.PasswordChar = chkShowPassword.Checked ? '\0' : '*';
+        }
+
+        private void txtPassXacNhan_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
