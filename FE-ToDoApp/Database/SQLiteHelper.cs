@@ -8,9 +8,20 @@ namespace FE_ToDoApp.Database
     public static class SQLiteHelper
     {
         private static string _dbFileName = "ToDoApp.db";
-        private static string _dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, _dbFileName);
+        
+        // S? d?ng ApplicationData folder ?? MSIX có th? ghi ???c
+        private static string _dbPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "FE-ToDoApp",
+            _dbFileName
+        );
         
         public static string ConnectionString => $"Data Source={_dbPath};Version=3;";
+
+        /// <summary>
+        /// ???ng d?n ??n database file
+        /// </summary>
+        public static string DatabasePath => _dbPath;
 
         /// <summary>
         /// L?y connection m?i
@@ -21,10 +32,17 @@ namespace FE_ToDoApp.Database
         }
 
         /// <summary>
-        /// Kh?i t?o database và t?o b?ng n?u ch?a t?n t?i
+        /// Kh?i t?o database v? t?o b?ng n?u ch?a t?n t?i
         /// </summary>
         public static void InitializeDatabase()
         {
+            // T?o th? m?c n?u ch?a t?n t?i
+            string dbDirectory = Path.GetDirectoryName(_dbPath);
+            if (!Directory.Exists(dbDirectory))
+            {
+                Directory.CreateDirectory(dbDirectory);
+            }
+
             if (!File.Exists(_dbPath))
             {
                 SQLiteConnection.CreateFile(_dbPath);
@@ -32,7 +50,7 @@ namespace FE_ToDoApp.Database
             }
             else
             {
-                // Database ?ã t?n t?i, ch?y migration
+                // Database ?? t?n t?i, ch?y migration
                 using (var conn = GetConnection())
                 {
                     conn.Open();
