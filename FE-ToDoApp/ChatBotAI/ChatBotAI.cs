@@ -15,6 +15,7 @@ using System.Diagnostics;
 
 namespace ChatbotAI_Form
     {
+
         public partial class ChatbotAI : Form
         {
 
@@ -189,113 +190,139 @@ namespace ChatbotAI_Form
         }
         private async void btnSend_Click(object sender, EventArgs e)
         {
-            // 1. LẤY DỮ LIỆU ĐẦU VÀO
+            // 1. LẤY DỮ LIỆU
             string text = txtInput.Text.Trim();
-
-            // Nếu không có chữ VÀ cũng không có file đính kèm thì thoát
             if (string.IsNullOrEmpty(text) && currentAttachments.Count == 0) return;
 
-            // 2. CHUYỂN ĐỔI GIAO DIỆN (Nếu đang ở màn hình Welcome)
-            if (panelHeader.Visible)
-            {
-                panelHeader.Visible = false;
-                flowActions.Visible = false;
-                flowMessages.Visible = true;
-                flowMessages.BringToFront();
-            }
-            ui.ShowChat();
+            // 2. CHUYỂN UI
+            if (panelHeader.Visible) ui.ShowChat();
 
-            // 3. TẠO SESSION MỚI (Nếu chưa có)
+            // 3. TẠO SESSION
             if (currentSession == null)
             {
                 string title = string.IsNullOrEmpty(text) ? "Hình ảnh" : (text.Length > 30 ? text.Substring(0, 30) : text);
-
-                currentSession = new ChatSession
-                {
-                    UserId = currentUserId,     // ✅ THÊM
-                    Title = title,
-                    CreatedAt = DateTime.Now    // ✅ nên thêm luôn cho chắc
-                };
-
+                currentSession = new ChatSession { UserId = currentUserId, Title = title, CreatedAt = DateTime.Now };
                 chatDAO.SaveSession(currentSession);
-
-
-                LoadHistory(); // Cập nhật lại list bên trái
+                LoadHistory();
             }
 
-            // 4. HIỂN THỊ TIN NHẮN USER (SỬA ĐOẠN NÀY)
+            // 4. HIỆN TIN NHẮN USER
             List<string> filesForDisplay = new List<string>(currentAttachments);
-
-            // Gọi hàm AddMessage mới: Truyền text và danh sách file
             AddMessage(text, true, filesForDisplay);
-
-            // 5. DỌN DẸP GIAO DIỆN NHẬP LIỆU
             txtInput.Clear();
             txtInput.Focus();
-            flowFileAttachments.Controls.Clear(); // Xóa chip file trên UI
+            flowFileAttachments.Controls.Clear();
 
-            // 6. CHUẨN BỊ GỬI AI & LƯU DB
-
-            // Copy danh sách file ra một list riêng để gửi API
             List<string> filesToSend = new List<string>(currentAttachments);
-
-            // Lưu số lượng file để ghi chú vào Database
             int fileCount = currentAttachments.Count;
-
-            // Xóa danh sách gốc để sẵn sàng cho tin nhắn sau
             currentAttachments.Clear();
 
-
-            //// 7. LƯU TIN NHẮN USER VÀO DATABASE (SQL)
+            // 5. LƯU DB
             string dbContent = text;
             if (fileCount > 0) dbContent += $"\n[Đính kèm {fileCount} file]";
-
-            ChatMessage userMsg = new ChatMessage
-            {
-                IsUser = true,
-                Content = dbContent,
-                Files = filesToSend // Đừng quên lưu file vào object này
-            };
-            // TRUYỀN ID (INT) VÀO DAO
+            ChatMessage userMsg = new ChatMessage { IsUser = true, Content = dbContent, Files = filesToSend };
             chatDAO.SaveMessage(currentSession.Id, userMsg);
             currentSession.Messages.Add(userMsg);
 
-
-            // 8. GỬI LÊN GEMINI
+            // 🔥 LOGIC THÔNG MINH 🔥
+            
             Panel thinkingRow = AddThinkingMessage();
-            string aiReply;
+            string aiReply = "";
 
             try
             {
-                // Gửi text và danh sách file ảnh lên Google
-                aiReply = await gemini.SendAsync(BuildGeminiContext(), filesToSend);
+                // A. TRƯỜNG HỢP CÓ FILE: Gửi File + Lịch sử chat
+                if (filesToSend.Count > 0)
+                {
+                    // Lấy lịch sử cũ
+                    List<string> history = BuildConversationHistory();
+                    // Thêm câu hỏi hiện tại vào cuối
+                    history.Add($"User (đang gửi kèm file): {text}");
+
+                    aiReply = await gemini.SendAsync(history, filesToSend);
+                }
+                // B. TRƯỜNG HỢP TEXT-TO-SQL (Dùng não to)
+                else
+                {
+                    // --- BƯỚC 1: HỎI SQL (Chỉ gửi câu hiện tại để AI tập trung viết Code) ---
+                    string schema = chatDAO.GetFullDatabaseSchema();
+                    // Lấy ngày giờ hiện tại
+                    string currentDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
+                    string promptGetSQL = $@"
+                    Bạn là chuyên gia SQL (SQLite).
+                    THỜI GIAN HIỆN TẠI: {currentDateTime} (Hãy dùng thời gian này để xác định 'Tuần này', 'Hôm nay').
+
+                    {schema}
+    
+                        YÊU CẦU:
+                        - Câu hỏi User: ""{text}""
+    
+                        Nhiệm vụ:
+                        - Nếu User muốn XEM dữ liệu: Viết câu lệnh SELECT.
+                        - Nếu User muốn THÊM (Insert), SỬA (Update), XÓA (Delete): Hãy viết câu lệnh SQL tương ứng để thực hiện thay đổi đó ngay lập tức.
+                        - Nếu là xã giao (không liên quan DB): Trả lời ""NO_SQL"".
+
+                        LƯU Ý: 
+                        - Chỉ trả về code SQL duy nhất, không giải thích, không markdown.
+                        - Với lệnh INSERT: nhớ lấy ngày giờ hiện tại là datetime('now').
+                        - Với lệnh DELETE/UPDATE: phải có WHERE cụ thể để tránh xóa nhầm all.
+                    ";
+
+                    // Lần 1: Không cần gửi lịch sử, chỉ cần lấy SQL chuẩn
+                    string aiResponse1 = await gemini.SendAsync(new List<string> { promptGetSQL }, null);
+                    string cleanSQL = aiResponse1.Replace("```sql", "").Replace("```", "").Trim();
+
+                    // --- BƯỚC 2: XỬ LÝ KẾT QUẢ VÀ TRẢ LỜI (CÓ KÈM TRÍ NHỚ) ---
+
+                    // Chuẩn bị sẵn lịch sử chat
+                    List<string> chatContext = BuildConversationHistory();
+
+                    if (cleanSQL.Contains("NO_SQL"))
+                    {
+                        // -> Xã giao: Gửi lịch sử + Câu hiện tại
+                        chatContext.Add($"User: {text}");
+                        aiReply = await gemini.SendAsync(chatContext, null);
+                    }
+                    else
+                    {
+                        // -> Có SQL: Chạy lệnh lấy dữ liệu
+                        string dbResult = chatDAO.ExecuteDynamicSQL(cleanSQL);
+
+                        // Tạo prompt cuối cùng chứa: Lịch sử + Kết quả DB + Câu hỏi hiện tại
+                        string promptFinal = $@"
+                            [THÔNG TIN TỪ DATABASE CHO CÂU HỎI HIỆN TẠI]
+                            SQL đã chạy: {cleanSQL}
+                            Kết quả: 
+                            {dbResult}
+
+                            [YÊU CẦU TRẢ LỜI]
+                            User vừa hỏi: ""{text}""
+                            Hãy trả lời User dựa trên KẾT QUẢ DATABASE ở trên.
+                            Lưu ý: Hãy kết hợp với lịch sử chat bên trên nếu cần thiết.
+                        ";
+
+                        // Thêm prompt này vào cuối danh sách lịch sử
+                        chatContext.Add(promptFinal);
+
+                        aiReply = await gemini.SendAsync(chatContext, null);
+                    }
+                }
             }
             catch (Exception ex)
             {
-                aiReply = "⚠️ Gemini lỗi: " + ex.Message;
+                aiReply = "⚠️ Lỗi xử lý: " + ex.Message;
             }
 
-            // Xóa dòng đang suy nghĩ
+            // HIỆN CÂU TRẢ LỜI
             flowMessages.Controls.Remove(thinkingRow);
             thinkingRow.Dispose();
-
-            // 9. HIỂN THỊ CÂU TRẢ LỜI CỦA AI
-            // Tham số thứ 3 là null vì AI không gửi file lại cho mình
             AddMessage(aiReply, false, null);
 
-            // 10. LƯU CÂU TRẢ LỜI CỦA AI VÀO DB
-            ChatMessage aiMsg = new ChatMessage
-            {
-                IsUser = false,
-                Content = aiReply
-            };
-
+            ChatMessage aiMsg = new ChatMessage { IsUser = false, Content = aiReply };
             chatDAO.SaveMessage(currentSession.Id, aiMsg);
             currentSession.Messages.Add(aiMsg);
         }
-
-
-        // Thêm tham số int fileCount = 0 vào cuối
         private void AddMessage(string text, bool isUser, List<string> files = null)
         {
             // 1. CẤU HÌNH CƠ BẢN
@@ -621,9 +648,9 @@ namespace ChatbotAI_Form
             flowMessages.Visible = true;
 
             // Load lại tin nhắn
-            foreach (var msg in session.Messages)
+            foreach (var msg in currentSession.Messages)
             {
-                AddMessage(msg.Content, msg.IsUser);
+                AddMessage(msg.Content, msg.IsUser, msg.Files);
             }
 
             // Reset tất cả item khác
@@ -739,6 +766,33 @@ namespace ChatbotAI_Form
             flowActions.Visible = false;
             flowMessages.Visible = true;
             panelBody.Padding = new Padding(0);
+        }
+
+        // Hàm này gom lại lịch sử chat để gửi kèm cho AI đỡ quên
+        private List<string> BuildConversationHistory()
+        {
+            var history = new List<string>();
+
+            // 1. System Prompt (Nhắc vai trò)
+            history.Add("System: Bạn là trợ lý ảo cá nhân. Hãy trả lời ngắn gọn, thân thiện và ghi nhớ bối cảnh cuộc trò chuyện.");
+
+            // 2. Lấy 10 tin nhắn gần nhất (để tiết kiệm Token và tránh lỗi quá dài)
+            if (currentSession != null && currentSession.Messages != null)
+            {
+                // Lấy 10 tin cuối cùng
+                var recentMsgs = currentSession.Messages.Skip(Math.Max(0, currentSession.Messages.Count - 10));
+
+                foreach (var msg in recentMsgs)
+                {
+                    // Định dạng: "User: nội dung" hoặc "AI: nội dung"
+                    string role = msg.IsUser ? "User" : "AI";
+                    // Chỉ lấy nội dung text, bỏ qua thông báo file đính kèm rườm rà
+                    string cleanContent = msg.Content.Replace("[Đính kèm file]", "").Trim();
+                    history.Add($"{role}: {cleanContent}");
+                }
+            }
+
+            return history;
         }
     }
 }

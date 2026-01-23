@@ -1,6 +1,6 @@
 ﻿namespace FE_ToDoApp.login
 {
-    partial class ForgotPasswrod
+    partial class ForgotPassword
     {
         private System.ComponentModel.IContainer components = null;
 
@@ -29,9 +29,7 @@
             labelUser = new Label();
             txtUsername = new TextBox();
             labelTitle = new Label();
-            pictureBoxLogo = new PictureBox();
             panelCard.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBoxLogo).BeginInit();
             SuspendLayout();
             // 
             // panelCard
@@ -52,7 +50,6 @@
             panelCard.Controls.Add(labelUser);
             panelCard.Controls.Add(txtUsername);
             panelCard.Controls.Add(labelTitle);
-            panelCard.Controls.Add(pictureBoxLogo);
             panelCard.Location = new Point(100, 40);
             panelCard.Name = "panelCard";
             panelCard.Size = new Size(500, 680);
@@ -85,7 +82,6 @@
             labelOr.Size = new Size(100, 23);
             labelOr.TabIndex = 2;
             labelOr.Text = "Hoặc";
-            labelOr.Click += labelOr_Click;
             // 
             // panelLine1
             // 
@@ -185,35 +181,25 @@
             // 
             labelTitle.Font = new Font("Segoe UI", 22F, FontStyle.Bold);
             labelTitle.ForeColor = Color.FromArgb(45, 55, 72);
-            labelTitle.Location = new Point(0, 130);
+            labelTitle.Location = new Point(0, 90);
             labelTitle.Name = "labelTitle";
             labelTitle.Size = new Size(500, 50);
             labelTitle.TabIndex = 13;
             labelTitle.Text = "Lấy lại mật khẩu";
             labelTitle.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // pictureBoxLogo
-            // 
-            pictureBoxLogo.Location = new Point(210, 40);
-            pictureBoxLogo.Name = "pictureBoxLogo";
-            pictureBoxLogo.Size = new Size(80, 80);
-            pictureBoxLogo.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBoxLogo.TabIndex = 14;
-            pictureBoxLogo.TabStop = false;
-            // 
-            // ForgotPasswrod
+            // ForgotPassword
             // 
             BackColor = Color.FromArgb(242, 245, 249);
             ClientSize = new Size(700, 780);
             Controls.Add(panelCard);
             Font = new Font("Segoe UI", 10F);
             FormBorderStyle = FormBorderStyle.FixedDialog;
-            Name = "ForgotPasswrod";
+            Name = "ForgotPassword";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Todo App - Reset Password";
             panelCard.ResumeLayout(false);
             panelCard.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBoxLogo).EndInit();
             ResumeLayout(false);
         }
 
@@ -225,6 +211,5 @@
         private Button btnResetPassword;
         private LinkLabel linkLogin;
         private CheckBox chkShowPassword;
-        private PictureBox pictureBoxLogo;
     }
 }

@@ -12,10 +12,6 @@ namespace FE_ToDoApp
     public partial class Trangchu : Form
     {
         private List<Form> privatePages = new List<Form>();
-        private int currentUserId;
-        private string currentUserName;
-        private WeekGroupMVC? currentWeekControl;
-        private FE_ToDoApp.Lich_Trinh.TaskItem? currentTaskControl;
 
         public Trangchu()
         {
@@ -25,8 +21,6 @@ namespace FE_ToDoApp
         public Trangchu(int userId, string userName)
         {
             InitializeComponent();
-            currentUserId = userId;
-            currentUserName = userName;
         }
 
 
@@ -139,7 +133,10 @@ namespace FE_ToDoApp
 
         private void btnDashboard_Click(object sender, EventArgs e)
         {
-
+            mainPanel.Controls.Clear();
+            FE_ToDoApp.Dashboard.DashboardControl dashboard = new FE_ToDoApp.Dashboard.DashboardControl();
+            dashboard.Dock = DockStyle.Fill;
+            mainPanel.Controls.Add(dashboard);
         }
 
         private void btn_logout_Click(object sender, EventArgs e)
@@ -218,6 +215,13 @@ namespace FE_ToDoApp
                     }
                 }
             }
+        }
+
+        private void btnHome_Click(object sender, EventArgs e)
+        {
+            Trangchu trangchu = new Trangchu();
+            trangchu.ShowDialog();
+            this.Hide();
         }
     }
 }

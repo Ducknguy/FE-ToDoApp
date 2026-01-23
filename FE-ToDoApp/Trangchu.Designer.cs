@@ -225,6 +225,7 @@
             btnHome.Text = "🏠 Trang chủ";
             btnHome.TextAlign = ContentAlignment.MiddleLeft;
             btnHome.UseVisualStyleBackColor = true;
+            btnHome.Click += btnHome_Click;
             // 
             // panelFooter
             // 
@@ -251,6 +252,7 @@
             btn_logout.Text = "🗑️ Đăng xuất";
             btn_logout.TextAlign = ContentAlignment.MiddleLeft;
             btn_logout.UseVisualStyleBackColor = true;
+            btn_logout.Click += btn_logout_Click;
             // 
             // btnTrash
             // 

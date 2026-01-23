@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using FE_ToDoApp.Services;
 
 namespace FE_ToDoApp.WeekList
 {
-    public class TaskEditDialog : Form
+    public partial class TaskEditDialog : Form
     {
         private TextBox txtTitle;
         private ComboBox cboDayOfWeek;
@@ -15,12 +16,16 @@ namespace FE_ToDoApp.WeekList
 
         public string TaskTitle { get; private set; }
         public int DayOfWeek { get; private set; }
+        public DateTime? ReminderTime { get; private set; }
+        public int? TaskId { get; set; }
 
-        public TaskEditDialog(string title = "", int dayOfWeek = 1)
+        public TaskEditDialog(string title = "", int dayOfWeek = 1, int? taskId = null)
         {
             TaskTitle = title;
             DayOfWeek = dayOfWeek;
+            TaskId = taskId;
             InitializeComponents();
+            InitializeReminderControls();
         }
 
         private void InitializeComponents()
@@ -32,7 +37,6 @@ namespace FE_ToDoApp.WeekList
             this.MaximizeBox = false;
             this.MinimizeBox = false;
 
-            // Label Title
             lblTitle = new Label
             {
                 Text = "Tiêu đề:",
@@ -42,7 +46,6 @@ namespace FE_ToDoApp.WeekList
             };
             this.Controls.Add(lblTitle);
 
-            // TextBox Title
             txtTitle = new TextBox
             {
                 Location = new Point(110, 20),
@@ -52,7 +55,6 @@ namespace FE_ToDoApp.WeekList
             };
             this.Controls.Add(txtTitle);
 
-            // Label Day
             lblDay = new Label
             {
                 Text = "Ngày:",
@@ -62,7 +64,6 @@ namespace FE_ToDoApp.WeekList
             };
             this.Controls.Add(lblDay);
 
-            // ComboBox Day
             cboDayOfWeek = new ComboBox
             {
                 Location = new Point(110, 60),
@@ -83,7 +84,6 @@ namespace FE_ToDoApp.WeekList
             cboDayOfWeek.SelectedIndex = DayOfWeek - 1;
             this.Controls.Add(cboDayOfWeek);
 
-            // Button OK
             btnOK = new Button
             {
                 Text = "OK",
@@ -95,7 +95,6 @@ namespace FE_ToDoApp.WeekList
             btnOK.Click += BtnOK_Click;
             this.Controls.Add(btnOK);
 
-            // Button Cancel
             btnCancel = new Button
             {
                 Text = "Hủy",
@@ -114,7 +113,7 @@ namespace FE_ToDoApp.WeekList
         {
             if (string.IsNullOrWhiteSpace(txtTitle.Text))
             {
-                MessageBox.Show("Vui lòng nhập tiêu đề task!", "Thông báo", 
+                MessageBox.Show("Vui lòng nhập tiêu đề task!", "Thông báo",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtTitle.Focus();
                 this.DialogResult = DialogResult.None;
@@ -123,6 +122,7 @@ namespace FE_ToDoApp.WeekList
 
             TaskTitle = txtTitle.Text.Trim();
             DayOfWeek = cboDayOfWeek.SelectedIndex + 1;
+            ProcessReminder();
         }
     }
 }
