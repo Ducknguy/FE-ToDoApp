@@ -1,96 +1,76 @@
 ﻿using System;
-using System.Data.SqlClient;
+using System.Data;
+using System.Data.SQLite;
 using System.Drawing;
 using System.IO;
+using FE_ToDoApp.Database; // Dùng SQLiteHelper ở đây
 using FE_ToDoApp.DTO;
 
 namespace FE_ToDoApp.DAO
 {
     public class UserDAO
     {
-        private string connectionString = @"Data Source=Money\SQLEXPRESS;Initial Catalog=ToDoApp;Integrated Security=True";
-
-        public User GetUserById(int userId)
+        public User GetUserById(int id)
         {
-            User user = null;
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            string query = "SELECT * FROM Users WHERE Id = @id";
+            SQLiteParameter param = new SQLiteParameter("@id", id);
+
+            DataTable dt = SQLiteHelper.ExecuteQuery(query, param);
+
+            if (dt.Rows.Count > 0)
             {
-                string query = "SELECT * FROM [User] WHERE Id = @id";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@id", userId);
-
-                try
+                DataRow row = dt.Rows[0];
+                return new User
                 {
-                    conn.Open();
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    if (reader.Read())
-                    {
-                        user = new User();
-                        user.Id = (int)reader["Id"];
-                        user.Username = reader["Username"].ToString();
-                        user.Password = reader["Password"].ToString();
-                        user.Email = reader["Email"].ToString();
-
-                        if (reader["DateCreated"] != DBNull.Value)
-                            user.DateCreated = (DateTime)reader["DateCreated"];
-
-                        // --- KHÔI PHỤC: Đọc dữ liệu ảnh từ cột Image ---
-                        if (reader["Image"] != DBNull.Value)
-                        {
-                            user.Avatar = (byte[])reader["Image"];
-                        }
-                    }
-                }
-                catch (Exception ex) { /* Xử lý lỗi log */ }
+                    Id = Convert.ToInt32(row["Id"]),
+                    Username = row["Username"].ToString(),
+                    Password = row["Password"].ToString(),
+                    Email = row["Email"].ToString(),
+                    // Kiểm tra nếu cột Avatar tồn tại và không null
+                    Avatar = row.Table.Columns.Contains("Avatar") && row["Avatar"] != DBNull.Value
+                             ? (byte[])row["Avatar"]
+                             : null
+                };
             }
-            return user;
+            return null;
         }
 
-        //update in4 
         public bool UpdateUserInfo(int id, string username, string email)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                string query = "UPDATE [User] SET Username = @user, Email = @email WHERE Id = @id";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@user", username);
-                cmd.Parameters.AddWithValue("@email", email);
-                cmd.Parameters.AddWithValue("@id", id);
+            string query = "UPDATE Users SET Username = @user, Email = @email WHERE Id = @id";
+            SQLiteParameter[] p = {
+                new SQLiteParameter("@user", username),
+                new SQLiteParameter("@email", email),
+                new SQLiteParameter("@id", id)
+            };
 
-                conn.Open();
-                return cmd.ExecuteNonQuery() > 0;
-            }
+            return SQLiteHelper.ExecuteNonQuery(query, p) > 0;
         }
 
-        // update password
-        public bool ChangePassword(int id, string newPassword)
+        public bool ChangePassword(int id, string newPass)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                string query = "UPDATE [User] SET Password = @pass WHERE Id = @id";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@pass", newPassword);
-                cmd.Parameters.AddWithValue("@id", id);
+            string query = "UPDATE Users SET Password = @pass WHERE Id = @id";
+            SQLiteParameter[] p = {
+                new SQLiteParameter("@pass", newPass),
+                new SQLiteParameter("@id", id)
+            };
 
-                conn.Open();
-                return cmd.ExecuteNonQuery() > 0;
-            }
+            return SQLiteHelper.ExecuteNonQuery(query, p) > 0;
         }
 
-        public bool UpdateUserAvatar(int id, byte[] imageBytes)
+        public bool UpdateUserAvatar(int id, byte[] avatarData)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                string query = "UPDATE [User] SET [Image] = @img WHERE Id = @id";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@img", imageBytes);
-                cmd.Parameters.AddWithValue("@id", id);
+            // Lưu ý: Cần đảm bảo bảng Users đã có cột Avatar
+            string query = "UPDATE Users SET Avatar = @avatar WHERE Id = @id";
+            SQLiteParameter[] p = {
+                new SQLiteParameter("@avatar", avatarData),
+                new SQLiteParameter("@id", id)
+            };
 
-                conn.Open();
-                return cmd.ExecuteNonQuery() > 0;
-            }
+            return SQLiteHelper.ExecuteNonQuery(query, p) > 0;
         }
 
+        // Helper chuyển đổi ảnh
         public byte[] ImageToByteArray(Image imageIn)
         {
             using (var ms = new MemoryStream())

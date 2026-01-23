@@ -8,18 +8,16 @@ namespace FE_ToDoApp.Setting
 {
     public partial class setting : Form
     {
-        UserDAO userDAO = new UserDAO();
-        int currentUserId = 3; //ID trong SQL
-        User currentUser;
+        private UserDAO userDAO = new UserDAO();
+        private int currentUserId = 1;
+        private User currentUser;
 
         public setting()
         {
             InitializeComponent();
-
             SetTheme("Sáng");
             cmbGiaoDien.SelectedItem = "Sáng";
             ShowPanel(panelAccount);
-
             LoadUserData();
 
             btnThongTinCaNhan.Click += (s, e) => ShowPanel(panelAccount);
@@ -36,7 +34,6 @@ namespace FE_ToDoApp.Setting
                 txtEmail.Text = currentUser.Email;
                 lblSidebarName.Text = currentUser.Username;
 
-                //Image
                 if (currentUser.Avatar != null && currentUser.Avatar.Length > 0)
                 {
                     try
@@ -44,28 +41,33 @@ namespace FE_ToDoApp.Setting
                         panelAvatar.BackgroundImage = userDAO.ByteArrayToImage(currentUser.Avatar);
                         lblAvatarText.Visible = false;
                     }
-                    catch {}
+                    catch
+                    {
+                        lblAvatarText.Visible = true;
+                    }
                 }
             }
             else
             {
-                MessageBox.Show("Không tìm thấy User!");
+                MessageBox.Show("Không tìm thấy thông tin người dùng!");
             }
         }
 
         private void btnLuuThongTin_Click(object sender, EventArgs e)
         {
+            if (currentUser == null) return;
+
             bool success = userDAO.UpdateUserInfo(currentUserId, txtTenHienThi.Text, txtEmail.Text);
             if (success)
             {
-                MessageBox.Show("Cập nhật thành công!");
+                MessageBox.Show("Cập nhật thông tin thành công!");
                 lblSidebarName.Text = txtTenHienThi.Text;
                 currentUser.Username = txtTenHienThi.Text;
                 currentUser.Email = txtEmail.Text;
             }
             else
             {
-                MessageBox.Show("Lỗi khi lưu thông tin.");
+                MessageBox.Show("Có lỗi xảy ra khi lưu thông tin.");
             }
         }
 
@@ -75,12 +77,12 @@ namespace FE_ToDoApp.Setting
 
             if (txtPassCu.Text != currentUser.Password)
             {
-                MessageBox.Show("Mật khẩu cũ không đúng!");
+                MessageBox.Show("Mật khẩu cũ không chính xác!");
                 return;
             }
             if (txtPassMoi.Text != txtPassXacNhan.Text)
             {
-                MessageBox.Show("Mật khẩu xác nhận không khớp!");
+                MessageBox.Show("Mật khẩu xác nhận không trùng khớp!");
                 return;
             }
 
@@ -89,11 +91,13 @@ namespace FE_ToDoApp.Setting
             {
                 MessageBox.Show("Đổi mật khẩu thành công!");
                 currentUser.Password = txtPassMoi.Text;
-                txtPassCu.Clear(); txtPassMoi.Clear(); txtPassXacNhan.Clear();
+                txtPassCu.Clear();
+                txtPassMoi.Clear();
+                txtPassXacNhan.Clear();
             }
             else
             {
-                MessageBox.Show("Lỗi đổi mật khẩu.");
+                MessageBox.Show("Có lỗi xảy ra khi đổi mật khẩu.");
             }
         }
 
@@ -110,7 +114,14 @@ namespace FE_ToDoApp.Setting
                     byte[] imgBytes = userDAO.ImageToByteArray(img);
                     bool success = userDAO.UpdateUserAvatar(currentUserId, imgBytes);
 
-                    if (!success) MessageBox.Show("Không lưu được ảnh vào Database!");
+                    if (!success)
+                    {
+                        MessageBox.Show("Lưu ảnh vào cơ sở dữ liệu thất bại.");
+                    }
+                    else
+                    {
+                        currentUser.Avatar = imgBytes;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -129,7 +140,8 @@ namespace FE_ToDoApp.Setting
 
         private void cmbGiaoDien_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cmbGiaoDien.SelectedItem != null) SetTheme(cmbGiaoDien.SelectedItem.ToString());
+            if (cmbGiaoDien.SelectedItem != null)
+                SetTheme(cmbGiaoDien.SelectedItem.ToString());
         }
 
         private void SetTheme(string theme)

@@ -5,13 +5,13 @@ using System.Windows.Forms;
 namespace FE_ToDoApp.Database
 {
     /// <summary>
-    /// Helper class ?? backup và restore database
-    /// ??c bi?t h?u ích khi dùng MSIX packaging
+    /// Helper class ?? backup vï¿½ restore database
+    /// ??c bi?t h?u ï¿½ch khi dï¿½ng MSIX packaging
     /// </summary>
     public static class DatabaseBackupHelper
     {
         /// <summary>
-        /// Backup database ra file ngoài
+        /// Backup database ra file ngoï¿½i
         /// </summary>
         public static bool BackupDatabase(string targetPath = null)
         {
@@ -36,7 +36,7 @@ namespace FE_ToDoApp.Database
 
                 if (!File.Exists(sourcePath))
                 {
-                    MessageBox.Show("Không tìm th?y database ?? backup!", "L?i", 
+                    MessageBox.Show("Khï¿½ng tï¿½m th?y database ?? backup!", "L?i", 
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
@@ -44,8 +44,8 @@ namespace FE_ToDoApp.Database
                 // Copy database file
                 File.Copy(sourcePath, targetPath, true);
 
-                MessageBox.Show($"Backup thành công!\nFile ???c l?u t?i:\n{targetPath}", 
-                    "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Backup thï¿½nh cï¿½ng!\nFile ???c l?u t?i:\n{targetPath}", 
+                    "Thï¿½nh cï¿½ng", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 
                 return true;
             }
@@ -80,17 +80,17 @@ namespace FE_ToDoApp.Database
 
                 if (!File.Exists(sourcePath))
                 {
-                    MessageBox.Show("File backup không t?n t?i!", "L?i", 
+                    MessageBox.Show("File backup khï¿½ng t?n t?i!", "L?i", 
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
 
-                // Xác nh?n restore
+                // Xï¿½c nh?n restore
                 var result = MessageBox.Show(
-                    "Restore s? ghi ?è lên database hi?n t?i!\n" +
-                    "B?n có ch?c ch?n mu?n ti?p t?c?\n\n" +
+                    "Restore s? ghi ?ï¿½ lï¿½n database hi?n t?i!\n" +
+                    "B?n cï¿½ ch?c ch?n mu?n ti?p t?c?\n\n" +
                     "Khuy?n ngh?: Backup database hi?n t?i tr??c khi restore.",
-                    "Xác nh?n Restore",
+                    "Xï¿½c nh?n Restore",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Warning);
 
@@ -106,11 +106,11 @@ namespace FE_ToDoApp.Database
                     File.Copy(targetPath, autoBackupPath, true);
                 }
 
-                // Copy file backup vào v? trí database
+                // Copy file backup vï¿½o v? trï¿½ database
                 File.Copy(sourcePath, targetPath, true);
 
-                MessageBox.Show("Restore thành công!\n?ng d?ng s? t?i l?i d? li?u.", 
-                    "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Restore thï¿½nh cï¿½ng!\n?ng d?ng s? t?i l?i d? li?u.", 
+                    "Thï¿½nh cï¿½ng", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 
                 return true;
             }
@@ -143,7 +143,7 @@ namespace FE_ToDoApp.Database
         }
 
         /// <summary>
-        /// L?y thông tin v? database hi?n t?i
+        /// L?y thï¿½ng tin v? database hi?n t?i
         /// </summary>
         public static DatabaseInfo GetDatabaseInfo()
         {
@@ -208,20 +208,20 @@ namespace FE_ToDoApp.Database
                 }
                 else
                 {
-                    MessageBox.Show("Th? m?c database không t?n t?i!", "Thông báo", 
+                    MessageBox.Show("Th? m?c database khï¿½ng t?n t?i!", "Thï¿½ng bï¿½o", 
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Không th? m? th? m?c:\n{ex.Message}", "L?i", 
+                MessageBox.Show($"Khï¿½ng th? m? th? m?c:\n{ex.Message}", "L?i", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
 
     /// <summary>
-    /// Thông tin v? database
+    /// Thï¿½ng tin v? database
     /// </summary>
     public class DatabaseInfo
     {

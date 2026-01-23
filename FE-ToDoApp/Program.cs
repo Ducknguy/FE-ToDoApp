@@ -30,7 +30,7 @@ namespace FE_ToDoApp
 
             Application.Run(new Trangchu());
             
-            // D?ng service khi app thoát
+            // D?ng service khi app thoï¿½t
             StreakService.Stop();
         }
     }
