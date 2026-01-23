@@ -108,6 +108,7 @@ namespace FE_ToDoApp
             FE_ToDoApp.Dashboard.DashboardControl dashboard = new FE_ToDoApp.Dashboard.DashboardControl();
             dashboard.Dock = DockStyle.Fill;
             mainPanel.Controls.Add(dashboard);
+            dashboard.Show();
         }
 
         private void btn_logout_Click(object sender, EventArgs e)

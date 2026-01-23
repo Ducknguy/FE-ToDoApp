@@ -226,20 +226,6 @@ namespace FE_ToDoApp.Dashboard
                 };
                 row.Controls.Add(btnDel);
 
-                //Label lblCheck = new Label
-                //{
-                //    //Text = "✔",
-                //    ForeColor = Color.ForestGreen,
-                //    Font = new Font("Segoe UI", 14, FontStyle.Bold),
-                //    AutoSize = true,
-                //    Location = new Point(width - 405, 10),
-                //    Anchor = AnchorStyles.Right
-                //};
-                //row.Controls.Add(lblCheck);
-
-                row.Controls.Add(lblBadge);
-
-                // Giữ lại thanh dọc màu xanh lá
                 Panel dot = new Panel
                 {
                     BackColor = Color.ForestGreen,
@@ -248,10 +234,10 @@ namespace FE_ToDoApp.Dashboard
                     Anchor = AnchorStyles.Right
                 };
                 row.Controls.Add(dot);
+                row.Controls.Add(lblBadge);
             }
             else
             {
-                // --- TRẠNG THÁI CHƯA HOÀN THÀNH ---
                 row.BackColor = Color.White;
 
                 if (showCheckbox)
@@ -371,8 +357,8 @@ namespace FE_ToDoApp.Dashboard
 
             // 2. UPCOMING
             string sqlUpcoming = @"SELECT 
-                (SELECT COUNT(*) FROM WeekCategory_item WHERE date(StartDate) > date('now', 'localtime')) + 
-                (SELECT COUNT(*) FROM Todo_List_Item t JOIN Todo_List_Detail l ON t.id_todo = l.id_todo WHERE date(l.created_at) > date('now', 'localtime'))";
+                (SELECT COUNT(*) FROM WeekCategory_item WHERE date(StartDate) > date('now', 'localtime') AND Status = 0) + 
+                (SELECT COUNT(*) FROM Todo_List_Item t JOIN Todo_List_Detail l ON t.id_todo = l.id_todo WHERE date(l.created_at) > date('now', 'localtime') AND (t.status = 0 OR t.status IS NULL))";
             int upcoming = GetCount(conn, sqlUpcoming);
 
             // 3. OVERDUE
