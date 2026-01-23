@@ -8,31 +8,47 @@ namespace FE_ToDoApp.Database
     public static class SQLiteHelper
     {
         private static string _dbFileName = "ToDoApp.db";
-        private static string _dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, _dbFileName);
-        
+
+        private static string _dbPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "FE-ToDoApp",
+            _dbFileName
+        );
+
         public static string ConnectionString => $"Data Source={_dbPath};Version=3;";
 
-        /// <summary>
-        /// L?y connection m?i
-        /// </summary>
+        public static string DatabasePath => _dbPath;
+
         public static SQLiteConnection GetConnection()
         {
             return new SQLiteConnection(ConnectionString);
         }
 
-        /// <summary>
-        /// Kh?i t?o database và t?o b?ng n?u ch?a t?n t?i
-        /// </summary>
         public static void InitializeDatabase()
         {
+            string dbDirectory = Path.GetDirectoryName(_dbPath);
+            if (!Directory.Exists(dbDirectory))
+            {
+                Directory.CreateDirectory(dbDirectory);
+            }
+
             if (!File.Exists(_dbPath))
             {
                 SQLiteConnection.CreateFile(_dbPath);
                 CreateTables();
             }
+            else
+            {
+                using (var conn = GetConnection())
+                {
+                    conn.Open();
+                    MigrateStreakColumns(conn);
+                    MigrateReminderColumns(conn);
+                    MigrateUserColumns(conn);
+                }
+            }
         }
 
-       
         private static void CreateTables()
         {
             using (var conn = GetConnection())
@@ -40,16 +56,15 @@ namespace FE_ToDoApp.Database
                 conn.Open();
 
                 string createTablesScript = @"
-                -- Users Table
                 CREATE TABLE IF NOT EXISTS Users (
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
                     Username TEXT NOT NULL UNIQUE,
                     Password TEXT NOT NULL,
                     Email TEXT NOT NULL UNIQUE,
+                    Avatar BLOB NULL,
                     CreatedAt DATETIME NOT NULL DEFAULT (datetime('now'))
                 );
 
-                -- ChatSessions Table
                 CREATE TABLE IF NOT EXISTS ChatSessions (
                     SessionID INTEGER PRIMARY KEY AUTOINCREMENT,
                     UserId INTEGER NOT NULL,
@@ -58,7 +73,6 @@ namespace FE_ToDoApp.Database
                     FOREIGN KEY (UserId) REFERENCES Users(Id)
                 );
 
-                -- ChatMessages Table
                 CREATE TABLE IF NOT EXISTS ChatMessages (
                     ID INTEGER PRIMARY KEY AUTOINCREMENT,
                     SessionID INTEGER NOT NULL,
@@ -69,7 +83,6 @@ namespace FE_ToDoApp.Database
                     FOREIGN KEY (SessionID) REFERENCES ChatSessions(SessionID) ON DELETE CASCADE
                 );
 
-                -- Todo_List_Detail Table
                 CREATE TABLE IF NOT EXISTS Todo_List_Detail (
                     id_todo INTEGER PRIMARY KEY AUTOINCREMENT,
                     UserId INTEGER NOT NULL,
@@ -78,10 +91,13 @@ namespace FE_ToDoApp.Database
                     updated_at DATETIME NULL,
                     IsDeleted INTEGER NOT NULL DEFAULT 0,
                     DeletedAt DATETIME NULL,
+                    CurrentStreak INTEGER NOT NULL DEFAULT 0,
+                    BestStreak INTEGER NOT NULL DEFAULT 0,
+                    LastCompletedDate DATETIME NULL,
+                    ReminderTime DATETIME NULL,
                     FOREIGN KEY (UserId) REFERENCES Users(Id)
                 );
 
-                -- Todo_List_Item Table
                 CREATE TABLE IF NOT EXISTS Todo_List_Item (
                     id_item INTEGER PRIMARY KEY AUTOINCREMENT,
                     id_todo INTEGER NOT NULL,
@@ -90,7 +106,6 @@ namespace FE_ToDoApp.Database
                     FOREIGN KEY (id_todo) REFERENCES Todo_List_Detail(id_todo)
                 );
 
-                -- WeekCategory_detail Table
                 CREATE TABLE IF NOT EXISTS WeekCategory_detail (
                     CategoryId INTEGER PRIMARY KEY AUTOINCREMENT,
                     UserId INTEGER NOT NULL,
@@ -104,7 +119,6 @@ namespace FE_ToDoApp.Database
                     FOREIGN KEY (UserId) REFERENCES Users(Id) ON DELETE CASCADE
                 );
 
-                -- WeekCategory_item Table
                 CREATE TABLE IF NOT EXISTS WeekCategory_item (
                     Id_weekly INTEGER PRIMARY KEY AUTOINCREMENT,
                     CategoryId INTEGER NOT NULL,
@@ -115,10 +129,10 @@ namespace FE_ToDoApp.Database
                     CreatedAt DATETIME NOT NULL DEFAULT (datetime('now')),
                     UpdatedAt DATETIME NULL,
                     EndDate DATETIME NULL,
+                    ReminderTime DATETIME NULL,
                     FOREIGN KEY (CategoryId) REFERENCES WeekCategory_detail(CategoryId) ON DELETE CASCADE
                 );
 
-                -- Insert default user for testing
                 INSERT OR IGNORE INTO Users (Id, Username, Password, Email, CreatedAt) 
                 VALUES (1, 'admin', 'admin', 'admin@todo.com', datetime('now'));
                 ";
@@ -127,16 +141,121 @@ namespace FE_ToDoApp.Database
                 {
                     cmd.ExecuteNonQuery();
                 }
+
+                MigrateStreakColumns(conn);
+                MigrateReminderColumns(conn);
+                MigrateUserColumns(conn);
             }
         }
 
-        /// <summary>
-        /// Execute SELECT query và tr? v? DataTable
-        /// </summary>
+        private static void MigrateStreakColumns(SQLiteConnection conn)
+        {
+            if (!ColumnExists(conn, "Todo_List_Detail", "CurrentStreak"))
+            {
+                try
+                {
+                    using (var cmd = new SQLiteCommand("ALTER TABLE Todo_List_Detail ADD COLUMN CurrentStreak INTEGER NOT NULL DEFAULT 0;", conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch { }
+            }
+
+            if (!ColumnExists(conn, "Todo_List_Detail", "BestStreak"))
+            {
+                try
+                {
+                    using (var cmd = new SQLiteCommand("ALTER TABLE Todo_List_Detail ADD COLUMN BestStreak INTEGER NOT NULL DEFAULT 0;", conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch { }
+            }
+
+            if (!ColumnExists(conn, "Todo_List_Detail", "LastCompletedDate"))
+            {
+                try
+                {
+                    using (var cmd = new SQLiteCommand("ALTER TABLE Todo_List_Detail ADD COLUMN LastCompletedDate DATETIME NULL;", conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch { }
+            }
+        }
+
+        private static void MigrateReminderColumns(SQLiteConnection conn)
+        {
+            if (!ColumnExists(conn, "Todo_List_Detail", "ReminderTime"))
+            {
+                try
+                {
+                    using (var cmd = new SQLiteCommand("ALTER TABLE Todo_List_Detail ADD COLUMN ReminderTime DATETIME NULL;", conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch { }
+            }
+
+            if (!ColumnExists(conn, "WeekCategory_item", "ReminderTime"))
+            {
+                try
+                {
+                    using (var cmd = new SQLiteCommand("ALTER TABLE WeekCategory_item ADD COLUMN ReminderTime DATETIME NULL;", conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch { }
+            }
+        }
+
+        private static void MigrateUserColumns(SQLiteConnection conn)
+        {
+            if (!ColumnExists(conn, "Users", "Avatar"))
+            {
+                try
+                {
+                    using (var cmd = new SQLiteCommand("ALTER TABLE Users ADD COLUMN Avatar BLOB NULL;", conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch { }
+            }
+        }
+
+        private static bool ColumnExists(SQLiteConnection conn, string tableName, string columnName)
+        {
+            try
+            {
+                using (var cmd = new SQLiteCommand($"PRAGMA table_info({tableName})", conn))
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        if (reader["name"].ToString() == columnName)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            return false;
+        }
+
         public static DataTable ExecuteQuery(string query, params SQLiteParameter[] parameters)
         {
             DataTable dt = new DataTable();
-            
+
             using (var conn = GetConnection())
             {
                 conn.Open();
@@ -157,9 +276,6 @@ namespace FE_ToDoApp.Database
             return dt;
         }
 
-        /// <summary>
-        /// Execute INSERT, UPDATE, DELETE
-        /// </summary>
         public static int ExecuteNonQuery(string query, params SQLiteParameter[] parameters)
         {
             using (var conn = GetConnection())
@@ -177,9 +293,6 @@ namespace FE_ToDoApp.Database
             }
         }
 
-        /// <summary>
-        /// Execute SELECT và tr? v? giá tr? ??n
-        /// </summary>
         public static object ExecuteScalar(string query, params SQLiteParameter[] parameters)
         {
             using (var conn = GetConnection())

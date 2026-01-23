@@ -8,39 +8,29 @@ namespace FE_ToDoApp.Lich_Trinh
 {
     public partial class TodoDetailItemControl : UserControl
     {
-        // ===== PUBLIC (TaskItem dùng) =====
         public int TodoId { get; private set; } = -1;
 
         public event EventHandler? TodoDeleted;
         public event EventHandler? TodoHeaderChanged;
+        public event EventHandler? TodoItemStatusChanged;
 
-        // ===== STATE =====
         private bool _deleteMode = false;
         private bool _editMode = false;
 
-        // Giữ lại footer để không bị Clear mất
         private Control? _footer;
 
         public TodoDetailItemControl()
         {
             InitializeComponent();
-
-            // tìm footer theo Name trong Designer
             _footer = FindFooterControl();
 
             btnAdd.Click += (s, e) => AddItem();
             btnDelete.Click += (s, e) => ToggleDeleteMode();
             btnEdit.Click += (s, e) => ToggleEditMode();
-
-            // Resize rows khi flpBody thay đổi kích thước
             flpBody.SizeChanged += (s, e) => ResizeAllRows();
 
             EnsureFooterIsLast();
         }
-
-        // =============================
-        // LOAD TODO
-        // =============================
         public void LoadTodo(int todoId)
         {
             TodoId = todoId;
@@ -48,10 +38,7 @@ namespace FE_ToDoApp.Lich_Trinh
             if (TodoId <= 0)
             {
                 lblTitle.Text = "Chưa chọn detail";
-                //TodoHeaderChanged?.Invoke(this, EventArgs.Empty);
-
-                // nút vẫn phải nhìn thấy (đừng clear footer)
-                btnAdd.Enabled = false;   // add item cần TodoId
+                btnAdd.Enabled = false; 
                 btnEdit.Enabled = false;
                 btnDelete.Enabled = false;
 
@@ -65,15 +52,10 @@ namespace FE_ToDoApp.Lich_Trinh
             btnDelete.Enabled = true;
 
             lblTitle.Text = GetTodoTitle(todoId);
-            //TodoHeaderChanged?.Invoke(this, EventArgs.Empty);
 
             LoadItems();
             EnsureFooterIsLast();
         }
-
-        // =============================
-        // MODE
-        // =============================
         private void ToggleDeleteMode()
         {
             _deleteMode = !_deleteMode;
@@ -98,7 +80,6 @@ namespace FE_ToDoApp.Lich_Trinh
         {
             foreach (Control c in flpBody.Controls)
             {
-                // footer không phải row
                 if (_footer != null && ReferenceEquals(c, _footer)) continue;
 
                 if (c is Panel row)
@@ -111,10 +92,6 @@ namespace FE_ToDoApp.Lich_Trinh
                 }
             }
         }
-
-        // =============================
-        // LOAD ITEMS
-        // =============================
         private void LoadItems()
         {
             ClearItemRowsOnly();
@@ -129,11 +106,13 @@ namespace FE_ToDoApp.Lich_Trinh
             foreach (DataRow r in dt.Rows)
             {
                 string itemText = Convert.ToString(r["item_detail"]) ?? "";
+                DateTime? reminderTime = r["ReminderTime"] == DBNull.Value ? null : Convert.ToDateTime(r["ReminderTime"]);
 
                 var row = CreateRow(
                     Convert.ToInt32(r["id_item"]),
                     itemText,
-                    Convert.ToByte(r["status"])
+                    Convert.ToByte(r["status"]),
+                    reminderTime
                 );
 
                 AddRowBeforeFooter(row);
@@ -141,18 +120,12 @@ namespace FE_ToDoApp.Lich_Trinh
 
             EnsureFooterIsLast();
             UpdateRowButtons();
-
-            // Resize lại tất cả rows sau khi load
             if (flpBody.Width > 0)
             {
                 ResizeAllRows();
             }
         }
-
-        // =============================
-        // ROW
-        // =============================
-        private Panel CreateRow(int itemId, string text, byte status)
+        private Panel CreateRow(int itemId, string text, byte status, DateTime? reminderTime = null)
         {
             int rowWidth = Math.Max(400, flpBody.Width > 0 ? flpBody.Width - 12 : 500);
 
@@ -175,8 +148,16 @@ namespace FE_ToDoApp.Lich_Trinh
                 Height = 20,
                 FlatStyle = FlatStyle.Flat
             };
-
-            string displayText = string.IsNullOrWhiteSpace(text) ? "[EMPTY TEXT]" : text;
+            string displayText;
+            if (reminderTime.HasValue)
+            {
+                string timeStr = reminderTime.Value.ToString("HH:mm dd/MM");
+                displayText = $"🔔 {timeStr} | {text}";
+            }
+            else
+            {
+                displayText = string.IsNullOrWhiteSpace(text) ? "[EMPTY TEXT]" : text;
+            }
 
             Label lbl = new Label
             {
@@ -229,22 +210,18 @@ namespace FE_ToDoApp.Lich_Trinh
                 BackColor = Color.LightBlue
             };
 
-            // ===== STATUS =====
             chk.CheckedChanged += (s, e) =>
             {
                 Db_UpdateItemStatus(itemId, chk.Checked ? (byte)2 : (byte)0);
                 ApplyDoneStyle(row, lbl, chk, lblDoneIcon, chk.Checked);
+                TodoItemStatusChanged?.Invoke(this, EventArgs.Empty);
             };
-
-            // ===== DELETE =====
             btnDelete.Click += (s, e) =>
             {
                 Db_DeleteItem(itemId);
                 TodoDeleted?.Invoke(this, EventArgs.Empty);
                 LoadItems();
             };
-
-            // ===== EDIT =====
             btnEdit.Click += (s, e) =>
             {
                 EditItem(itemId);
@@ -258,44 +235,12 @@ namespace FE_ToDoApp.Lich_Trinh
 
             lbl.BringToFront();
             lblDoneIcon.BringToFront();
-
-            // Apply initial style
             ApplyDoneStyle(row, lbl, chk, lblDoneIcon, chk.Checked);
 
             return row;
         }
-
-        // =============================
-        // ACTIONS
-        // =============================
-        private void AddItem()
-        {
-            if (TodoId <= 0) return;
-
-            string text = Interaction.InputBox("Nhập nội dung", "Thêm");
-            if (string.IsNullOrWhiteSpace(text)) return;
-
-            Db_InsertItem(TodoId, text);
-            LoadItems();
-        }
-
-        private void EditItem(int itemId)
-        {
-            string current = Db_GetItemText(itemId);
-            string edited = Interaction.InputBox("Sửa nội dung", "Sửa", current);
-
-            if (string.IsNullOrWhiteSpace(edited) || edited == current) return;
-
-            Db_UpdateItemText(itemId, edited);
-            LoadItems();
-        }
-
-        // =============================
-        // HELPERS: Giữ footer, chỉ xóa rows
-        // =============================
         private void ClearItemRowsOnly()
         {
-            // xóa tất cả control trong flpBody TRỪ footer
             for (int i = flpBody.Controls.Count - 1; i >= 0; i--)
             {
                 var c = flpBody.Controls[i];
@@ -307,14 +252,11 @@ namespace FE_ToDoApp.Lich_Trinh
 
         private Control? FindFooterControl()
         {
-            // nếu Designer của bạn đặt footer là pnlFooter
-            // và footer là con trực tiếp của flpBody
+       
             foreach (Control c in flpBody.Controls)
             {
                 if (c.Name == "pnlFooter") return c;
             }
-
-            // fallback: tìm sâu hơn (trường hợp footer nằm nested)
             var found = FindControlRecursive(flpBody, "pnlFooter");
             return found;
         }
@@ -335,13 +277,10 @@ namespace FE_ToDoApp.Lich_Trinh
             if (_footer == null) _footer = FindFooterControl();
             if (_footer == null) return;
 
-            // nếu footer đang không nằm trong flpBody thì add vào
             if (_footer.Parent != flpBody)
             {
                 flpBody.Controls.Add(_footer);
             }
-
-            // đưa footer xuống cuối
             flpBody.Controls.SetChildIndex(_footer, flpBody.Controls.Count - 1);
         }
 
@@ -351,7 +290,6 @@ namespace FE_ToDoApp.Lich_Trinh
 
             flpBody.Controls.Add(row);
 
-            // nếu có footer thì đưa row lên trước footer
             if (_footer != null && _footer.Parent == flpBody)
             {
                 int footerIndex = flpBody.Controls.GetChildIndex(_footer);
@@ -359,9 +297,6 @@ namespace FE_ToDoApp.Lich_Trinh
             }
         }
 
-        // =============================
-        // RESIZE ROWS
-        // =============================
         private void ResizeAllRows()
         {
             if (flpBody.Width <= 0) return;
@@ -375,8 +310,6 @@ namespace FE_ToDoApp.Lich_Trinh
                 if (c is Panel row)
                 {
                     row.Width = rowWidth;
-
-                    // Resize label và buttons trong row
                     foreach (Control child in row.Controls)
                     {
                         if (child is Label lbl && child.Name != "lblDoneIcon")
@@ -400,44 +333,25 @@ namespace FE_ToDoApp.Lich_Trinh
             }
         }
 
-        // =============================
-        // STYLE
-        // =============================
         private void ApplyDoneStyle(Panel row, Label lbl, CheckBox chk, Label doneIcon, bool done)
         {
             if (done)
             {
-                // Row background - màu xanh nhạt
-                row.BackColor = Color.FromArgb(240, 255, 240); // Light green
-
-                // Label - gạch ngang + màu xám + opacity effect
+                row.BackColor = Color.FromArgb(240, 255, 240); 
                 lbl.Font = new Font(lbl.Font, FontStyle.Strikeout);
-                lbl.ForeColor = Color.FromArgb(120, 120, 120); // Darker gray
-
-                // Checkbox - màu xanh lá khi checked
+                lbl.ForeColor = Color.FromArgb(120, 120, 120);
                 chk.ForeColor = Color.Green;
-
-                // Show done icon
                 doneIcon.Visible = true;
             }
             else
             {
-                // Row background - trắng
                 row.BackColor = Color.White;
-
-                // Label - bình thường
                 lbl.Font = new Font(lbl.Font, FontStyle.Regular);
                 lbl.ForeColor = Color.Black;
-
-                // Checkbox - màu mặc định
                 chk.ForeColor = Color.Black;
-
-                // Hide done icon
                 doneIcon.Visible = false;
             }
         }
-
-        // ===== DATABASE - SQLITE =====
         private string GetTodoTitle(int todoId)
         {
             if (todoId <= 0) return "";
@@ -454,7 +368,7 @@ namespace FE_ToDoApp.Lich_Trinh
         private DataTable Db_GetItems(int todoId)
         {
             return SQLiteHelper.ExecuteQuery(@"
-                SELECT id_item, item_detail, status
+                SELECT id_item, item_detail, status, ReminderTime
                 FROM Todo_List_Item
                 WHERE id_todo = @todoId
                 ORDER BY id_item DESC",

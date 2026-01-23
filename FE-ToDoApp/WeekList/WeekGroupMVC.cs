@@ -7,6 +7,7 @@ using FE_ToDoApp.WeekList.Controllers;
 using FE_ToDoApp.WeekList.Models;
 using FE_ToDoApp.WeekList.Views;
 using FE_ToDoApp.WeekList.Views.Dialogs;
+using FE_ToDoApp.Services;
 
 namespace FE_ToDoApp.WeekList       
 {
@@ -41,6 +42,23 @@ namespace FE_ToDoApp.WeekList
             txt_search_place.TextChanged += TxtSearch_TextChanged;
             LoadCategories();
         }
+
+        public void RefreshData()
+        {
+            LoadCategories();
+        }
+
+        public void SelectCategory(int categoryId)
+        {
+            var targetItem = flowLayoutPanel1.Controls.OfType<week_category_item>()
+                .FirstOrDefault(item => item.CategoryId == categoryId);
+
+            if (targetItem != null)
+            {
+                CategoryItem_Clicked(targetItem, EventArgs.Empty);
+            }
+        }
+
         private void LoadCategories()
         {
             try
@@ -230,85 +248,94 @@ namespace FE_ToDoApp.WeekList
         private void ClearAndRenderDay(Panel dayPanel, List<WeekTask> tasks)
         {
             if (dayPanel == null) return;
-            var toRemove = dayPanel.Controls.OfType<CheckBox>().ToList();
-            foreach (var chk in toRemove)
+            
+            var toRemove = new List<Control>();
+            foreach (Control c in dayPanel.Controls)
             {
-                dayPanel.Controls.Remove(chk);
-                chk.Dispose();
+                if (c is Panel headerPanel && headerPanel.BackColor == SystemColors.ActiveBorder)
+                    continue;
+                toRemove.Add(c);
             }
+            
+            foreach (var c in toRemove)
+            {
+                dayPanel.Controls.Remove(c);
+                c.Dispose();
+            }
+
             int yPos = 70;
+
+            int scrollbarWidth = dayPanel.VerticalScroll.Visible ? SystemInformation.VerticalScrollBarWidth : 0;
+            int availableWidth = dayPanel.ClientSize.Width - scrollbarWidth;
+            
+            int taskPanelWidth = Math.Max(200, availableWidth - 50); // 50 = padding left/right
+
             foreach (var task in tasks)
             {
-                var chk = new CheckBox
+                // Container panel for each task
+                Panel taskPanel = new Panel
                 {
-                    Text = task.Title,
-                    Checked = task.IsDone,
-                    AutoSize = true,
+                    Width = taskPanelWidth,
+                    Height = 35,
                     Location = new Point(24, yPos),
-                    Font = new Font("Segoe UI", 10F),
+                    BackColor = Color.Transparent,
                     Tag = task.TaskId
+                };
+                string displayText;
+                if (task.ReminderTime.HasValue)
+                {
+                    string timeStr = task.ReminderTime.Value.ToString("HH:mm");
+                    displayText = $"🔔 {timeStr} | {task.Title}";
+                }
+                else
+                {
+                    displayText = task.Title;
+                }
+                CheckBox chk = new CheckBox
+                {
+                    Text = displayText,
+                    Checked = task.IsDone,
+                    Location = new Point(0, 8),
+                    Width = taskPanelWidth - 45, // Space for done icon
+                    Height = 24,
+                    Font = new Font("Segoe UI", 10F),
+                    FlatStyle = FlatStyle.Flat,
+                    Tag = task.TaskId,
+                    AutoSize = false,
+                    AutoEllipsis = true
+                };
+
+                // Done icon (✓) - fixed position từ bên phải
+                Label lblDoneIcon = new Label
+                {
+                    Name = "lblDoneIcon",
+                    Text = "✓",
+                    Width = 30,
+                    Height = 24,
+                    Location = new Point(taskPanelWidth - 35, 6),
+                    Font = new Font("Segoe UI", 14F, FontStyle.Bold),
+                    ForeColor = Color.Green,
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    Visible = task.IsDone,
+                    BackColor = Color.Transparent
                 };
 
                 chk.CheckedChanged += Chk_CheckedChanged;
                 chk.Click += Chk_Click;
                 chk.DoubleClick += Chk_DoubleClick;
 
-                dayPanel.Controls.Add(chk);
-                yPos += 30;
+                taskPanel.Controls.Add(chk);
+                taskPanel.Controls.Add(lblDoneIcon);
+                lblDoneIcon.BringToFront();
+
+                ApplyCompletionStyle(taskPanel, chk, lblDoneIcon, task.IsDone);
+
+                dayPanel.Controls.Add(taskPanel);
+                taskPanel.BringToFront();
+                
+                yPos += 35;
             }
         }
-        //private int GetDayOfWeekFromPanel(Panel panel)
-        //{
-        //    if (panel == panel5) return 1;  // Monday
-        //    if (panel == panel7) return 2;  // Tuesday
-        //    if (panel == panel9) return 3;  // Wednesday
-        //    if (panel == panel11) return 4; // Thursday
-        //    if (panel == panel15) return 5; // Friday
-        //    if (panel == panel17) return 6; // Saturday
-        //    if (panel == panel19) return 7; // Sunday
-        //    return 1; // Default Monday
-        //}
-        //private void AddTaskToDay(int dayOfWeek)
-        //{
-        //    if (_currentCategoryId <= 0)
-        //    {
-        //        MessageBox.Show("Vui lòng chọn category trước!", "Thông báo",
-        //            MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //        return;
-        //    }
-
-        //    var dialog = new TaskEditDialog("", dayOfWeek);
-        //    if (dialog.ShowDialog() == DialogResult.OK)
-        //    {
-        //        try
-        //        {
-        //            int newTaskId = _taskController.AddTask(
-        //                _currentCategoryId,
-        //                _currentWeekStart,
-        //                dialog.DayOfWeek,
-        //                dialog.TaskTitle);
-
-        //            _allTasks.Add(new WeekTask
-        //            {
-        //                TaskId = newTaskId,
-        //                CategoryId = _currentCategoryId,
-        //                DayOfWeek = dialog.DayOfWeek,
-        //                Title = dialog.TaskTitle,
-        //                IsDone = false,
-        //                OrderIndex = 0
-        //            });
-
-        //            LoadWeek();
-        //            MessageBox.Show("Thêm task thành công!", "Thông báo",
-        //                MessageBoxButtons.OK, MessageBoxIcon.Information);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            MessageBox.Show($"Lỗi: {ex.Message}", "Lỗi",
-        //                MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //        }
-        //    }
-        //}
 
         private void BtnAddTask_Click(object? sender, EventArgs e)
         {
@@ -329,6 +356,10 @@ namespace FE_ToDoApp.WeekList
                         _currentWeekStart,
                         dialog.DayOfWeek,
                         dialog.TaskTitle);
+                    if (dialog.ReminderTime.HasValue)
+                    {
+                        NotificationService.SetWeekTaskReminder(newTaskId, dialog.ReminderTime);
+                    }
 
                     _allTasks.Add(new WeekTask
                     {
@@ -377,11 +408,11 @@ namespace FE_ToDoApp.WeekList
                 var task = _allTasks.FirstOrDefault(t => t.TaskId == taskId);
                 if (task == null) return;
 
-                var dialog = new TaskEditDialog(task.Title, task.DayOfWeek);
+                var dialog = new TaskEditDialog(task.Title, task.DayOfWeek, taskId);
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     _taskController.UpdateTask(taskId, dialog.TaskTitle, dialog.DayOfWeek);
-
+                    NotificationService.SetWeekTaskReminder(taskId, dialog.ReminderTime);
                     task.Title = dialog.TaskTitle;
                     task.DayOfWeek = dialog.DayOfWeek;
 
@@ -437,7 +468,11 @@ namespace FE_ToDoApp.WeekList
         }
         private void Chk_Click(object sender, EventArgs e)
         {
-            _selectedCheckBox = sender as CheckBox;
+            var chk = sender as CheckBox;
+            if (chk != null)
+            {
+                _selectedCheckBox = chk;
+            }
         }
 
         private void Chk_DoubleClick(object sender, EventArgs e)
@@ -465,7 +500,18 @@ namespace FE_ToDoApp.WeekList
                 _taskController.ToggleTaskStatus(taskId, newValue);
 
                 var task = _allTasks.FirstOrDefault(t => t.TaskId == taskId);
-                if (task != null) task.IsDone = newValue;
+                if (task != null) 
+                {
+                    task.IsDone = newValue;
+                }
+                Panel? taskPanel = chk.Parent as Panel;
+                if (taskPanel != null)
+                {
+                    Label? doneIcon = taskPanel.Controls.OfType<Label>()
+                        .FirstOrDefault(l => l.Name == "lblDoneIcon");
+                    
+                    ApplyCompletionStyle(taskPanel, chk, doneIcon, newValue);
+                }
             }
             catch (Exception ex)
             {
@@ -476,6 +522,33 @@ namespace FE_ToDoApp.WeekList
             finally
             {
                 chk.Enabled = true;
+            }
+        }
+        private void ApplyCompletionStyle(Panel taskPanel, CheckBox chk, Label? doneIcon, bool isDone)
+        {
+            if (isDone)
+            {
+                taskPanel.BackColor = Color.FromArgb(240, 255, 240);
+                chk.Font = new Font(chk.Font, FontStyle.Strikeout);
+                chk.ForeColor = Color.FromArgb(120, 120, 120);
+                chk.BackColor = Color.Transparent;              
+                if (doneIcon != null)
+                {
+                    doneIcon.Visible = true;
+                }
+            }
+            else
+            {
+                taskPanel.BackColor = Color.Transparent;
+                
+                chk.Font = new Font("Segoe UI", 10F, FontStyle.Regular);
+                chk.ForeColor = Color.Black;
+                chk.BackColor = Color.Transparent;
+                
+                if (doneIcon != null)
+                {
+                    doneIcon.Visible = false;
+                }
             }
         }
         private void TxtSearch_TextChanged(object? sender, EventArgs e)
