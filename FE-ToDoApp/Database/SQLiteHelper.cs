@@ -224,26 +224,29 @@ namespace FE_ToDoApp.Database
 
         private static void MigrateReminderColumns(SQLiteConnection conn)
         {
-            // Thêm c?t ReminderTime cho Todo_List_Detail
-            if (!ColumnExists(conn, "Todo_List_Detail", "ReminderTime"))
+            // KHÔNG thêm vào Todo_List_Detail n?a
+            // Thay vào ?ó thêm vào Todo_List_Item
+            
+            // Thêm c?t ReminderTime cho Todo_List_Item
+            if (!ColumnExists(conn, "Todo_List_Item", "ReminderTime"))
             {
                 try
                 {
                     using (var cmd = new SQLiteCommand(@"
-                        ALTER TABLE Todo_List_Detail ADD COLUMN ReminderTime DATETIME NULL;
+                        ALTER TABLE Todo_List_Item ADD COLUMN ReminderTime DATETIME NULL;
                     ", conn))
                     {
                         cmd.ExecuteNonQuery();
                     }
-                    System.Diagnostics.Debug.WriteLine("Added ReminderTime column to Todo_List_Detail");
+                    System.Diagnostics.Debug.WriteLine("Added ReminderTime column to Todo_List_Item");
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine($"Error adding ReminderTime to Todo_List_Detail: {ex.Message}");
+                    System.Diagnostics.Debug.WriteLine($"Error adding ReminderTime to Todo_List_Item: {ex.Message}");
                 }
             }
 
-            // Thêm c?t ReminderTime cho WeekCategory_item
+            // Thêm c?t ReminderTime cho WeekCategory_item (gi? nguyên)
             if (!ColumnExists(conn, "WeekCategory_item", "ReminderTime"))
             {
                 try

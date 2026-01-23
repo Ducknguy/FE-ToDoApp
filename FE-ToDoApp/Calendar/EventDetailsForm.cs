@@ -27,7 +27,7 @@ namespace FE_ToDoApp.Calendar
 
             Label lblTitle = new Label()
             {
-                Text = $"📅 {_currentDate:dd/MM/yyyy}",
+                Text = $"{_currentDate:dd/MM/yyyy}",
                 Location = new Point(10, 15),
                 AutoSize = true,
                 Font = new Font("Segoe UI", 16, FontStyle.Bold),
@@ -52,7 +52,9 @@ namespace FE_ToDoApp.Calendar
         {
             panelList.Controls.Clear();
 
-            var todayEvents = events.Where(t => t.StartDate.Date == _currentDate.Date).OrderBy(t => t.StartDate).ToList();
+            var todayEvents = events.Where(t => t.StartDate.Date == _currentDate.Date)
+                                   .OrderBy(t => t.ReminderTime ?? t.StartDate)
+                                   .ToList();
 
             if (todayEvents.Count == 0)
             {
@@ -81,9 +83,23 @@ namespace FE_ToDoApp.Calendar
             pnl.BackColor = Color.AliceBlue;
             pnl.BorderStyle = BorderStyle.FixedSingle;
 
+            string timeText;
+            if (task.ReminderTime.HasValue)
+            {
+                timeText = task.ReminderTime.Value.ToString("HH:mm");
+            }
+            else if (task.StartDate.TimeOfDay.TotalSeconds > 0)
+            {
+                timeText = task.StartDate.ToString("HH:mm");
+            }
+            else
+            {
+                timeText = "--:--";
+            }
+
             Label lblTime = new Label()
             {
-                Text = task.StartDate.ToString("HH:mm"),
+                Text = timeText,
                 Location = new Point(10, 10),
                 Font = new Font("Segoe UI", 12, FontStyle.Bold),
                 ForeColor = Color.Teal,

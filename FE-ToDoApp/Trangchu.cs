@@ -217,5 +217,12 @@ namespace FE_ToDoApp
                 }
             }
         }
+
+        private void btnHome_Click(object sender, EventArgs e)
+        {
+            Trangchu trangchu = new Trangchu();
+            trangchu.ShowDialog();
+            this.Hide();
+        }
     }
 }
