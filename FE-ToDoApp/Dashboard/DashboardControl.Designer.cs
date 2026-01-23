@@ -36,17 +36,17 @@ namespace FE_ToDoApp.Dashboard
             pnlHeader.Dock = DockStyle.Top;
             pnlHeader.Location = new Point(0, 0);
             pnlHeader.Name = "pnlHeader";
-            pnlHeader.Size = new Size(1000, 90);
+            pnlHeader.Size = new Size(1200, 100);
             pnlHeader.TabIndex = 0;
 
             // 
             // lblTitle
             // 
             lblTitle.AutoSize = true;
-            lblTitle.Font = new Font("Segoe UI", 24F, FontStyle.Bold);
+            lblTitle.Font = new Font("Segoe UI", 26F, FontStyle.Bold);
             lblTitle.Location = new Point(20, 15);
             lblTitle.Name = "lblTitle";
-            lblTitle.Size = new Size(197, 54);
+            lblTitle.Size = new Size(215, 60);
             lblTitle.TabIndex = 0;
             lblTitle.Text = "Thống kê";
 
@@ -54,11 +54,11 @@ namespace FE_ToDoApp.Dashboard
             // lblDate
             // 
             lblDate.AutoSize = true;
-            lblDate.Font = new Font("Segoe UI", 10F);
+            lblDate.Font = new Font("Segoe UI", 12F);
             lblDate.ForeColor = Color.Gray;
-            lblDate.Location = new Point(28, 65);
+            lblDate.Location = new Point(30, 70);
             lblDate.Name = "lblDate";
-            lblDate.Size = new Size(176, 23);
+            lblDate.Size = new Size(200, 28);
             lblDate.TabIndex = 1;
             lblDate.Text = "Sunday, December 21";
 
@@ -67,10 +67,10 @@ namespace FE_ToDoApp.Dashboard
             // 
             flowStats.BackColor = Color.FromArgb(250, 250, 250);
             flowStats.Dock = DockStyle.Top;
-            flowStats.Location = new Point(0, 90);
+            flowStats.Location = new Point(0, 100);
             flowStats.Name = "flowStats";
-            flowStats.Padding = new Padding(15, 5, 0, 10);
-            flowStats.Size = new Size(1000, 160);
+            flowStats.Padding = new Padding(20, 10, 0, 10);
+            flowStats.Size = new Size(1200, 180);
             flowStats.TabIndex = 1;
 
             // 
@@ -80,12 +80,12 @@ namespace FE_ToDoApp.Dashboard
             tblLists.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tblLists.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tblLists.Dock = DockStyle.Fill;
-            tblLists.Location = new Point(0, 250);
+            tblLists.Location = new Point(0, 280);
             tblLists.Name = "tblLists";
-            tblLists.Padding = new Padding(10);
+            tblLists.Padding = new Padding(20);
             tblLists.RowCount = 1;
             tblLists.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tblLists.Size = new Size(1000, 360);
+            tblLists.Size = new Size(1200, 520);
             tblLists.TabIndex = 2;
 
             // 
@@ -98,7 +98,7 @@ namespace FE_ToDoApp.Dashboard
             Controls.Add(flowStats);
             Controls.Add(pnlHeader);
             Name = "DashboardControl";
-            Size = new Size(1000, 610);
+            Size = new Size(1200, 800);
             pnlHeader.ResumeLayout(false);
             pnlHeader.PerformLayout();
             ResumeLayout(false);

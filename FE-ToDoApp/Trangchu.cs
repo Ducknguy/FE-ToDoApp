@@ -11,8 +11,6 @@ namespace FE_ToDoApp
     public partial class Trangchu : Form
     {
         private List<Form> privatePages = new List<Form>();
-        private int currentUserId;
-        private string currentUserName;
 
         public Trangchu()
         {
@@ -22,8 +20,6 @@ namespace FE_ToDoApp
         public Trangchu(int userId, string userName)
         {
             InitializeComponent();
-            currentUserId = userId;
-            currentUserName = userName;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -34,7 +30,7 @@ namespace FE_ToDoApp
         private void btnTrash_Click(object sender, EventArgs e)
         {
            Thungrac thungrac = new Thungrac();
-              thungrac.ShowDialog();
+           thungrac.ShowDialog();
         }
 
         private void btn_CaiDat(object sender, EventArgs e)
@@ -108,7 +104,10 @@ namespace FE_ToDoApp
 
         private void btnDashboard_Click(object sender, EventArgs e)
         {
-            
+            mainPanel.Controls.Clear();
+            FE_ToDoApp.Dashboard.DashboardControl dashboard = new FE_ToDoApp.Dashboard.DashboardControl();
+            dashboard.Dock = DockStyle.Fill;
+            mainPanel.Controls.Add(dashboard);
         }
 
         private void btn_logout_Click(object sender, EventArgs e)

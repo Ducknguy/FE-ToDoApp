@@ -22,13 +22,11 @@
             labelEmailUser = new Label();
             chkShowPassword = new CheckBox();
             labelTitle = new Label();
-            pictureBoxLogo = new PictureBox();
             txtUsername = new TextBox();
             linkForgotPassword = new LinkLabel();
             txtPassword = new TextBox();
             btnLogin = new Button();
             panelCard.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBoxLogo).BeginInit();
             SuspendLayout();
             // 
             // panelCard
@@ -44,7 +42,6 @@
             panelCard.Controls.Add(labelEmailUser);
             panelCard.Controls.Add(chkShowPassword);
             panelCard.Controls.Add(labelTitle);
-            panelCard.Controls.Add(pictureBoxLogo);
             panelCard.Controls.Add(txtUsername);
             panelCard.Controls.Add(linkForgotPassword);
             panelCard.Controls.Add(txtPassword);
@@ -59,7 +56,7 @@
             labelOr.ForeColor = Color.FromArgb(160, 174, 192);
             labelOr.Location = new Point(235, 500);
             labelOr.Name = "labelOr";
-            labelOr.Size = new Size(100, 23);
+            labelOr.Size = new Size(59, 23);
             labelOr.TabIndex = 0;
             labelOr.Text = "Hoặc";
             // 
@@ -93,10 +90,10 @@
             linkRegister.LinkColor = Color.FromArgb(37, 132, 235);
             linkRegister.Location = new Point(292, 550);
             linkRegister.Name = "linkRegister";
-            linkRegister.Size = new Size(111, 23);
+            linkRegister.Size = new Size(158, 23);
             linkRegister.TabIndex = 4;
             linkRegister.TabStop = true;
-            linkRegister.Text = "Đăng kí";
+            linkRegister.Text = "Tạo tài khoản";
             linkRegister.TextAlign = ContentAlignment.MiddleCenter;
             linkRegister.LinkClicked += linkRegister_LinkClicked_1;
             // 
@@ -132,21 +129,12 @@
             // 
             labelTitle.Font = new Font("Segoe UI", 22F, FontStyle.Bold);
             labelTitle.ForeColor = Color.FromArgb(45, 55, 72);
-            labelTitle.Location = new Point(0, 130);
+            labelTitle.Location = new Point(-3, 85);
             labelTitle.Name = "labelTitle";
             labelTitle.Size = new Size(500, 50);
             labelTitle.TabIndex = 8;
             labelTitle.Text = "CHÀO MỪNG";
             labelTitle.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // pictureBoxLogo
-            // 
-            pictureBoxLogo.Location = new Point(210, 40);
-            pictureBoxLogo.Name = "pictureBoxLogo";
-            pictureBoxLogo.Size = new Size(80, 80);
-            pictureBoxLogo.SizeMode = PictureBoxSizeMode.Zoom;
-            pictureBoxLogo.TabIndex = 9;
-            pictureBoxLogo.TabStop = false;
             // 
             // txtUsername
             // 
@@ -200,13 +188,11 @@
             Text = "Login";
             panelCard.ResumeLayout(false);
             panelCard.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBoxLogo).EndInit();
             ResumeLayout(false);
         }
 
         private Panel panelCard, panelLine1, panelLine2;
         private Label labelTitle, labelEmailUser, labelPass, labelNoAccount, labelOr;
-        private PictureBox pictureBoxLogo;
         private CheckBox chkShowPassword;
         private TextBox txtUsername, txtPassword;
         private Button btnLogin;

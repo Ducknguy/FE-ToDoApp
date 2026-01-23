@@ -20,10 +20,10 @@ namespace FE_ToDoApp.Calendar
         public calendar()
         {
             InitializeComponent();
-            
+
             InitializeWeekHeader();
             InitializeDayCells();
-            
+
             _month = DateTime.Now.Month;
             _year = DateTime.Now.Year;
 
@@ -115,14 +115,14 @@ namespace FE_ToDoApp.Calendar
                 {
                     cell.SetDate(dayVal, month, year);
 
-                if (day == DateTime.Now.Day && month == DateTime.Now.Month && year == DateTime.Now.Year)
-                {
-                    btnDay.SetToday();
-                }
+                    // Highlight ngày hôm nay
+                    if (dayVal == DateTime.Now.Day && month == DateTime.Now.Month && year == DateTime.Now.Year)
+                    {
+                        cell.SetToday();
+                    }
 
-                foreach (var task in dbTasks)
-                {
-                    if (task.DueDate.Date == DateTime.Parse(btnDay.FullDate).Date)
+                    // Hiển thị công việc
+                    if (_currentMonthTasks != null)
                     {
                         // Đếm số việc trong ngày
                         //int taskCount = _currentMonthTasks.Count(t => t.StartDate.Date == new DateTime(year, month, dayVal).Date);
