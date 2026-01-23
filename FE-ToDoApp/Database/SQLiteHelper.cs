@@ -55,6 +55,7 @@ namespace FE_ToDoApp.Database
                 {
                     conn.Open();
                     MigrateStreakColumns(conn);
+                    MigrateReminderColumns(conn);
                 }
             }
         }
@@ -160,6 +161,7 @@ namespace FE_ToDoApp.Database
                 
                 // Thêm c?t streak cho database ?ã t?n t?i
                 MigrateStreakColumns(conn);
+                MigrateReminderColumns(conn);
             }
         }
 
@@ -216,6 +218,47 @@ namespace FE_ToDoApp.Database
                 catch (Exception ex)
                 {
                     System.Diagnostics.Debug.WriteLine($"Error adding LastCompletedDate: {ex.Message}");
+                }
+            }
+        }
+
+        private static void MigrateReminderColumns(SQLiteConnection conn)
+        {
+            // Thêm c?t ReminderTime cho Todo_List_Detail
+            if (!ColumnExists(conn, "Todo_List_Detail", "ReminderTime"))
+            {
+                try
+                {
+                    using (var cmd = new SQLiteCommand(@"
+                        ALTER TABLE Todo_List_Detail ADD COLUMN ReminderTime DATETIME NULL;
+                    ", conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                    System.Diagnostics.Debug.WriteLine("Added ReminderTime column to Todo_List_Detail");
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error adding ReminderTime to Todo_List_Detail: {ex.Message}");
+                }
+            }
+
+            // Thêm c?t ReminderTime cho WeekCategory_item
+            if (!ColumnExists(conn, "WeekCategory_item", "ReminderTime"))
+            {
+                try
+                {
+                    using (var cmd = new SQLiteCommand(@"
+                        ALTER TABLE WeekCategory_item ADD COLUMN ReminderTime DATETIME NULL;
+                    ", conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                    System.Diagnostics.Debug.WriteLine("Added ReminderTime column to WeekCategory_item");
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error adding ReminderTime to WeekCategory_item: {ex.Message}");
                 }
             }
         }
