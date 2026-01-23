@@ -1,32 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data.SQLite;
 using System.Windows.Forms;
-using System.Configuration;
+using FE_ToDoApp.Database;
 
 namespace FE_ToDoApp
 {
     class ConnectSQL
     {
-        // --- QUAN TRỌNG: ĐỂ public static ĐỂ CÁC DAO KHÁC DÙNG KÉ ---
-        public static string strCon = @"Data Source=LAPTOP-HJ0H2N4I;Initial Catalog=ToDoApp;Integrated Security=True";
+        // ✅ SQLite: không cần strCon kiểu SQL Server nữa
+        // Dùng thẳng SQLiteHelper trong Database folder
 
         // Đối tượng kết nối
-        private SqlConnection conn = null;
+        private SQLiteConnection conn = null;
 
         public ConnectSQL()
         {
-            conn = new SqlConnection(strCon);
+            conn = SQLiteHelper.GetConnection();
         }
 
         // HÀM LẤY KẾT NỐI
-        public SqlConnection GetConnection()
+        public SQLiteConnection GetConnection()
         {
-            return new SqlConnection(strCon);
+            return SQLiteHelper.GetConnection();
         }
 
         // 2. HÀM LẤY DỮ LIỆU (SELECT)
@@ -37,8 +33,10 @@ namespace FE_ToDoApp
             {
                 if (conn.State == ConnectionState.Closed) conn.Open();
 
-                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
-                da.Fill(dt);
+                using (SQLiteDataAdapter da = new SQLiteDataAdapter(sql, conn))
+                {
+                    da.Fill(dt);
+                }
 
                 if (conn.State == ConnectionState.Open) conn.Close();
             }
@@ -56,12 +54,13 @@ namespace FE_ToDoApp
             {
                 if (conn.State == ConnectionState.Closed) conn.Open();
 
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                int ketqua = cmd.ExecuteNonQuery();
+                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
+                {
+                    int ketqua = cmd.ExecuteNonQuery();
 
-                if (conn.State == ConnectionState.Open) conn.Close();
-
-                return ketqua > 0;
+                    if (conn.State == ConnectionState.Open) conn.Close();
+                    return ketqua > 0;
+                }
             }
             catch (Exception ex)
             {

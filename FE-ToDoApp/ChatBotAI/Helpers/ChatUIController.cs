@@ -22,7 +22,7 @@ namespace ChatbotAI_Form
             panelBody = body;
         }
 
-        // 👉 MÀN HÌNH CHÀO
+        //  MÀN HÌNH CHÀO
         public void ShowWelcome()
         {
             panelHeader.Visible = true;
@@ -32,7 +32,7 @@ namespace ChatbotAI_Form
             panelBody.Padding = new Padding(20);
         }
 
-        // 👉 ĐANG CHAT
+        //  ĐANG CHAT
         public void ShowChat()
         {
             panelHeader.Visible = false;
