@@ -82,7 +82,6 @@ namespace FE_ToDoApp.Calendar
 
                 _currentMonthTasks = await Task.Run(() => DatabaseHelper.GetTasksByMonth(month, year));
                 _dataCache[cacheKey] = _currentMonthTasks;
-
                 this.Cursor = Cursors.Default;
             }
 

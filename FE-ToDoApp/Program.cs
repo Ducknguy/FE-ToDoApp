@@ -7,6 +7,7 @@ using System.Globalization;
 using FE_ToDoApp.ThungRac;
 using FE_ToDoApp.Database;
 using FE_ToDoApp.Services;
+using Google.Apis.Calendar.v3.Data;
 
 
 namespace FE_ToDoApp
@@ -28,7 +29,7 @@ namespace FE_ToDoApp
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();          
 
-            Application.Run(new Trangchu());
+            Application.Run(new Login1());
             
             // D?ng service khi app tho�t
             StreakService.Stop();

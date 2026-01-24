@@ -17,456 +17,468 @@
 
         private void InitializeComponent()
         {
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.sidebarPanel = new System.Windows.Forms.Panel();
-            this.btnGiaoDien = new System.Windows.Forms.Button();
-            this.btnThongTinCaNhan = new System.Windows.Forms.Button();
-            this.panelUserSidebar = new System.Windows.Forms.Panel();
-            this.lblSidebarName = new System.Windows.Forms.Label();
-            this.panelAccount = new System.Windows.Forms.Panel();
-            this.tableLayoutAccount = new System.Windows.Forms.TableLayoutPanel();
-            this.panelRightAvatar = new System.Windows.Forms.Panel();
-            this.btnDoiAnh = new System.Windows.Forms.Button();
-            this.panelAvatar = new System.Windows.Forms.Panel();
-            this.lblAvatarText = new System.Windows.Forms.Label();
-            this.panelLeftInfo = new System.Windows.Forms.Panel();
-            this.grpPassword = new System.Windows.Forms.GroupBox();
-            this.btnLuuMatKhau = new System.Windows.Forms.Button();
-            this.txtPassXacNhan = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.txtPassMoi = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.txtPassCu = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.grpInfo = new System.Windows.Forms.GroupBox();
-            this.btnLuuThongTin = new System.Windows.Forms.Button();
-            this.txtEmail = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txtTenHienThi = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.panelAppearance = new System.Windows.Forms.Panel();
-            this.cmbGiaoDien = new System.Windows.Forms.ComboBox();
-            this.lblThemeDesc = new System.Windows.Forms.Label();
-            this.lblThemeTitle = new System.Windows.Forms.Label();
-            this.lblHeaderAppearance = new System.Windows.Forms.Label();
-            this.openFileDialogAvatar = new System.Windows.Forms.OpenFileDialog();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            this.sidebarPanel.SuspendLayout();
-            this.panelUserSidebar.SuspendLayout();
-            this.panelAccount.SuspendLayout();
-            this.tableLayoutAccount.SuspendLayout();
-            this.panelRightAvatar.SuspendLayout();
-            this.panelAvatar.SuspendLayout();
-            this.panelLeftInfo.SuspendLayout();
-            this.grpPassword.SuspendLayout();
-            this.grpInfo.SuspendLayout();
-            this.panelAppearance.SuspendLayout();
-            this.SuspendLayout();
+            splitContainer1 = new SplitContainer();
+            sidebarPanel = new Panel();
+            btnGiaoDien = new Button();
+            btnThongTinCaNhan = new Button();
+            panelUserSidebar = new Panel();
+            lblSidebarName = new Label();
+            panelAccount = new Panel();
+            tableLayoutAccount = new TableLayoutPanel();
+            panelRightAvatar = new Panel();
+            btnDoiAnh = new Button();
+            panelAvatar = new Panel();
+            lblAvatarText = new Label();
+            panelLeftInfo = new Panel();
+            grpPassword = new GroupBox();
+            chkShowPassword = new CheckBox();
+            btnLuuMatKhau = new Button();
+            txtPassXacNhan = new TextBox();
+            label5 = new Label();
+            txtPassMoi = new TextBox();
+            label4 = new Label();
+            txtPassCu = new TextBox();
+            label3 = new Label();
+            grpInfo = new GroupBox();
+            btnLuuThongTin = new Button();
+            txtEmail = new TextBox();
+            label2 = new Label();
+            txtTenHienThi = new TextBox();
+            label1 = new Label();
+            panelAppearance = new Panel();
+            cmbGiaoDien = new ComboBox();
+            lblThemeDesc = new Label();
+            lblThemeTitle = new Label();
+            lblHeaderAppearance = new Label();
+            openFileDialogAvatar = new OpenFileDialog();
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
+            splitContainer1.Panel1.SuspendLayout();
+            splitContainer1.Panel2.SuspendLayout();
+            splitContainer1.SuspendLayout();
+            sidebarPanel.SuspendLayout();
+            panelUserSidebar.SuspendLayout();
+            panelAccount.SuspendLayout();
+            tableLayoutAccount.SuspendLayout();
+            panelRightAvatar.SuspendLayout();
+            panelAvatar.SuspendLayout();
+            panelLeftInfo.SuspendLayout();
+            grpPassword.SuspendLayout();
+            grpInfo.SuspendLayout();
+            panelAppearance.SuspendLayout();
+            SuspendLayout();
             // 
             // splitContainer1
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
+            splitContainer1.Dock = DockStyle.Fill;
+            splitContainer1.FixedPanel = FixedPanel.Panel1;
+            splitContainer1.Location = new Point(0, 0);
+            splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.BackColor = System.Drawing.Color.White;
-            this.splitContainer1.Panel1.Controls.Add(this.sidebarPanel);
+            splitContainer1.Panel1.BackColor = Color.White;
+            splitContainer1.Panel1.Controls.Add(sidebarPanel);
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.panelAccount);
-            this.splitContainer1.Panel2.Controls.Add(this.panelAppearance);
-            this.splitContainer1.Size = new System.Drawing.Size(984, 661);
-            this.splitContainer1.SplitterDistance = 250;
-            this.splitContainer1.TabIndex = 0;
+            splitContainer1.Panel2.Controls.Add(panelAccount);
+            splitContainer1.Panel2.Controls.Add(panelAppearance);
+            splitContainer1.Size = new Size(984, 661);
+            splitContainer1.SplitterDistance = 250;
+            splitContainer1.TabIndex = 0;
             // 
             // sidebarPanel
             // 
-            this.sidebarPanel.Controls.Add(this.btnGiaoDien);
-            this.sidebarPanel.Controls.Add(this.btnThongTinCaNhan);
-            this.sidebarPanel.Controls.Add(this.panelUserSidebar);
-            this.sidebarPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.sidebarPanel.Location = new System.Drawing.Point(0, 0);
-            this.sidebarPanel.Name = "sidebarPanel";
-            this.sidebarPanel.Padding = new System.Windows.Forms.Padding(10);
-            this.sidebarPanel.Size = new System.Drawing.Size(250, 661);
-            this.sidebarPanel.TabIndex = 0;
+            sidebarPanel.Controls.Add(btnGiaoDien);
+            sidebarPanel.Controls.Add(btnThongTinCaNhan);
+            sidebarPanel.Controls.Add(panelUserSidebar);
+            sidebarPanel.Dock = DockStyle.Fill;
+            sidebarPanel.Location = new Point(0, 0);
+            sidebarPanel.Name = "sidebarPanel";
+            sidebarPanel.Padding = new Padding(10);
+            sidebarPanel.Size = new Size(250, 661);
+            sidebarPanel.TabIndex = 0;
             // 
             // btnGiaoDien
             // 
-            this.btnGiaoDien.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnGiaoDien.FlatAppearance.BorderSize = 0;
-            this.btnGiaoDien.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnGiaoDien.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.btnGiaoDien.Location = new System.Drawing.Point(10, 110);
-            this.btnGiaoDien.Name = "btnGiaoDien";
-            this.btnGiaoDien.Size = new System.Drawing.Size(230, 40);
-            this.btnGiaoDien.TabIndex = 2;
-            this.btnGiaoDien.Text = "🎨  Cài đặt Giao diện";
-            this.btnGiaoDien.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnGiaoDien.UseVisualStyleBackColor = true;
+            btnGiaoDien.Dock = DockStyle.Top;
+            btnGiaoDien.FlatAppearance.BorderSize = 0;
+            btnGiaoDien.FlatStyle = FlatStyle.Flat;
+            btnGiaoDien.Font = new Font("Segoe UI", 10F);
+            btnGiaoDien.Location = new Point(10, 110);
+            btnGiaoDien.Name = "btnGiaoDien";
+            btnGiaoDien.Size = new Size(230, 40);
+            btnGiaoDien.TabIndex = 2;
+            btnGiaoDien.Text = "🎨  Cài đặt Giao diện";
+            btnGiaoDien.TextAlign = ContentAlignment.MiddleLeft;
+            btnGiaoDien.UseVisualStyleBackColor = true;
             // 
             // btnThongTinCaNhan
             // 
-            this.btnThongTinCaNhan.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnThongTinCaNhan.FlatAppearance.BorderSize = 0;
-            this.btnThongTinCaNhan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnThongTinCaNhan.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.btnThongTinCaNhan.Location = new System.Drawing.Point(10, 70);
-            this.btnThongTinCaNhan.Name = "btnThongTinCaNhan";
-            this.btnThongTinCaNhan.Size = new System.Drawing.Size(230, 40);
-            this.btnThongTinCaNhan.TabIndex = 1;
-            this.btnThongTinCaNhan.Text = "👤  Thông tin cá nhân";
-            this.btnThongTinCaNhan.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnThongTinCaNhan.UseVisualStyleBackColor = true;
+            btnThongTinCaNhan.Dock = DockStyle.Top;
+            btnThongTinCaNhan.FlatAppearance.BorderSize = 0;
+            btnThongTinCaNhan.FlatStyle = FlatStyle.Flat;
+            btnThongTinCaNhan.Font = new Font("Segoe UI", 10F);
+            btnThongTinCaNhan.Location = new Point(10, 70);
+            btnThongTinCaNhan.Name = "btnThongTinCaNhan";
+            btnThongTinCaNhan.Size = new Size(230, 40);
+            btnThongTinCaNhan.TabIndex = 1;
+            btnThongTinCaNhan.Text = "👤  Thông tin cá nhân";
+            btnThongTinCaNhan.TextAlign = ContentAlignment.MiddleLeft;
+            btnThongTinCaNhan.UseVisualStyleBackColor = true;
             // 
             // panelUserSidebar
             // 
-            this.panelUserSidebar.Controls.Add(this.lblSidebarName);
-            this.panelUserSidebar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelUserSidebar.Location = new System.Drawing.Point(10, 10);
-            this.panelUserSidebar.Name = "panelUserSidebar";
-            this.panelUserSidebar.Size = new System.Drawing.Size(230, 60);
-            this.panelUserSidebar.TabIndex = 0;
+            panelUserSidebar.Controls.Add(lblSidebarName);
+            panelUserSidebar.Dock = DockStyle.Top;
+            panelUserSidebar.Location = new Point(10, 10);
+            panelUserSidebar.Name = "panelUserSidebar";
+            panelUserSidebar.Size = new Size(230, 60);
+            panelUserSidebar.TabIndex = 0;
             // 
             // lblSidebarName
             // 
-            this.lblSidebarName.AutoSize = true;
-            this.lblSidebarName.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblSidebarName.Location = new System.Drawing.Point(5, 15);
-            this.lblSidebarName.Name = "lblSidebarName";
-            this.lblSidebarName.Size = new System.Drawing.Size(89, 21);
-            this.lblSidebarName.TabIndex = 0;
-            this.lblSidebarName.Text = "User Name";
+            lblSidebarName.AutoSize = true;
+            lblSidebarName.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            lblSidebarName.Location = new Point(5, 15);
+            lblSidebarName.Name = "lblSidebarName";
+            lblSidebarName.Size = new Size(116, 28);
+            lblSidebarName.TabIndex = 0;
+            lblSidebarName.Text = "User Name";
             // 
             // panelAccount
             // 
-            this.panelAccount.AutoScroll = true;
-            this.panelAccount.Controls.Add(this.tableLayoutAccount);
-            this.panelAccount.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelAccount.Location = new System.Drawing.Point(0, 0);
-            this.panelAccount.Name = "panelAccount";
-            this.panelAccount.Padding = new System.Windows.Forms.Padding(20);
-            this.panelAccount.Size = new System.Drawing.Size(730, 661);
-            this.panelAccount.TabIndex = 0;
+            panelAccount.AutoScroll = true;
+            panelAccount.Controls.Add(tableLayoutAccount);
+            panelAccount.Dock = DockStyle.Fill;
+            panelAccount.Location = new Point(0, 0);
+            panelAccount.Name = "panelAccount";
+            panelAccount.Padding = new Padding(20);
+            panelAccount.Size = new Size(730, 661);
+            panelAccount.TabIndex = 0;
             // 
             // tableLayoutAccount
             // 
-            this.tableLayoutAccount.ColumnCount = 2;
-            this.tableLayoutAccount.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 65F));
-            this.tableLayoutAccount.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 35F));
-            this.tableLayoutAccount.Controls.Add(this.panelRightAvatar, 1, 0);
-            this.tableLayoutAccount.Controls.Add(this.panelLeftInfo, 0, 0);
-            this.tableLayoutAccount.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutAccount.Location = new System.Drawing.Point(20, 20);
-            this.tableLayoutAccount.Name = "tableLayoutAccount";
-            this.tableLayoutAccount.RowCount = 1;
-            this.tableLayoutAccount.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));
-            this.tableLayoutAccount.Size = new System.Drawing.Size(690, 600);
-            this.tableLayoutAccount.TabIndex = 0;
+            tableLayoutAccount.ColumnCount = 2;
+            tableLayoutAccount.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 65F));
+            tableLayoutAccount.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35F));
+            tableLayoutAccount.Controls.Add(panelRightAvatar, 1, 0);
+            tableLayoutAccount.Controls.Add(panelLeftInfo, 0, 0);
+            tableLayoutAccount.Dock = DockStyle.Top;
+            tableLayoutAccount.Location = new Point(20, 20);
+            tableLayoutAccount.Name = "tableLayoutAccount";
+            tableLayoutAccount.RowCount = 1;
+            tableLayoutAccount.RowStyles.Add(new RowStyle());
+            tableLayoutAccount.Size = new Size(690, 600);
+            tableLayoutAccount.TabIndex = 0;
             // 
             // panelRightAvatar
             // 
-            this.panelRightAvatar.Controls.Add(this.btnDoiAnh);
-            this.panelRightAvatar.Controls.Add(this.panelAvatar);
-            this.panelRightAvatar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelRightAvatar.Location = new System.Drawing.Point(451, 3);
-            this.panelRightAvatar.Name = "panelRightAvatar";
-            this.panelRightAvatar.Size = new System.Drawing.Size(236, 250);
-            this.panelRightAvatar.TabIndex = 1;
+            panelRightAvatar.Controls.Add(btnDoiAnh);
+            panelRightAvatar.Controls.Add(panelAvatar);
+            panelRightAvatar.Dock = DockStyle.Top;
+            panelRightAvatar.Location = new Point(451, 3);
+            panelRightAvatar.Name = "panelRightAvatar";
+            panelRightAvatar.Size = new Size(236, 250);
+            panelRightAvatar.TabIndex = 1;
             // 
             // btnDoiAnh
             // 
-            this.btnDoiAnh.Location = new System.Drawing.Point(68, 170);
-            this.btnDoiAnh.Name = "btnDoiAnh";
-            this.btnDoiAnh.Size = new System.Drawing.Size(100, 30);
-            this.btnDoiAnh.TabIndex = 1;
-            this.btnDoiAnh.Text = "Chọn ảnh...";
-            this.btnDoiAnh.UseVisualStyleBackColor = true;
-            this.btnDoiAnh.Click += new System.EventHandler(this.btnDoiAnh_Click);
+            btnDoiAnh.Location = new Point(68, 170);
+            btnDoiAnh.Name = "btnDoiAnh";
+            btnDoiAnh.Size = new Size(100, 30);
+            btnDoiAnh.TabIndex = 1;
+            btnDoiAnh.Text = "Chọn ảnh...";
+            btnDoiAnh.UseVisualStyleBackColor = true;
+            btnDoiAnh.Click += btnDoiAnh_Click;
             // 
             // panelAvatar
             // 
-            this.panelAvatar.BackColor = System.Drawing.Color.Gainsboro;
-            this.panelAvatar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.panelAvatar.Controls.Add(this.lblAvatarText);
-            this.panelAvatar.Location = new System.Drawing.Point(43, 10);
-            this.panelAvatar.Name = "panelAvatar";
-            this.panelAvatar.Size = new System.Drawing.Size(150, 150);
-            this.panelAvatar.TabIndex = 0;
+            panelAvatar.BackColor = Color.Gainsboro;
+            panelAvatar.BackgroundImageLayout = ImageLayout.Zoom;
+            panelAvatar.Controls.Add(lblAvatarText);
+            panelAvatar.Location = new Point(43, 10);
+            panelAvatar.Name = "panelAvatar";
+            panelAvatar.Size = new Size(150, 150);
+            panelAvatar.TabIndex = 0;
             // 
             // lblAvatarText
             // 
-            this.lblAvatarText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblAvatarText.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Bold);
-            this.lblAvatarText.Location = new System.Drawing.Point(0, 0);
-            this.lblAvatarText.Name = "lblAvatarText";
-            this.lblAvatarText.Size = new System.Drawing.Size(150, 150);
-            this.lblAvatarText.TabIndex = 0;
-            this.lblAvatarText.Text = "Q";
-            this.lblAvatarText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            lblAvatarText.Dock = DockStyle.Fill;
+            lblAvatarText.Font = new Font("Segoe UI", 36F, FontStyle.Bold);
+            lblAvatarText.Location = new Point(0, 0);
+            lblAvatarText.Name = "lblAvatarText";
+            lblAvatarText.Size = new Size(150, 150);
+            lblAvatarText.TabIndex = 0;
+            lblAvatarText.Text = "Q";
+            lblAvatarText.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // panelLeftInfo
             // 
-            this.panelLeftInfo.Controls.Add(this.grpPassword);
-            this.panelLeftInfo.Controls.Add(this.grpInfo);
-            this.panelLeftInfo.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelLeftInfo.Location = new System.Drawing.Point(3, 3);
-            this.panelLeftInfo.Name = "panelLeftInfo";
-            this.panelLeftInfo.Size = new System.Drawing.Size(442, 590);
-            this.panelLeftInfo.TabIndex = 0;
+            panelLeftInfo.Controls.Add(grpPassword);
+            panelLeftInfo.Controls.Add(grpInfo);
+            panelLeftInfo.Dock = DockStyle.Top;
+            panelLeftInfo.Location = new Point(3, 3);
+            panelLeftInfo.Name = "panelLeftInfo";
+            panelLeftInfo.Size = new Size(442, 590);
+            panelLeftInfo.TabIndex = 0;
             // 
             // grpPassword
             // 
-            this.grpPassword.Controls.Add(this.btnLuuMatKhau);
-            this.grpPassword.Controls.Add(this.txtPassXacNhan);
-            this.grpPassword.Controls.Add(this.label5);
-            this.grpPassword.Controls.Add(this.txtPassMoi);
-            this.grpPassword.Controls.Add(this.label4);
-            this.grpPassword.Controls.Add(this.txtPassCu);
-            this.grpPassword.Controls.Add(this.label3);
-            this.grpPassword.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpPassword.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.grpPassword.Location = new System.Drawing.Point(0, 260);
-            this.grpPassword.Name = "grpPassword";
-            this.grpPassword.Size = new System.Drawing.Size(442, 300);
-            this.grpPassword.TabIndex = 1;
-            this.grpPassword.TabStop = false;
-            this.grpPassword.Text = "THAY ĐỔI MẬT KHẨU";
+            grpPassword.Controls.Add(chkShowPassword);
+            grpPassword.Controls.Add(btnLuuMatKhau);
+            grpPassword.Controls.Add(txtPassXacNhan);
+            grpPassword.Controls.Add(label5);
+            grpPassword.Controls.Add(txtPassMoi);
+            grpPassword.Controls.Add(label4);
+            grpPassword.Controls.Add(txtPassCu);
+            grpPassword.Controls.Add(label3);
+            grpPassword.Dock = DockStyle.Top;
+            grpPassword.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            grpPassword.Location = new Point(0, 260);
+            grpPassword.Name = "grpPassword";
+            grpPassword.Size = new Size(442, 300);
+            grpPassword.TabIndex = 1;
+            grpPassword.TabStop = false;
+            grpPassword.Text = "THAY ĐỔI MẬT KHẨU";
+            // 
+            // chkShowPassword
+            // 
+            chkShowPassword.AutoSize = true;
+            chkShowPassword.BackgroundImageLayout = ImageLayout.Center;
+            chkShowPassword.Location = new Point(22, 223);
+            chkShowPassword.Name = "chkShowPassword";
+            chkShowPassword.Size = new Size(177, 27);
+            chkShowPassword.TabIndex = 7;
+            chkShowPassword.Text = "Hiển thị mật khẩu";
+            chkShowPassword.UseVisualStyleBackColor = true;
+            chkShowPassword.CheckedChanged += chkShowPassword_CheckedChanged_1;
             // 
             // btnLuuMatKhau
             // 
-            this.btnLuuMatKhau.BackColor = System.Drawing.Color.ForestGreen;
-            this.btnLuuMatKhau.FlatAppearance.BorderSize = 0;
-            this.btnLuuMatKhau.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLuuMatKhau.ForeColor = System.Drawing.Color.White;
-            this.btnLuuMatKhau.Location = new System.Drawing.Point(150, 240);
-            this.btnLuuMatKhau.Name = "btnLuuMatKhau";
-            this.btnLuuMatKhau.Size = new System.Drawing.Size(120, 35);
-            this.btnLuuMatKhau.TabIndex = 6;
-            this.btnLuuMatKhau.Text = "Lưu mật khẩu";
-            this.btnLuuMatKhau.UseVisualStyleBackColor = false;
-            this.btnLuuMatKhau.Click += new System.EventHandler(this.btnLuuMatKhau_Click);
+            btnLuuMatKhau.BackColor = Color.ForestGreen;
+            btnLuuMatKhau.FlatAppearance.BorderSize = 0;
+            btnLuuMatKhau.FlatStyle = FlatStyle.Flat;
+            btnLuuMatKhau.ForeColor = Color.White;
+            btnLuuMatKhau.Location = new Point(150, 259);
+            btnLuuMatKhau.Name = "btnLuuMatKhau";
+            btnLuuMatKhau.Size = new Size(141, 35);
+            btnLuuMatKhau.TabIndex = 6;
+            btnLuuMatKhau.Text = "Lưu mật khẩu";
+            btnLuuMatKhau.UseVisualStyleBackColor = false;
+            btnLuuMatKhau.Click += btnLuuMatKhau_Click;
             // 
             // txtPassXacNhan
             // 
-            this.txtPassXacNhan.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.txtPassXacNhan.Location = new System.Drawing.Point(150, 180);
-            this.txtPassXacNhan.Name = "txtPassXacNhan";
-            this.txtPassXacNhan.PasswordChar = '*';
-            this.txtPassXacNhan.Size = new System.Drawing.Size(250, 25);
-            this.txtPassXacNhan.TabIndex = 5;
+            txtPassXacNhan.Font = new Font("Segoe UI", 10F);
+            txtPassXacNhan.Location = new Point(201, 180);
+            txtPassXacNhan.Name = "txtPassXacNhan";
+            txtPassXacNhan.PasswordChar = '*';
+            txtPassXacNhan.Size = new Size(199, 30);
+            txtPassXacNhan.TabIndex = 5;
+            txtPassXacNhan.TextChanged += txtPassXacNhan_TextChanged;
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.label5.Location = new System.Drawing.Point(20, 183);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(121, 19);
-            this.label5.TabIndex = 4;
-            this.label5.Text = "Nhập lại mật khẩu:";
+            label5.AutoSize = true;
+            label5.Font = new Font("Segoe UI", 10F);
+            label5.Location = new Point(20, 183);
+            label5.Name = "label5";
+            label5.Size = new Size(155, 23);
+            label5.TabIndex = 4;
+            label5.Text = "Nhập lại mật khẩu:";
             // 
             // txtPassMoi
             // 
-            this.txtPassMoi.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.txtPassMoi.Location = new System.Drawing.Point(150, 120);
-            this.txtPassMoi.Name = "txtPassMoi";
-            this.txtPassMoi.PasswordChar = '*';
-            this.txtPassMoi.Size = new System.Drawing.Size(250, 25);
-            this.txtPassMoi.TabIndex = 3;
+            txtPassMoi.Font = new Font("Segoe UI", 10F);
+            txtPassMoi.Location = new Point(201, 120);
+            txtPassMoi.Name = "txtPassMoi";
+            txtPassMoi.PasswordChar = '*';
+            txtPassMoi.Size = new Size(199, 30);
+            txtPassMoi.TabIndex = 3;
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.label4.Location = new System.Drawing.Point(20, 123);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(98, 19);
-            this.label4.TabIndex = 2;
-            this.label4.Text = "Mật khẩu mới:";
+            label4.AutoSize = true;
+            label4.Font = new Font("Segoe UI", 10F);
+            label4.Location = new Point(20, 123);
+            label4.Name = "label4";
+            label4.Size = new Size(120, 23);
+            label4.TabIndex = 2;
+            label4.Text = "Mật khẩu mới:";
             // 
             // txtPassCu
             // 
-            this.txtPassCu.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.txtPassCu.Location = new System.Drawing.Point(150, 60);
-            this.txtPassCu.Name = "txtPassCu";
-            this.txtPassCu.PasswordChar = '*';
-            this.txtPassCu.Size = new System.Drawing.Size(250, 25);
-            this.txtPassCu.TabIndex = 1;
+            txtPassCu.Font = new Font("Segoe UI", 10F);
+            txtPassCu.Location = new Point(201, 60);
+            txtPassCu.Name = "txtPassCu";
+            txtPassCu.PasswordChar = '*';
+            txtPassCu.Size = new Size(199, 30);
+            txtPassCu.TabIndex = 1;
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.label3.Location = new System.Drawing.Point(20, 63);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(89, 19);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "Mật khẩu cũ:";
+            label3.AutoSize = true;
+            label3.Font = new Font("Segoe UI", 10F);
+            label3.Location = new Point(20, 63);
+            label3.Name = "label3";
+            label3.Size = new Size(109, 23);
+            label3.TabIndex = 0;
+            label3.Text = "Mật khẩu cũ:";
             // 
             // grpInfo
             // 
-            this.grpInfo.Controls.Add(this.btnLuuThongTin);
-            this.grpInfo.Controls.Add(this.txtEmail);
-            this.grpInfo.Controls.Add(this.label2);
-            this.grpInfo.Controls.Add(this.txtTenHienThi);
-            this.grpInfo.Controls.Add(this.label1);
-            this.grpInfo.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpInfo.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.grpInfo.Location = new System.Drawing.Point(0, 0);
-            this.grpInfo.Name = "grpInfo";
-            this.grpInfo.Size = new System.Drawing.Size(442, 260);
-            this.grpInfo.TabIndex = 0;
-            this.grpInfo.TabStop = false;
-            this.grpInfo.Text = "THÔNG TIN CÁ NHÂN";
+            grpInfo.Controls.Add(btnLuuThongTin);
+            grpInfo.Controls.Add(txtEmail);
+            grpInfo.Controls.Add(label2);
+            grpInfo.Controls.Add(txtTenHienThi);
+            grpInfo.Controls.Add(label1);
+            grpInfo.Dock = DockStyle.Top;
+            grpInfo.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            grpInfo.Location = new Point(0, 0);
+            grpInfo.Name = "grpInfo";
+            grpInfo.Size = new Size(442, 260);
+            grpInfo.TabIndex = 0;
+            grpInfo.TabStop = false;
+            grpInfo.Text = "THÔNG TIN CÁ NHÂN";
             // 
             // btnLuuThongTin
             // 
-            this.btnLuuThongTin.BackColor = System.Drawing.Color.ForestGreen;
-            this.btnLuuThongTin.FlatAppearance.BorderSize = 0;
-            this.btnLuuThongTin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLuuThongTin.ForeColor = System.Drawing.Color.White;
-            this.btnLuuThongTin.Location = new System.Drawing.Point(150, 180);
-            this.btnLuuThongTin.Name = "btnLuuThongTin";
-            this.btnLuuThongTin.Size = new System.Drawing.Size(120, 35);
-            this.btnLuuThongTin.TabIndex = 4;
-            this.btnLuuThongTin.Text = "Lưu thay đổi";
-            this.btnLuuThongTin.UseVisualStyleBackColor = false;
-            this.btnLuuThongTin.Click += new System.EventHandler(this.btnLuuThongTin_Click);
+            btnLuuThongTin.BackColor = Color.ForestGreen;
+            btnLuuThongTin.FlatAppearance.BorderSize = 0;
+            btnLuuThongTin.FlatStyle = FlatStyle.Flat;
+            btnLuuThongTin.ForeColor = Color.White;
+            btnLuuThongTin.Location = new Point(150, 180);
+            btnLuuThongTin.Name = "btnLuuThongTin";
+            btnLuuThongTin.Size = new Size(141, 35);
+            btnLuuThongTin.TabIndex = 4;
+            btnLuuThongTin.Text = "Lưu thay đổi";
+            btnLuuThongTin.UseVisualStyleBackColor = false;
+            btnLuuThongTin.Click += btnLuuThongTin_Click;
             // 
             // txtEmail
             // 
-            this.txtEmail.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.txtEmail.Location = new System.Drawing.Point(150, 120);
-            this.txtEmail.Name = "txtEmail";
-            this.txtEmail.Size = new System.Drawing.Size(250, 25);
-            this.txtEmail.TabIndex = 3;
+            txtEmail.Font = new Font("Segoe UI", 10F);
+            txtEmail.Location = new Point(150, 120);
+            txtEmail.Name = "txtEmail";
+            txtEmail.Size = new Size(250, 30);
+            txtEmail.TabIndex = 3;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.label2.Location = new System.Drawing.Point(20, 123);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(44, 19);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Email:";
+            label2.AutoSize = true;
+            label2.Font = new Font("Segoe UI", 10F);
+            label2.Location = new Point(20, 123);
+            label2.Name = "label2";
+            label2.Size = new Size(55, 23);
+            label2.TabIndex = 2;
+            label2.Text = "Email:";
             // 
             // txtTenHienThi
             // 
-            this.txtTenHienThi.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.txtTenHienThi.Location = new System.Drawing.Point(150, 60);
-            this.txtTenHienThi.Name = "txtTenHienThi";
-            this.txtTenHienThi.Size = new System.Drawing.Size(250, 25);
-            this.txtTenHienThi.TabIndex = 1;
+            txtTenHienThi.Font = new Font("Segoe UI", 10F);
+            txtTenHienThi.Location = new Point(150, 60);
+            txtTenHienThi.Name = "txtTenHienThi";
+            txtTenHienThi.Size = new Size(250, 30);
+            txtTenHienThi.TabIndex = 1;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.label1.Location = new System.Drawing.Point(20, 63);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(76, 19);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Họ và Tên:";
+            label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI", 10F);
+            label1.Location = new Point(20, 63);
+            label1.Name = "label1";
+            label1.Size = new Size(134, 23);
+            label1.TabIndex = 0;
+            label1.Text = "Tên người dùng:";
             // 
             // panelAppearance
             // 
-            this.panelAppearance.Controls.Add(this.cmbGiaoDien);
-            this.panelAppearance.Controls.Add(this.lblThemeDesc);
-            this.panelAppearance.Controls.Add(this.lblThemeTitle);
-            this.panelAppearance.Controls.Add(this.lblHeaderAppearance);
-            this.panelAppearance.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelAppearance.Location = new System.Drawing.Point(0, 0);
-            this.panelAppearance.Name = "panelAppearance";
-            this.panelAppearance.Padding = new System.Windows.Forms.Padding(40);
-            this.panelAppearance.Size = new System.Drawing.Size(730, 661);
-            this.panelAppearance.TabIndex = 1;
-            this.panelAppearance.Visible = false;
+            panelAppearance.Controls.Add(cmbGiaoDien);
+            panelAppearance.Controls.Add(lblThemeDesc);
+            panelAppearance.Controls.Add(lblThemeTitle);
+            panelAppearance.Controls.Add(lblHeaderAppearance);
+            panelAppearance.Dock = DockStyle.Fill;
+            panelAppearance.Location = new Point(0, 0);
+            panelAppearance.Name = "panelAppearance";
+            panelAppearance.Padding = new Padding(40);
+            panelAppearance.Size = new Size(730, 661);
+            panelAppearance.TabIndex = 1;
+            panelAppearance.Visible = false;
             // 
             // cmbGiaoDien
             // 
-            this.cmbGiaoDien.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbGiaoDien.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.cmbGiaoDien.FormattingEnabled = true;
-            this.cmbGiaoDien.Items.AddRange(new object[] {
-            "Sáng",
-            "Tối"});
-            this.cmbGiaoDien.Location = new System.Drawing.Point(42, 160);
-            this.cmbGiaoDien.Name = "cmbGiaoDien";
-            this.cmbGiaoDien.Size = new System.Drawing.Size(200, 25);
-            this.cmbGiaoDien.TabIndex = 3;
-            this.cmbGiaoDien.SelectedIndexChanged += new System.EventHandler(this.cmbGiaoDien_SelectedIndexChanged);
+            cmbGiaoDien.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbGiaoDien.Font = new Font("Segoe UI", 10F);
+            cmbGiaoDien.FormattingEnabled = true;
+            cmbGiaoDien.Items.AddRange(new object[] { "Sáng", "Tối" });
+            cmbGiaoDien.Location = new Point(42, 160);
+            cmbGiaoDien.Name = "cmbGiaoDien";
+            cmbGiaoDien.Size = new Size(200, 31);
+            cmbGiaoDien.TabIndex = 3;
+            cmbGiaoDien.SelectedIndexChanged += cmbGiaoDien_SelectedIndexChanged;
             // 
             // lblThemeDesc
             // 
-            this.lblThemeDesc.AutoSize = true;
-            this.lblThemeDesc.ForeColor = System.Drawing.Color.Gray;
-            this.lblThemeDesc.Location = new System.Drawing.Point(40, 130);
-            this.lblThemeDesc.Name = "lblThemeDesc";
-            this.lblThemeDesc.Size = new System.Drawing.Size(277, 13);
-            this.lblThemeDesc.TabIndex = 2;
-            this.lblThemeDesc.Text = "Tùy chỉnh giao diện hiển thị của ứng dụng trên thiết bị này.";
+            lblThemeDesc.AutoSize = true;
+            lblThemeDesc.ForeColor = Color.Gray;
+            lblThemeDesc.Location = new Point(40, 130);
+            lblThemeDesc.Name = "lblThemeDesc";
+            lblThemeDesc.Size = new Size(372, 19);
+            lblThemeDesc.TabIndex = 2;
+            lblThemeDesc.Text = "Tùy chỉnh giao diện hiển thị của ứng dụng trên thiết bị này.";
             // 
             // lblThemeTitle
             // 
-            this.lblThemeTitle.AutoSize = true;
-            this.lblThemeTitle.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            this.lblThemeTitle.Location = new System.Drawing.Point(40, 105);
-            this.lblThemeTitle.Name = "lblThemeTitle";
-            this.lblThemeTitle.Size = new System.Drawing.Size(95, 20);
-            this.lblThemeTitle.TabIndex = 1;
-            this.lblThemeTitle.Text = "Chế độ màu";
+            lblThemeTitle.AutoSize = true;
+            lblThemeTitle.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            lblThemeTitle.Location = new Point(40, 105);
+            lblThemeTitle.Name = "lblThemeTitle";
+            lblThemeTitle.Size = new Size(118, 25);
+            lblThemeTitle.TabIndex = 1;
+            lblThemeTitle.Text = "Chế độ màu";
             // 
             // lblHeaderAppearance
             // 
-            this.lblHeaderAppearance.AutoSize = true;
-            this.lblHeaderAppearance.Font = new System.Drawing.Font("Segoe UI", 20F, System.Drawing.FontStyle.Bold);
-            this.lblHeaderAppearance.Location = new System.Drawing.Point(35, 40);
-            this.lblHeaderAppearance.Name = "lblHeaderAppearance";
-            this.lblHeaderAppearance.Size = new System.Drawing.Size(140, 37);
-            this.lblHeaderAppearance.TabIndex = 0;
-            this.lblHeaderAppearance.Text = "Giao diện";
+            lblHeaderAppearance.AutoSize = true;
+            lblHeaderAppearance.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
+            lblHeaderAppearance.Location = new Point(35, 40);
+            lblHeaderAppearance.Name = "lblHeaderAppearance";
+            lblHeaderAppearance.Size = new Size(172, 46);
+            lblHeaderAppearance.TabIndex = 0;
+            lblHeaderAppearance.Text = "Giao diện";
             // 
             // openFileDialogAvatar
             // 
-            this.openFileDialogAvatar.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.bmp";
+            openFileDialogAvatar.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.bmp";
             // 
             // setting
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(984, 661);
-            this.Controls.Add(this.splitContainer1);
-            this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Name = "setting";
-            this.Text = "Cài đặt";
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
-            this.sidebarPanel.ResumeLayout(false);
-            this.panelUserSidebar.ResumeLayout(false);
-            this.panelUserSidebar.PerformLayout();
-            this.panelAccount.ResumeLayout(false);
-            this.tableLayoutAccount.ResumeLayout(false);
-            this.panelRightAvatar.ResumeLayout(false);
-            this.panelAvatar.ResumeLayout(false);
-            this.panelLeftInfo.ResumeLayout(false);
-            this.grpPassword.ResumeLayout(false);
-            this.grpPassword.PerformLayout();
-            this.grpInfo.ResumeLayout(false);
-            this.grpInfo.PerformLayout();
-            this.panelAppearance.ResumeLayout(false);
-            this.panelAppearance.PerformLayout();
-            this.ResumeLayout(false);
-
+            AutoScaleMode = AutoScaleMode.None;
+            ClientSize = new Size(984, 661);
+            Controls.Add(splitContainer1);
+            Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Name = "setting";
+            Text = "Cài đặt";
+            splitContainer1.Panel1.ResumeLayout(false);
+            splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
+            splitContainer1.ResumeLayout(false);
+            sidebarPanel.ResumeLayout(false);
+            panelUserSidebar.ResumeLayout(false);
+            panelUserSidebar.PerformLayout();
+            panelAccount.ResumeLayout(false);
+            tableLayoutAccount.ResumeLayout(false);
+            panelRightAvatar.ResumeLayout(false);
+            panelAvatar.ResumeLayout(false);
+            panelLeftInfo.ResumeLayout(false);
+            grpPassword.ResumeLayout(false);
+            grpPassword.PerformLayout();
+            grpInfo.ResumeLayout(false);
+            grpInfo.PerformLayout();
+            panelAppearance.ResumeLayout(false);
+            panelAppearance.PerformLayout();
+            ResumeLayout(false);
         }
 
         #endregion
@@ -504,5 +516,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtPassCu;
         private System.Windows.Forms.Label label3;
+        private CheckBox chkShowPassword;
     }
 }
