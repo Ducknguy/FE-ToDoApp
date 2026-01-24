@@ -1,4 +1,4 @@
-Ôªøusing System;
+using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Drawing;
@@ -11,8 +11,6 @@ namespace FE_ToDoApp.Dashboard
 {
     public partial class DashboardControl : UserControl
     {
-        
-
         public DashboardControl()
         {
             InitializeComponent();
@@ -21,7 +19,14 @@ namespace FE_ToDoApp.Dashboard
 
         public void LoadDashboardData()
         {
-            lblDate.Text = DateTime.Now.ToString("dddd, dd/MM/yyyy", new CultureInfo("vi-VN"));
+            try
+            {
+                lblDate.Text = DateTime.Now.ToString("dddd, dd/MM/yyyy", new CultureInfo("vi-VN"));
+            }
+            catch
+            {
+                lblDate.Text = DateTime.Now.ToString("dddd, dd/MM/yyyy");
+            }
 
             flowStats.Controls.Clear();
             tblLists.Controls.Clear();
@@ -31,10 +36,18 @@ namespace FE_ToDoApp.Dashboard
                 using (SQLiteConnection conn = SQLiteHelper.GetConnection())
                 {
                     conn.Open();
+                    
+                    // Ki?m tra xem c·c b?ng cÛ t?n t?i khÙng
+                    if (!CheckTablesExist(conn))
+                    {
+                        ShowEmptyDashboard("Database ch?a ???c kh?i t?o ??y ??.");
+                        return;
+                    }
+                    
                     LoadStats(conn);
 
-                    // --- PH·∫¶N 1: C√îNG VI·ªÜC S·∫ÆP T·ªöI (Upcoming) ---
-                    Panel pnlToday = CreateListCard("C√°c c√¥ng vi·ªác s·∫Øp t·ªõi");
+                    // --- PH?N 1: C‘NG VI?C S?P T?I (Upcoming) ---
+                    Panel pnlToday = CreateListCard("C·c cÙng vi?c s?p t?i");
 
                     string sqlUpcoming = @"
                         SELECT 
@@ -66,9 +79,8 @@ namespace FE_ToDoApp.Dashboard
                     LoadTasksToContainer(conn, pnlToday, sqlUpcoming, true);
                     tblLists.Controls.Add(pnlToday, 0, 0);
 
-
-                    // --- PH·∫¶N 2: C√îNG VI·ªÜC QU√Å H·∫†N (Overdue) ---
-                    Panel pnlOverdue = CreateListCard("C√°c c√¥ng vi·ªác qu√° h·∫°n");
+                    // --- PH?N 2: C‘NG VI?C QU¡ H?N (Overdue) ---
+                    Panel pnlOverdue = CreateListCard("C·c cÙng vi?c qu· h?n");
 
                     string sqlOverdue = @"
                         SELECT 
@@ -103,7 +115,65 @@ namespace FE_ToDoApp.Dashboard
             }
             catch (Exception ex)
             {
-                MessageBox.Show("L·ªói Dashboard: " + ex.Message);
+                ShowEmptyDashboard("L?i Dashboard: " + ex.Message);
+            }
+        }
+
+        private void ShowEmptyDashboard(string message)
+        {
+            // Hi?n th? stats m?c ??nh
+            flowStats.Controls.Add(CreateStatCard("0", "HÙm nay", Color.AliceBlue, "??"));
+            flowStats.Controls.Add(CreateStatCard("0", "S?p t?i", Color.Beige, "??"));
+            flowStats.Controls.Add(CreateStatCard("0", "Qu· h?n", Color.MistyRose, "??"));
+            flowStats.Controls.Add(CreateStatCard("0", "Ho‡n th‡nh", Color.Honeydew, "?"));
+
+            // Hi?n th? thÙng b·o
+            Panel pnlMessage = new Panel
+            {
+                Dock = DockStyle.Fill,
+                BackColor = Color.White,
+                Margin = new Padding(15),
+                Padding = new Padding(20)
+            };
+
+            Label lblMessage = new Label
+            {
+                Text = message + "\n\nH„y thÍm cÙng vi?c m?i ?? b?t ??u s? d?ng Dashboard.",
+                Font = new Font("Segoe UI", 12, FontStyle.Regular),
+                ForeColor = Color.Gray,
+                Location = new Point(50, 100),
+                AutoSize = true,
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+
+            pnlMessage.Controls.Add(lblMessage);
+            tblLists.Controls.Add(pnlMessage, 0, 0);
+            tblLists.SetColumnSpan(pnlMessage, 2);
+        }
+
+        private bool CheckTablesExist(SQLiteConnection conn)
+        {
+            try
+            {
+                string[] requiredTables = { "WeekCategory_item", "WeekCategory_detail", "Todo_List_Item", "Todo_List_Detail" };
+                
+                foreach (string tableName in requiredTables)
+                {
+                    string query = $"SELECT name FROM sqlite_master WHERE type='table' AND name='{tableName}'";
+                    using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
+                    {
+                        var result = cmd.ExecuteScalar();
+                        if (result == null)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
 
@@ -114,35 +184,80 @@ namespace FE_ToDoApp.Dashboard
             int rowWidth = container.ClientSize.Width + 520;
             if (rowWidth <= 0) rowWidth = 400;
 
-            using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
+            try
             {
-                using (SQLiteDataReader reader = cmd.ExecuteReader())
+                using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
                 {
-                    while (reader.Read())
+                    using (SQLiteDataReader reader = cmd.ExecuteReader())
                     {
-                        int id = Convert.ToInt32(reader["ID"]);
-                        string title = reader["Title"].ToString();
-                        string categoryName = reader["GroupName"].ToString();
-                        string sourceType = reader["SourceType"].ToString();
+                        if (!reader.HasRows)
+                        {
+                            Label lblEmpty = new Label
+                            {
+                                Text = "Ch?a cÛ cÙng vi?c n‡o",
+                                Font = new Font("Segoe UI", 10, FontStyle.Italic),
+                                ForeColor = Color.Gray,
+                                Location = new Point(15, 10),
+                                AutoSize = true
+                            };
+                            container.Controls.Add(lblEmpty);
+                            return;
+                        }
 
-                        string fullDisplayTitle = $"{categoryName} - {title}";
-                        DateTime taskDate = Convert.ToDateTime(reader["TaskDate"]);
+                        while (reader.Read())
+                        {
+                            try
+                            {
+                                int id = Convert.ToInt32(reader["ID"]);
+                                string title = reader["Title"]?.ToString() ?? "KhÙng cÛ tiÍu ??";
+                                string categoryName = reader["GroupName"]?.ToString() ?? "Ch?a ph‚n lo?i";
+                                string sourceType = reader["SourceType"]?.ToString() ?? "Unknown";
 
-                        int statusInt = 0;
-                        if (reader["Status"] != DBNull.Value)
-                            statusInt = Convert.ToInt32(reader["Status"]);
+                                string fullDisplayTitle = $"{categoryName} - {title}";
+                                DateTime taskDate = Convert.ToDateTime(reader["TaskDate"]);
 
-                        bool isDone = (statusInt == 1);
+                                int statusInt = 0;
+                                if (reader["Status"] != DBNull.Value)
+                                    statusInt = Convert.ToInt32(reader["Status"]);
 
-                        Color color = Color.DodgerBlue;
-                        if (!isDone && taskDate.Date < DateTime.Now.Date) color = Color.OrangeRed;
-                        if (isDone) color = Color.SeaGreen;
+                                bool isDone = (statusInt == 1);
 
-                        string timeInfo = taskDate.ToString("dddd, dd/MM/yyyy", new CultureInfo("vi-VN"));
+                                Color color = Color.DodgerBlue;
+                                if (!isDone && taskDate.Date < DateTime.Now.Date) color = Color.OrangeRed;
+                                if (isDone) color = Color.SeaGreen;
 
-                        container.Controls.Add(CreateTaskRow(id, fullDisplayTitle, timeInfo, color, isDone, showCheckbox, rowWidth, sourceType));
+                                string timeInfo = "";
+                                try
+                                {
+                                    timeInfo = taskDate.ToString("dddd, dd/MM/yyyy", new CultureInfo("vi-VN"));
+                                }
+                                catch
+                                {
+                                    timeInfo = taskDate.ToString("dddd, dd/MM/yyyy");
+                                }
+
+                                container.Controls.Add(CreateTaskRow(id, fullDisplayTitle, timeInfo, color, isDone, showCheckbox, rowWidth, sourceType));
+                            }
+                            catch (Exception ex)
+                            {
+                                // B? qua task l?i v‡ ti?p t?c v?i task kh·c
+                                System.Diagnostics.Debug.WriteLine($"Error loading task: {ex.Message}");
+                            }
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                Label lblError = new Label
+                {
+                    Text = "L?i t?i d? li?u: " + ex.Message,
+                    Font = new Font("Segoe UI", 9, FontStyle.Regular),
+                    ForeColor = Color.Red,
+                    Location = new Point(15, 10),
+                    AutoSize = true
+                };
+                container.Controls.Add(lblError);
             }
         }
 
@@ -156,7 +271,6 @@ namespace FE_ToDoApp.Dashboard
 
             int textX = showCheckbox ? 35 : 15;
 
-            // --- T·∫†O BADGE (NH√ÉN) PH√ÇN LO·∫†I ---
             Label lblBadge = new Label
             {
                 Text = sourceType,
@@ -211,7 +325,7 @@ namespace FE_ToDoApp.Dashboard
 
                 Button btnDel = new Button
                 {
-                    Text = "üóëÔ∏è",
+                    Text = "???",
                     Size = new Size(30, 30),
                     Location = new Point(width - 50, 12),
                     Anchor = AnchorStyles.Right,
@@ -222,25 +336,13 @@ namespace FE_ToDoApp.Dashboard
                 };
                 btnDel.FlatAppearance.BorderSize = 0;
                 btnDel.Click += (s, e) => {
-                    if (MessageBox.Show("X√≥a c√¥ng vi·ªác n√†y?", "X√°c nh·∫≠n", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MessageBox.Show("XÛa cÙng vi?c n‡y?", "X·c nh?n", MessageBoxButtons.YesNo) == DialogResult.Yes)
                         DeleteTask(taskId, sourceType);
                 };
                 row.Controls.Add(btnDel);
 
-                //Label lblCheck = new Label
-                //{
-                //    //Text = "‚úî",
-                //    ForeColor = Color.ForestGreen,
-                //    Font = new Font("Segoe UI", 14, FontStyle.Bold),
-                //    AutoSize = true,
-                //    Location = new Point(width - 405, 10),
-                //    Anchor = AnchorStyles.Right
-                //};
-                //row.Controls.Add(lblCheck);
-
                 row.Controls.Add(lblBadge);
 
-                // Gi·ªØ l·∫°i thanh d·ªçc m√†u xanh l√°
                 Panel dot = new Panel
                 {
                     BackColor = Color.ForestGreen,
@@ -252,7 +354,6 @@ namespace FE_ToDoApp.Dashboard
             }
             else
             {
-                // --- TR·∫†NG TH√ÅI CH∆ØA HO√ÄN TH√ÄNH ---
                 row.BackColor = Color.White;
 
                 if (showCheckbox)
@@ -282,7 +383,7 @@ namespace FE_ToDoApp.Dashboard
 
                 Button btnDel = new Button
                 {
-                    Text = "üóëÔ∏è",
+                    Text = "???",
                     Size = new Size(30, 30),
                     Location = new Point(width - 50, 12),
                     Anchor = AnchorStyles.Right,
@@ -293,7 +394,7 @@ namespace FE_ToDoApp.Dashboard
                 };
                 btnDel.FlatAppearance.BorderSize = 0;
                 btnDel.Click += (s, e) => {
-                    if (MessageBox.Show("X√≥a c√¥ng vi·ªác n√†y?", "X√°c nh·∫≠n", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MessageBox.Show("XÛa cÙng vi?c n‡y?", "X·c nh?n", MessageBoxButtons.YesNo) == DialogResult.Yes)
                         DeleteTask(taskId, sourceType);
                 };
 
@@ -313,36 +414,50 @@ namespace FE_ToDoApp.Dashboard
 
         private void ToggleTaskStatus(int id, bool isChecked, string sourceType)
         {
-            string query = "";
-            string statusVal = isChecked ? "1" : "0";
-
-            if (sourceType == "Calendar")
+            try
             {
-                query = $"UPDATE WeekCategory_item SET Status = {statusVal} WHERE Id_weekly = {id}";
-            }
-            else
-            {
-                query = $"UPDATE Todo_List_Item SET status = {statusVal} WHERE id_item = {id}";
-            }
+                string query = "";
+                string statusVal = isChecked ? "1" : "0";
 
-            ExecuteSql(query, cmd => { });
-            LoadDashboardData();
+                if (sourceType == "Calendar")
+                {
+                    query = $"UPDATE WeekCategory_item SET Status = {statusVal} WHERE Id_weekly = {id}";
+                }
+                else
+                {
+                    query = $"UPDATE Todo_List_Item SET status = {statusVal} WHERE id_item = {id}";
+                }
+
+                ExecuteSql(query, cmd => { });
+                LoadDashboardData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("L?i c?p nh?t tr?ng th·i: " + ex.Message, "L?i", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void DeleteTask(int id, string sourceType)
         {
-            string query = "";
-            if (sourceType == "Calendar")
+            try
             {
-                query = $"DELETE FROM WeekCategory_item WHERE Id_weekly = {id}";
-            }
-            else
-            {
-                query = $"DELETE FROM Todo_List_Item WHERE id_item = {id}";
-            }
+                string query = "";
+                if (sourceType == "Calendar")
+                {
+                    query = $"DELETE FROM WeekCategory_item WHERE Id_weekly = {id}";
+                }
+                else
+                {
+                    query = $"DELETE FROM Todo_List_Item WHERE id_item = {id}";
+                }
 
-            ExecuteSql(query, cmd => { });
-            LoadDashboardData();
+                ExecuteSql(query, cmd => { });
+                LoadDashboardData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("L?i xÛa cÙng vi?c: " + ex.Message, "L?i", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void ExecuteSql(string query, Action<SQLiteCommand> paramBuilder)
@@ -359,44 +474,71 @@ namespace FE_ToDoApp.Dashboard
                     }
                 }
             }
-            catch (Exception ex) { MessageBox.Show("L·ªói: " + ex.Message); }
+            catch (Exception ex) 
+            { 
+                MessageBox.Show("L?i: " + ex.Message, "L?i", MessageBoxButtons.OK, MessageBoxIcon.Error); 
+            }
         }
 
         private void LoadStats(SQLiteConnection conn)
         {
-            // 1. TODAY
-            string sqlToday = @"SELECT 
-                (SELECT COUNT(*) FROM WeekCategory_item WHERE date(StartDate) = date('now', 'localtime')) + 
-                (SELECT COUNT(*) FROM Todo_List_Item t JOIN Todo_List_Detail l ON t.id_todo = l.id_todo WHERE date(l.created_at) = date('now', 'localtime'))";
-            int today = GetCount(conn, sqlToday);
+            try
+            {
+                // 1. TODAY
+                string sqlToday = @"SELECT 
+                    COALESCE((SELECT COUNT(*) FROM WeekCategory_item WHERE date(StartDate) = date('now', 'localtime')), 0) + 
+                    COALESCE((SELECT COUNT(*) FROM Todo_List_Item t JOIN Todo_List_Detail l ON t.id_todo = l.id_todo WHERE date(l.created_at) = date('now', 'localtime')), 0)";
+                int today = GetCount(conn, sqlToday);
 
-            // 2. UPCOMING
-            string sqlUpcoming = @"SELECT 
-                (SELECT COUNT(*) FROM WeekCategory_item WHERE date(StartDate) > date('now', 'localtime')) + 
-                (SELECT COUNT(*) FROM Todo_List_Item t JOIN Todo_List_Detail l ON t.id_todo = l.id_todo WHERE date(l.created_at) > date('now', 'localtime'))";
-            int upcoming = GetCount(conn, sqlUpcoming);
+                // 2. UPCOMING
+                string sqlUpcoming = @"SELECT 
+                    COALESCE((SELECT COUNT(*) FROM WeekCategory_item WHERE date(StartDate) > date('now', 'localtime')), 0) + 
+                    COALESCE((SELECT COUNT(*) FROM Todo_List_Item t JOIN Todo_List_Detail l ON t.id_todo = l.id_todo WHERE date(l.created_at) > date('now', 'localtime')), 0)";
+                int upcoming = GetCount(conn, sqlUpcoming);
 
-            // 3. OVERDUE
-            string sqlOverdue = @"SELECT 
-                (SELECT COUNT(*) FROM WeekCategory_item WHERE date(StartDate) < date('now', 'localtime') AND Status = 0) + 
-                (SELECT COUNT(*) FROM Todo_List_Item t JOIN Todo_List_Detail l ON t.id_todo = l.id_todo WHERE date(l.created_at) < date('now', 'localtime') AND (t.status = 0 OR t.status IS NULL))";
-            int overdue = GetCount(conn, sqlOverdue);
+                // 3. OVERDUE
+                string sqlOverdue = @"SELECT 
+                    COALESCE((SELECT COUNT(*) FROM WeekCategory_item WHERE date(StartDate) < date('now', 'localtime') AND Status = 0), 0) + 
+                    COALESCE((SELECT COUNT(*) FROM Todo_List_Item t JOIN Todo_List_Detail l ON t.id_todo = l.id_todo WHERE date(l.created_at) < date('now', 'localtime') AND (t.status = 0 OR t.status IS NULL)), 0)";
+                int overdue = GetCount(conn, sqlOverdue);
 
-            // 4. DONE
-            string sqlDone = @"SELECT 
-                (SELECT COUNT(*) FROM WeekCategory_item WHERE Status = 1) + 
-                (SELECT COUNT(*) FROM Todo_List_Item WHERE status = 1)";
-            int done = GetCount(conn, sqlDone);
+                // 4. DONE
+                string sqlDone = @"SELECT 
+                    COALESCE((SELECT COUNT(*) FROM WeekCategory_item WHERE Status = 1), 0) + 
+                    COALESCE((SELECT COUNT(*) FROM Todo_List_Item WHERE status = 1), 0)";
+                int done = GetCount(conn, sqlDone);
 
-            flowStats.Controls.Add(CreateStatCard(today.ToString(), "H√¥m nay", Color.AliceBlue, "üìÖ"));
-            flowStats.Controls.Add(CreateStatCard(upcoming.ToString(), "S·∫Øp t·ªõi", Color.Beige, "üïí"));
-            flowStats.Controls.Add(CreateStatCard(overdue.ToString(), "Qu√° h·∫°n", Color.MistyRose, "‚ö†Ô∏è"));
-            flowStats.Controls.Add(CreateStatCard(done.ToString(), "Ho√†n th√†nh", Color.Honeydew, "‚úÖ"));
+                flowStats.Controls.Add(CreateStatCard(today.ToString(), "HÙm nay", Color.AliceBlue, "??"));
+                flowStats.Controls.Add(CreateStatCard(upcoming.ToString(), "S?p t?i", Color.Beige, "??"));
+                flowStats.Controls.Add(CreateStatCard(overdue.ToString(), "Qu· h?n", Color.MistyRose, "??"));
+                flowStats.Controls.Add(CreateStatCard(done.ToString(), "Ho‡n th‡nh", Color.Honeydew, "?"));
+            }
+            catch (Exception ex)
+            {
+                // N?u l?i, hi?n th? stats m?c ??nh
+                flowStats.Controls.Add(CreateStatCard("0", "HÙm nay", Color.AliceBlue, "??"));
+                flowStats.Controls.Add(CreateStatCard("0", "S?p t?i", Color.Beige, "??"));
+                flowStats.Controls.Add(CreateStatCard("0", "Qu· h?n", Color.MistyRose, "??"));
+                flowStats.Controls.Add(CreateStatCard("0", "Ho‡n th‡nh", Color.Honeydew, "?"));
+                
+                System.Diagnostics.Debug.WriteLine("Error loading stats: " + ex.Message);
+            }
         }
 
         private int GetCount(SQLiteConnection conn, string query)
         {
-            using (SQLiteCommand cmd = new SQLiteCommand(query, conn)) { return Convert.ToInt32(cmd.ExecuteScalar() ?? 0); }
+            try
+            {
+                using (SQLiteCommand cmd = new SQLiteCommand(query, conn))
+                {
+                    var result = cmd.ExecuteScalar();
+                    return result != null && result != DBNull.Value ? Convert.ToInt32(result) : 0;
+                }
+            }
+            catch
+            {
+                return 0;
+            }
         }
 
         private Panel CreateStatCard(string value, string title, Color bgColor, string icon)
@@ -417,9 +559,9 @@ namespace FE_ToDoApp.Dashboard
             card.Paint += (s, e) => ControlPaint.DrawBorder(e.Graphics, card.ClientRectangle, Color.FromArgb(230, 230, 230), ButtonBorderStyle.Solid);
             Label lbl = new Label { Text = title, Font = new Font("Segoe UI", 14, FontStyle.Bold), Location = new Point(15, 15), AutoSize = true };
             FlowLayoutPanel listContainer = new FlowLayoutPanel { Name = "listContainer", FlowDirection = FlowDirection.TopDown, WrapContents = false, Location = new Point(15, 60), Size = new Size(card.Width - 30, 350), AutoScroll = true, Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom };
-            card.Controls.Add(lbl); card.Controls.Add(listContainer);
+            card.Controls.Add(lbl); 
+            card.Controls.Add(listContainer);
             return card;
         }
     }
 }
-

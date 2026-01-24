@@ -12,6 +12,8 @@ namespace FE_ToDoApp
     public partial class Trangchu : Form
     {
         private List<Form> privatePages = new List<Form>();
+        private WeekGroupMVC currentWeekControl;
+        private FE_ToDoApp.Lich_Trinh.TaskItem currentTaskControl;
 
         public Trangchu()
         {

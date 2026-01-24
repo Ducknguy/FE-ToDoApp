@@ -28,7 +28,7 @@ namespace FE_ToDoApp
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();          
 
-            Application.Run(new Trangchu());
+            Application.Run(new Login1());
             
             // D?ng service khi app tho�t
             StreakService.Stop();

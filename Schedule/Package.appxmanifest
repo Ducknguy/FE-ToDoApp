@@ -9,7 +9,7 @@
   <Identity
     Name="77fab4d9-6700-4cb1-9a9c-359ee225c94b"
     Publisher="CN=duc67"
-    Version="1.0.0.0" />
+    Version="1.0.3.0" />
 
   <Properties>
     <DisplayName>Schedule</DisplayName>
