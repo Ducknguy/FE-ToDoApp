@@ -51,7 +51,7 @@ namespace FE_ToDoApp.Calendar
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Lỗi Database: " + ex.Message);
+                    MessageBox.Show("Error: " + ex.Message);
                 }
             }
             return list;
